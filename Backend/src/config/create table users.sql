@@ -1,0 +1,8 @@
+CREATE TABLE users (
+ id SERIAL PRIMARY KEY,
+ username VARCHAR(100),
+ email VARCHAR(150) UNIQUE,
+ password TEXT,
+ streak INT DEFAULT 0,
+ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
