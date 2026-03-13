@@ -4,7 +4,7 @@ require("dotenv").config();
 const pool = new Pool({
   user: "postgres",
   host: "localhost",
-  database: "CODECANVAS",
+  database: "CODECANVAS_AI",
   password: process.env.DB_PASSWORD,
   port: 5432,
 })

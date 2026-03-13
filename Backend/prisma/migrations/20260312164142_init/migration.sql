@@ -1,131 +1,117 @@
--- CreateEnum
-CREATE TYPE "Difficulty" AS ENUM ('EASY', 'MEDIUM', 'HARD');
+-- Enable UUID generator
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
--- CreateEnum
-CREATE TYPE "Status" AS ENUM ('PENDING', 'ATTEMPTED', 'SOLVED');
 
--- CreateTable
-CREATE TABLE "User" (
-    "id" TEXT NOT NULL,
-    "username" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
-    "avatar" TEXT,
-    "rating" INTEGER NOT NULL DEFAULT 0,
-    "streak" INTEGER NOT NULL DEFAULT 0,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+-- ENUMS
 
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+CREATE TYPE difficulty AS ENUM ('EASY', 'MEDIUM', 'HARD');
+CREATE TYPE progress_status AS ENUM ('PENDING', 'ATTEMPTED', 'SOLVED');
+
+
+-- USERS
+
+CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    username TEXT NOT NULL UNIQUE,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    avatar TEXT,
+    rating INTEGER DEFAULT 0,
+    streak INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- CreateTable
-CREATE TABLE "Problem" (
-    "id" TEXT NOT NULL,
-    "title" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
-    "difficulty" "Difficulty" NOT NULL,
-    "tags" TEXT[],
-    "starterCode" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "Problem_pkey" PRIMARY KEY ("id")
+-- PROBLEMS
+
+CREATE TABLE problems (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    difficulty difficulty NOT NULL,
+    tags TEXT[],
+    starter_code TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- CreateTable
-CREATE TABLE "Submission" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "problemId" TEXT NOT NULL,
-    "language" TEXT NOT NULL,
-    "code" TEXT NOT NULL,
-    "status" TEXT NOT NULL,
-    "runtime" DOUBLE PRECISION,
-    "memory" DOUBLE PRECISION,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "Submission_pkey" PRIMARY KEY ("id")
+-- SUBMISSIONS
+
+CREATE TABLE submissions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    problem_id UUID NOT NULL,
+    language TEXT NOT NULL,
+    code TEXT NOT NULL,
+    status TEXT NOT NULL,
+    runtime DOUBLE PRECISION,
+    memory DOUBLE PRECISION,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (problem_id) REFERENCES problems(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
--- CreateTable
-CREATE TABLE "Sheet" (
-    "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "description" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "Sheet_pkey" PRIMARY KEY ("id")
+-- SHEETS
+
+CREATE TABLE sheets (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- CreateTable
-CREATE TABLE "SheetProblem" (
-    "id" TEXT NOT NULL,
-    "sheetId" TEXT NOT NULL,
-    "problemId" TEXT NOT NULL,
-    "order" INTEGER NOT NULL,
 
-    CONSTRAINT "SheetProblem_pkey" PRIMARY KEY ("id")
+-- SHEET PROBLEMS
+
+CREATE TABLE sheet_problems (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    sheet_id UUID NOT NULL,
+    problem_id UUID NOT NULL,
+    order_index INTEGER NOT NULL,
+
+    FOREIGN KEY (sheet_id) REFERENCES sheets(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (problem_id) REFERENCES problems(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
--- CreateTable
-CREATE TABLE "Progress" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "problemId" TEXT NOT NULL,
-    "status" "Status" NOT NULL,
-    "attempts" INTEGER NOT NULL DEFAULT 0,
 
-    CONSTRAINT "Progress_pkey" PRIMARY KEY ("id")
+-- USER PROGRESS
+
+CREATE TABLE progress (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    problem_id UUID NOT NULL,
+    status progress_status NOT NULL,
+    attempts INTEGER DEFAULT 0,
+
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (problem_id) REFERENCES problems(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
--- CreateTable
-CREATE TABLE "Post" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "problemId" TEXT,
-    "title" TEXT NOT NULL,
-    "content" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "Post_pkey" PRIMARY KEY ("id")
+-- POSTS (DISCUSSIONS)
+
+CREATE TABLE posts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL,
+    problem_id UUID,
+    title TEXT NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
--- CreateTable
-CREATE TABLE "Comment" (
-    "id" TEXT NOT NULL,
-    "postId" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "content" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "Comment_pkey" PRIMARY KEY ("id")
+-- COMMENTS
+
+CREATE TABLE comments (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    post_id UUID NOT NULL,
+    user_id UUID NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
--- AddForeignKey
-ALTER TABLE "Submission" ADD CONSTRAINT "Submission_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Submission" ADD CONSTRAINT "Submission_problemId_fkey" FOREIGN KEY ("problemId") REFERENCES "Problem"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "SheetProblem" ADD CONSTRAINT "SheetProblem_sheetId_fkey" FOREIGN KEY ("sheetId") REFERENCES "Sheet"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "SheetProblem" ADD CONSTRAINT "SheetProblem_problemId_fkey" FOREIGN KEY ("problemId") REFERENCES "Problem"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Progress" ADD CONSTRAINT "Progress_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Progress" ADD CONSTRAINT "Progress_problemId_fkey" FOREIGN KEY ("problemId") REFERENCES "Problem"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Post" ADD CONSTRAINT "Post_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Comment" ADD CONSTRAINT "Comment_postId_fkey" FOREIGN KEY ("postId") REFERENCES "Post"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
