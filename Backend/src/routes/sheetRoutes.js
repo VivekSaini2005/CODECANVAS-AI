@@ -1,9 +1,14 @@
 const express = require("express")
 const router = express.Router()
 
-const {getSheets,getSheetProblems} = require("../controllers/sheetController")
+const {
+  getSheets,
+  getSheetProblems,
+  createSheet
+} = require("../controllers/sheetController")
 
-router.get("/",getSheets)
-router.get("/:sheetId",getSheetProblems)
+router.get("/", getSheets)
+router.get("/:id", getSheetProblems)
+router.post("/", createSheet)
 
 module.exports = router

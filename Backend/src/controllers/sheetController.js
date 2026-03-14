@@ -1,35 +1,47 @@
 const pool = require("../config/db")
 
-exports.getSheets = async(req,res)=>{
-    try{
+exports.getSheets = async (req,res)=>{
+    
+    const sheets = await pool.query(
+        "SELECT * FROM sheets ORDER BY created_at DESC"
+    )
 
-        const sheets = await pool.query("SELECT * FROM sheets")
-
-        res.json(sheets.rows)
-
-    }catch(err){
-        res.status(500).json({error:err.message})
-    }
+    res.json(sheets.rows)
 }
 
-exports.getSheetProblems = async(req,res)=>{
-    try{
 
-        const {sheetId} = req.params
+exports.createSheet = async (req,res)=>{
 
-        const problems = await pool.query(
-        `SELECT p.*
-         FROM sheet_problems sp
-         JOIN problems p
-         ON sp.problem_id = p.id
-         WHERE sp.sheet_id = $1
-         ORDER BY sp.problem_order`,
-        [sheetId]
-        )
+    const {name,description} = req.body
 
-        res.json(problems.rows)
+    const sheet = await pool.query(
+        `
+        INSERT INTO sheets(name,description)
+        VALUES($1,$2)
+        RETURNING *
+        `,
+        [name,description]
+    )
 
-    }catch(err){
-        res.status(500).json({error:err.message})
-    }
+    res.json(sheet.rows[0])
+}
+
+
+exports.getSheetProblems = async (req,res)=>{
+
+    const {id} = req.params
+
+    const problems = await pool.query(
+        `
+        SELECT p.*
+        FROM problems p
+        JOIN sheet_problem sp
+        ON sp.problem_id = p.id
+        WHERE sp.sheet_id=$1
+        ORDER BY sp.order ASC
+        `,
+        [id]
+    )
+
+    res.json(problems.rows)
 }

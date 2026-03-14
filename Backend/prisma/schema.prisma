@@ -8,125 +8,127 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username  String   @unique
+  id        String   @id @default(uuid())
   email     String   @unique
+  name      String?
   password  String
-  avatar    String?
-  rating    Int      @default(0)
-  streak    Int      @default(0)
   createdAt DateTime @default(now())
 
   submissions Submission[]
   progress    Progress[]
-  posts       Post[]
-
-  @@map("users")
 }
 
 model Problem {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title       String
-  description String
-  difficulty  Difficulty
-  tags        String[]
-  starterCode String?
-  createdAt   DateTime @default(now())
+  id                String   @id @default(uuid())
+  title             String
+  slug              String   @unique
+  difficulty        String
+  problemLink       String
+  platform          String?
+  referenceSolution String?
+  editorialLink     String?
+  youtubeLink       String?
+  createdAt         DateTime @default(now())
 
+  testCases     TestCase[]
   submissions   Submission[]
   progress      Progress[]
   sheetProblems SheetProblem[]
 
-  @@map("problems")
+  companies     ProblemCompany[]
+  tags          ProblemTag[]
 }
 
-model Submission {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId    String   @db.Uuid
-  problemId String   @db.Uuid
-  language  String
-  code      String
-  status    String
-  runtime   Float?
-  memory    Float?
-  createdAt DateTime @default(now())
+model TestCase {
+  id             String  @id @default(uuid())
+  problemId      String
+  input          String
+  expectedOutput String
+  isSample       Boolean @default(false)
+  explain        String?
 
-  user    User    @relation(fields: [userId], references: [id])
-  problem Problem @relation(fields: [problemId], references: [id])
-
-  @@map("submissions")
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
 }
 
 model Sheet {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id          String   @id @default(uuid())
   name        String
   description String?
   createdAt   DateTime @default(now())
 
   problems SheetProblem[]
-
-  @@map("sheets")
 }
 
 model SheetProblem {
-  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  sheetId   String @db.Uuid
-  problemId String @db.Uuid
-  order     Int
+  id        String @id @default(uuid())
+  sheetId   String
+  problemId String
+  order     Int?
 
-  sheet   Sheet   @relation(fields: [sheetId], references: [id])
-  problem Problem @relation(fields: [problemId], references: [id])
+  sheet   Sheet   @relation(fields: [sheetId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
 
-  @@map("sheet_problems")
+  @@unique([sheetId, problemId])
+}
+
+model Submission {
+  id        String   @id @default(uuid())
+  userId    String
+  problemId String
+  code      String
+  language  String
+  status    String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
 }
 
 model Progress {
-  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId    String @db.Uuid
-  problemId String @db.Uuid
-  status    Status
-  attempts  Int    @default(0)
+  id        String   @id @default(uuid())
+  userId    String
+  problemId String
+  status    String
+  updatedAt DateTime @updatedAt
 
-  user    User    @relation(fields: [userId], references: [id])
-  problem Problem @relation(fields: [problemId], references: [id])
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
 
-  @@map("progress")
+  @@unique([userId, problemId])
 }
 
-model Post {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId    String   @db.Uuid
-  problemId String?  @db.Uuid
-  title     String
-  content   String
-  createdAt DateTime @default(now())
+model Company {
+  id   String @id @default(uuid())
+  name String @unique
 
-  user     User      @relation(fields: [userId], references: [id])
-  comments Comment[]
-
-  @@map("posts")
+  problems ProblemCompany[]
 }
 
-model Comment {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  postId    String   @db.Uuid
-  userId    String   @db.Uuid
-  content   String
-  createdAt DateTime @default(now())
+model ProblemCompany {
+  id        String @id @default(uuid())
+  problemId String
+  companyId String
 
-  post Post @relation(fields: [postId], references: [id])
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
-  @@map("comments")
+  @@unique([problemId, companyId])
 }
 
-enum Difficulty {
-  EASY
-  MEDIUM
-  HARD
+model Tag {
+  id   String @id @default(uuid())
+  name String @unique
+
+  problems ProblemTag[]
 }
 
-enum Status {
-  PENDING
-  ATTEMPTED
-  SOLVED
+model ProblemTag {
+  id        String @id @default(uuid())
+  problemId String
+  tagId     String
+
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  tag     Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([problemId, tagId])
 }
