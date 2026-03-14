@@ -6,6 +6,10 @@ import Dashboard from "./pages/Dashboard"
 import Sheets from "./pages/Sheets"
 import SheetProblems from "./pages/SheetProblems"
 import Problem from "./pages/Problem"
+import Login from "./pages/Login"
+import Register from "./pages/Register"
+import Profile from "./pages/Profile"
+import ProtectedRoute from "./components/ProtectedRoute"
 
 function App() {
 
@@ -20,6 +24,16 @@ function App() {
           <Route path="/sheets" element={<Sheets />} />
           <Route path="/sheet/:id" element={<SheetProblems />} />
           <Route path="/problem/:slug" element={<Problem />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } 
+          />
 
         </Routes>
 
