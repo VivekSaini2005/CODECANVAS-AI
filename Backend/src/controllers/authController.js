@@ -1,17 +1,18 @@
 const pool = require("../config/db")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
+const { v4: uuidv4 } = require("uuid")
 
 exports.register = async (req, res) => {
     try {
 
-        const { username, email, password } = req.body
+        const { name, email, password } = req.body
 
         const hashed = await bcrypt.hash(password, 10)
 
         const user = await pool.query(
-            "INSERT INTO users(username,email,password) VALUES($1,$2,$3) RETURNING *",
-            [username, email, hashed]
+            "INSERT INTO users(id,name,email,password) VALUES($1,$2,$3,$4) RETURNING *",
+            [uuidv4(),name, email, hashed]
         )
 
         res.json(user.rows[0])

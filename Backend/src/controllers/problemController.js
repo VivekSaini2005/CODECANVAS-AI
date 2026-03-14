@@ -1,4 +1,5 @@
 const pool = require("../config/db")
+const { v4: uuidv4 } = require("uuid")
 
 exports.getProblems = async (req, res) => {
   try {
@@ -65,18 +66,18 @@ exports.createProblem = async (req, res) => {
       title,
       slug,
       difficulty,
-      problemLink,
+      link,
       platform
     } = req.body
 
     const problem = await pool.query(
       `
       INSERT INTO problems
-      (title,slug,difficulty,problem_link,platform)
-      VALUES($1,$2,$3,$4,$5)
+      (id,title,slug,difficulty,"problemLink",platform)
+      VALUES($1,$2,$3,$4,$5,$6)
       RETURNING *
       `,
-      [title, slug, difficulty, problemLink, platform]
+      [uuidv4(),title, slug, difficulty, link, platform]
     )
 
     res.json(problem.rows[0])

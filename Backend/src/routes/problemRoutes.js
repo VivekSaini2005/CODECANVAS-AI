@@ -9,6 +9,6 @@ const {
 
 router.get("/", getProblems)
 router.get("/:slug", getProblem)
-router.post("/", createProblem)
+router.post("/create", createProblem)
 
 module.exports = router

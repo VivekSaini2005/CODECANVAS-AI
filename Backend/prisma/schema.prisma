@@ -16,6 +16,8 @@ model User {
 
   submissions Submission[]
   progress    Progress[]
+
+  @@map("users")
 }
 
 model Problem {
@@ -37,6 +39,8 @@ model Problem {
 
   companies     ProblemCompany[]
   tags          ProblemTag[]
+
+  @@map("problems")
 }
 
 model TestCase {
@@ -57,6 +61,8 @@ model Sheet {
   createdAt   DateTime @default(now())
 
   problems SheetProblem[]
+
+  @@map("sheets")
 }
 
 model SheetProblem {
@@ -82,6 +88,8 @@ model Submission {
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@map("submissions")
 }
 
 model Progress {
@@ -95,6 +103,8 @@ model Progress {
   problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
 
   @@unique([userId, problemId])
+
+  @@map("progress")
 }
 
 model Company {
@@ -102,6 +112,8 @@ model Company {
   name String @unique
 
   problems ProblemCompany[]
+
+  @@map("companies")
 }
 
 model ProblemCompany {
@@ -120,6 +132,8 @@ model Tag {
   name String @unique
 
   problems ProblemTag[]
+
+  @@map("tags")
 }
 
 model ProblemTag {
