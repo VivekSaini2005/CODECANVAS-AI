@@ -7,9 +7,12 @@ const problemRoutes = require("./routes/problemRoutes")
 const sheetRoutes = require("./routes/sheetRoutes")
 const progressRoutes = require("./routes/progressRoutes")
 const submissionRoutes = require("./routes/submissionRoutes")
+const cookieParser = require("cookie-parser")
+
 
 const app = express()
 
+app.use(cookieParser())
 app.use(cors())
 app.use(express.json())
 

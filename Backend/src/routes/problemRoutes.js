@@ -1,5 +1,6 @@
 const express = require("express")
 const router = express.Router()
+const auth = require("../middleware/authMiddleware")
 
 const {
   getProblems,
@@ -9,6 +10,6 @@ const {
 
 router.get("/", getProblems)
 router.get("/:slug", getProblem)
-router.post("/create", createProblem)
+router.post("/create", auth, createProblem)
 
 module.exports = router

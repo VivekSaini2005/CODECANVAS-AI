@@ -1,68 +1,132 @@
 const pool = require("../config/db")
 
-exports.updateProgress = async (req,res)=>{
+// ======================================
+// MARK PROBLEM AS SOLVED
+// ======================================
 
-    const {problemId,status} = req.body
-    const userId = req.userId
-
-    const progress = await pool.query(
-        `
-        INSERT INTO progress(user_id,problem_id,status)
-        VALUES($1,$2,$3)
-        ON CONFLICT (user_id,problem_id)
-        DO UPDATE SET status=$3
-        RETURNING *
-        `,
-        [userId,problemId,status]
-    )
-
-    res.json(progress.rows[0])
-}
-
-
-
-exports.getUserProgress = async (req,res)=>{
-
-    const userId = req.userId
-
-    const progress = await pool.query(
-        `
-        SELECT p.title, pr.status
-        FROM progress pr
-        JOIN problems p
-        ON p.id = pr.problem_id
-        WHERE pr.user_id=$1
-        `,
-        [userId]
-    )
-
-    res.json(progress.rows)
-}
-
-exports.getUserStats = async (req,res)=>{
-
-    const userId = req.userId
+exports.updateProgress = async (req, res) => {
 
     try {
-        const progressStats = await pool.query(
+
+        const { problemId, platform } = req.body
+        const userId = req.userId
+
+        const progress = await pool.query(
             `
-            SELECT COUNT(*) FROM progress 
-            WHERE user_id=$1 AND status='Solved'
+            INSERT INTO user_solved_problems
+            (user_id, problem_id, platform, solved_at)
+            VALUES($1,$2,$3,NOW())
+            ON CONFLICT (user_id, problem_id, platform)
+            DO UPDATE SET solved_at = NOW()
+            RETURNING *
+            `,
+            [userId, problemId, platform]
+        )
+
+        res.json(progress.rows[0])
+
+    } catch (err) {
+        res.status(500).json({ error: err.message })
+    }
+
+}
+
+
+
+// ======================================
+// GET USER SOLVED PROBLEMS
+// ======================================
+
+exports.getUserProgress = async (req, res) => {
+
+    try {
+
+        const userId = req.userId
+
+        const progress = await pool.query(
+            `
+            SELECT 
+                p.title,
+                p.slug,
+                p.platform,
+                p.difficulty,
+                usp.solved_at
+            FROM user_solved_problems usp
+            JOIN problems p
+            ON p.id = usp.problem_id
+            WHERE usp.user_id = $1
+            ORDER BY usp.solved_at DESC
             `,
             [userId]
         )
 
-        const submissionStats = await pool.query(
+        res.json(progress.rows)
+
+    } catch (err) {
+        res.status(500).json({ error: err.message })
+    }
+
+}
+
+
+
+// ======================================
+// USER STATS
+// ======================================
+
+exports.getUserStats = async (req, res) => {
+
+    const userId = req.userId
+
+    try {
+
+        const solvedStats = await pool.query(
             `
-            SELECT COUNT(*) FROM submissions 
+            SELECT COUNT(*) 
+            FROM user_solved_problems
             WHERE user_id=$1
             `,
             [userId]
         )
 
+        const easyStats = await pool.query(
+            `
+            SELECT COUNT(*) 
+            FROM user_solved_problems usp
+            JOIN problems p
+            ON p.id = usp.problem_id
+            WHERE usp.user_id=$1 AND p.difficulty='Easy'
+            `,
+            [userId]
+        )
+
+        const mediumStats = await pool.query(
+            `
+            SELECT COUNT(*) 
+            FROM user_solved_problems usp
+            JOIN problems p
+            ON p.id = usp.problem_id
+            WHERE usp.user_id=$1 AND p.difficulty='Medium'
+            `,
+            [userId]
+        )
+
+        const hardStats = await pool.query(
+            `
+            SELECT COUNT(*) 
+            FROM user_solved_problems usp
+            JOIN problems p
+            ON p.id = usp.problem_id
+            WHERE usp.user_id=$1 AND p.difficulty='Hard'
+            `,
+            [userId]
+        )
+
         res.json({
-            problemsSolved: parseInt(progressStats.rows[0].count),
-            submissions: parseInt(submissionStats.rows[0].count),
+            totalSolved: parseInt(solvedStats.rows[0].count),
+            easySolved: parseInt(easyStats.rows[0].count),
+            mediumSolved: parseInt(mediumStats.rows[0].count),
+            hardSolved: parseInt(hardStats.rows[0].count),
             sheetsCompleted: 0,
             currentStreak: 0
         })

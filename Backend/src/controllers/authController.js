@@ -12,15 +12,23 @@ exports.register = async (req, res) => {
 
         const user = await pool.query(
             "INSERT INTO users(id,name,email,password) VALUES($1,$2,$3,$4) RETURNING *",
-            [uuidv4(),name, email, hashed]
+            [uuidv4(), name, email, hashed]
         )
 
         const token = jwt.sign(
             { id: user.rows[0].id },
-            process.env.JWT_SECRET
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
         )
 
-        res.json({ user: user.rows[0], token })
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false, // true in production (https)
+            sameSite: "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        })
+
+        res.json({ user: user.rows[0] })
 
     } catch (err) {
         res.status(500).json({ error: err.message })
@@ -49,7 +57,7 @@ exports.login = async (req, res) => {
         const { email, password } = req.body
 
         const user = await pool.query(
-            'SELECT * FROM users WHERE email=$1',
+            "SELECT * FROM users WHERE email=$1",
             [email]
         )
 
@@ -63,10 +71,18 @@ exports.login = async (req, res) => {
 
         const token = jwt.sign(
             { id: user.rows[0].id },
-            process.env.JWT_SECRET
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
         )
 
-        res.json({ "Login Successfully": "Congrulations", token })
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        })
+
+        res.json({ message: "Login successful" })
 
     } catch (err) {
         res.status(500).json({ error: err.message })

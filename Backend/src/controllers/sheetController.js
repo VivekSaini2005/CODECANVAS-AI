@@ -1,47 +1,89 @@
 const pool = require("../config/db")
 
-exports.getSheets = async (req,res)=>{
-    
-    const sheets = await pool.query(
-        "SELECT * FROM sheets ORDER BY created_at DESC"
-    )
+// =====================================
+// GET ALL SHEETS
+// =====================================
 
-    res.json(sheets.rows)
+exports.getSheets = async (req, res) => {
+
+    try {
+
+        const sheets = await pool.query(
+            "SELECT * FROM sheets ORDER BY created_at DESC"
+        )
+
+        res.json(sheets.rows)
+
+    } catch (err) {
+        res.status(500).json({ error: err.message })
+    }
+
 }
 
 
-exports.createSheet = async (req,res)=>{
 
-    const {name,description} = req.body
+// =====================================
+// CREATE NEW SHEET
+// =====================================
 
-    const sheet = await pool.query(
-        `
-        INSERT INTO sheets(name,description)
-        VALUES($1,$2)
-        RETURNING *
-        `,
-        [name,description]
-    )
+exports.createSheet = async (req, res) => {
 
-    res.json(sheet.rows[0])
+    try {
+
+        const { name, description } = req.body
+
+        const sheet = await pool.query(
+            `
+            INSERT INTO sheets(name,description)
+            VALUES($1,$2)
+            RETURNING *
+            `,
+            [name, description]
+        )
+
+        res.json(sheet.rows[0])
+
+    } catch (err) {
+        res.status(500).json({ error: err.message })
+    }
+
 }
 
 
-exports.getSheetProblems = async (req,res)=>{
 
-    const {id} = req.params
+// =====================================
+// GET PROBLEMS OF A SHEET
+// =====================================
 
-    const problems = await pool.query(
-        `
-        SELECT p.*
-        FROM problems p
-        JOIN sheet_problem sp
-        ON sp.problem_id = p.id
-        WHERE sp.sheet_id=$1
-        ORDER BY sp.order ASC
-        `,
-        [id]
-    )
+exports.getSheetProblems = async (req, res) => {
 
-    res.json(problems.rows)
+    try {
+
+        const { id } = req.params
+
+        const problems = await pool.query(
+            `
+            SELECT 
+                p.id,
+                p.title,
+                p.slug,
+                p.link,
+                p.platform,
+                p.difficulty,
+                sp.order_index
+            FROM problems p
+            JOIN sheet_problems sp
+            ON sp.problem_id = p.id
+            WHERE sp.sheet_id = $1
+            ORDER BY sp.order_index ASC
+            `,
+            [id]
+        )
+
+        res.json(problems.rows)
+
+    } catch (err) {
+        res.status(500).json({ error: err.message })
+    }
+
 }
