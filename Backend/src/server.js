@@ -8,6 +8,7 @@ const sheetRoutes = require("./routes/sheetRoutes")
 const progressRoutes = require("./routes/progressRoutes")
 const submissionRoutes = require("./routes/submissionRoutes")
 const platformStatsRoutes = require("./routes/platformStats")
+const runcode = require("./routes/compilerRoute")
 const cookieParser = require("cookie-parser")
 
 
@@ -23,6 +24,7 @@ app.use("/api/sheets", sheetRoutes)
 app.use("/api/progress", progressRoutes)
 app.use("/api/submissions", submissionRoutes)
 app.use("/api/stats", platformStatsRoutes)
+app.use("/api/run", runcode)
 
 const PORT = process.env.PORT || 5000
 
