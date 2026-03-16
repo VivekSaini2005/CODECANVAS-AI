@@ -14,10 +14,13 @@ exports.getProblems = async (req, res) => {
       SELECT 
         p.*,
         ARRAY_AGG(DISTINCT c.name) FILTER (WHERE c.name IS NOT NULL) AS companies,
+        ARRAY_AGG(DISTINCT t2.name) FILTER (WHERE t2.name IS NOT NULL) AS tags,
         (ARRAY_AGG(DISTINCT s.name) FILTER (WHERE s.name IS NOT NULL))[1] AS sheet
       FROM problems p
       LEFT JOIN problem_companies pc ON pc.problem_id = p.id
       LEFT JOIN companies c ON c.id = pc.company_id
+      LEFT JOIN problem_tags pt2 ON pt2.problem_id = p.id
+      LEFT JOIN tags t2 ON t2.id = pt2.tag_id
       LEFT JOIN sheet_problems sp ON sp.problem_id = p.id
       LEFT JOIN sheets s ON s.id = sp.sheet_id
     `
@@ -26,11 +29,11 @@ exports.getProblems = async (req, res) => {
     let conditions = []
 
     if (tag) {
-      query += `
-        JOIN problem_tags pt ON pt.problem_id = p.id
+      conditions.push(`EXISTS (
+        SELECT 1 FROM problem_tags pt
         JOIN tags t ON t.id = pt.tag_id
-      `
-      conditions.push(`t.name = $${values.length + 1}`)
+        WHERE pt.problem_id = p.id AND t.name = $${values.length + 1}
+      )`)
       values.push(tag)
     }
 

@@ -8,6 +8,13 @@ export default function ProblemsPage() {
     const [solvedIds, setSolvedIds] = useState(new Set())
     const [toggling, setToggling] = useState(null)
     const [page, setPage] = useState(1)
+    
+    // Filters state
+    const [selectedDifficulty, setSelectedDifficulty] = useState("Difficulty")
+    const [selectedStatus, setSelectedStatus] = useState("Status")
+    const [selectedTag, setSelectedTag] = useState("Topic Tags")
+    const [selectedCompany, setSelectedCompany] = useState("Companies")
+
     const ITEMS_PER_PAGE = 5;
 
     useEffect(() => {
@@ -59,10 +66,41 @@ export default function ProblemsPage() {
         return "bg-[#1e2332] text-gray-400 border border-[#2a3a4e]"
     }
 
-    const totalPages = Math.ceil(problems.length / ITEMS_PER_PAGE);
+    // Compute unique tags and companies from all problems
+    const allTags = Array.from(new Set(problems.flatMap(p => p.tags || []))).sort()
+    const allCompanies = Array.from(new Set(problems.flatMap(p => p.companies || []))).sort()
+
+    // Filter problems
+    const filteredProblems = problems.filter(p => {
+        const matchDifficulty = selectedDifficulty === "Difficulty" || 
+            (p.difficulty && p.difficulty.toLowerCase() === selectedDifficulty.toLowerCase())
+        
+        const isSolved = solvedIds.has(p.id)
+        const matchStatus = selectedStatus === "Status" || 
+            (selectedStatus === "Solved" && isSolved) || 
+            (selectedStatus === "Unsolved" && !isSolved)
+            
+        const matchTag = selectedTag === "Topic Tags" || 
+            (p.tags && p.tags.includes(selectedTag))
+            
+        const matchCompany = selectedCompany === "Companies" || 
+            (p.companies && p.companies.includes(selectedCompany))
+
+        return matchDifficulty && matchStatus && matchTag && matchCompany
+    })
+
+    const totalPages = Math.ceil(filteredProblems.length / ITEMS_PER_PAGE);
     const indexOfLast = page * ITEMS_PER_PAGE;
     const indexOfFirst = indexOfLast - ITEMS_PER_PAGE;
-    const currentProblems = problems.slice(indexOfFirst, indexOfLast);
+    const currentProblems = filteredProblems.slice(indexOfFirst, indexOfLast);
+
+    const resetFilters = () => {
+        setSelectedDifficulty("Difficulty")
+        setSelectedStatus("Status")
+        setSelectedTag("Topic Tags")
+        setSelectedCompany("Companies")
+        setPage(1)
+    }
 
     const selectClass = "bg-[#121622] border border-[#1e2332] text-gray-300 px-4 py-2.5 rounded-lg text-[13px] outline-none focus:border-[#3b82f6] appearance-none bg-no-repeat bg-[position:right_0.75rem_center] bg-[image:url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%239CA3AF%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] pr-10 min-w-[140px] cursor-pointer hover:border-[#2a3a4e] transition-colors";
 
@@ -83,28 +121,53 @@ export default function ProblemsPage() {
 
             {/* FILTERS */}
             <div className="flex gap-4 mb-6 flex-wrap">
-                <select className={selectClass}>
-                    <option>Difficulty</option>
-                    <option>Easy</option>
-                    <option>Medium</option>
-                    <option>Hard</option>
+                <select 
+                    className={selectClass} 
+                    value={selectedDifficulty}
+                    onChange={(e) => { setSelectedDifficulty(e.target.value); setPage(1); }}
+                >
+                    <option value="Difficulty">Difficulty</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Hard">Hard</option>
                 </select>
 
-                <select className={selectClass}>
-                    <option>Status</option>
-                    <option>Solved</option>
-                    <option>Unsolved</option>
+                <select 
+                    className={selectClass} 
+                    value={selectedStatus}
+                    onChange={(e) => { setSelectedStatus(e.target.value); setPage(1); }}
+                >
+                    <option value="Status">Status</option>
+                    <option value="Solved">Solved</option>
+                    <option value="Unsolved">Unsolved</option>
                 </select>
 
-                <select className={selectClass}>
-                    <option>Topic Tags</option>
+                <select 
+                    className={selectClass} 
+                    value={selectedTag}
+                    onChange={(e) => { setSelectedTag(e.target.value); setPage(1); }}
+                >
+                    <option value="Topic Tags">Topic Tags</option>
+                    {allTags.map(tag => (
+                        <option key={tag} value={tag}>{tag}</option>
+                    ))}
                 </select>
 
-                <select className={selectClass}>
-                    <option>Companies</option>
+                <select 
+                    className={selectClass} 
+                    value={selectedCompany}
+                    onChange={(e) => { setSelectedCompany(e.target.value); setPage(1); }}
+                >
+                    <option value="Companies">Companies</option>
+                    {allCompanies.map(company => (
+                        <option key={company} value={company}>{company}</option>
+                    ))}
                 </select>
 
-                <button className="border border-[#1e2332] text-gray-300 px-5 py-2.5 rounded-lg text-[13px] font-medium hover:bg-[#121622] transition-colors gap-2.5 flex items-center ml-auto">
+                <button 
+                    onClick={resetFilters}
+                    className="border border-[#1e2332] text-gray-300 px-5 py-2.5 rounded-lg text-[13px] font-medium hover:bg-[#121622] transition-colors gap-2.5 flex items-center ml-auto"
+                >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
                     Reset Filters
                 </button>
@@ -191,7 +254,7 @@ export default function ProblemsPage() {
             {/* PAGINATION */}
             <div className="flex justify-between items-center mt-8">
                 <div className="text-[13px] text-gray-400">
-                    Showing {problems.length === 0 ? 0 : indexOfFirst + 1}-{Math.min(indexOfLast, problems.length)} of {problems.length} problems
+                    Showing {filteredProblems.length === 0 ? 0 : indexOfFirst + 1}-{Math.min(indexOfLast, filteredProblems.length)} of {filteredProblems.length} problems
                 </div>
 
                 <div className="flex gap-2 items-center">
