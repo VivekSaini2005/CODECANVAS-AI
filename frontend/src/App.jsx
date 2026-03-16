@@ -10,6 +10,7 @@ import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Profile from "./pages/Profile"
 import ProtectedRoute from "./components/ProtectedRoute"
+import SolveProblem from "./pages/SolveProblem"
 
 function App() {
 
@@ -34,7 +35,7 @@ function App() {
               </ProtectedRoute>
             } 
           />
-
+          <Route path="/solve/:problemId" element={<SolveProblem />} />
         </Routes>
 
       </MainLayout>

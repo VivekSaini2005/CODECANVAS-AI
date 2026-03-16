@@ -189,13 +189,30 @@ function SheetProblems() {
                 </button>
 
                 {/* Title */}
-                <span
+                {/* <span
                   className={`text-sm font-medium transition-colors ${
                     isSolved ? "line-through text-gray-500" : "text-gray-200"
                   }`}
                 >
                   {p.title}
-                </span>
+                </span> */}
+                {/* <Link
+                  to={`/solve/${p.id}`}
+                  className={`text-sm font-medium hover:text-[#625df5] ${
+                    isSolved ? "line-through text-gray-500" : "text-gray-200"
+                  }`}
+                >
+                  {p.title}
+                </Link> */}
+                <Link
+                  to={`/solve/${p.id}`}
+                  state={{ problem: p }}
+                  className={`text-sm font-medium hover:text-[#625df5] ${
+                    isSolved ? "line-through text-gray-500" : "text-gray-200"
+                  }`}
+                >
+                  {p.title}
+                </Link>
 
                 {/* Difficulty */}
                 <span className={`text-[11px] font-bold px-2 py-0.5 rounded w-fit ${diff.bg} ${diff.text}`}>
