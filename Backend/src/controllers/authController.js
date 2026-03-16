@@ -38,7 +38,7 @@ exports.register = async (req, res) => {
 exports.getMe = async (req, res) => {
     try {
         const user = await pool.query(
-            'SELECT id, name, email FROM users WHERE id=$1',
+            'SELECT id, name, email, leetcode_username, codeforces_username, codechef_username FROM users WHERE id=$1',
             [req.userId]
         )
 
@@ -83,6 +83,26 @@ exports.login = async (req, res) => {
         })
 
         res.json({ message: "Login successful", token: token, user: user.rows[0] })
+
+    } catch (err) {
+        res.status(500).json({ error: err.message })
+    }
+}
+
+exports.updateProfile = async (req, res) => {
+    try {
+
+        const { leetcode_username, codeforces_username, codechef_username, name } = req.body
+
+        const user = await pool.query(
+            "UPDATE users SET leetcode_username=$1, codeforces_username=$2, codechef_username=$3, name=$4 WHERE id=$5 RETURNING *",
+            [leetcode_username, codeforces_username, codechef_username, name, req.userId]
+        )
+
+        if (user.rows.length === 0)
+            return res.status(400).json({ msg: "User not found" })
+
+        res.json({ message: "Profile updated successfully", user: user.rows[0] })
 
     } catch (err) {
         res.status(500).json({ error: err.message })

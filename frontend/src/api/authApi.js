@@ -14,3 +14,8 @@ export const fetchUserProfile = async () => {
   const response = await API.get('/auth/me');
   return response.data;
 };
+
+export const updateUserProfile = async (profileData) => {
+  const response = await API.put('/auth/update-profile', profileData);
+  return response.data;
+};
