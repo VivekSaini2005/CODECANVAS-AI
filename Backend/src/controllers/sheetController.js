@@ -87,3 +87,54 @@ exports.getSheetProblems = async (req, res) => {
     }
 
 }
+
+exports.getSheetsProg = async (req, res) => {
+    try {
+
+        const userId = req.userId
+
+        // console.log(userId);
+
+        const sheets = await pool.query(
+            `
+      SELECT 
+        s.id,
+        s.name,
+        s.description,
+
+        COUNT(sp.problem_id) AS total_problems,
+
+        COUNT(usp.problem_id) AS solved_problems,
+
+        COALESCE(
+          ROUND(
+            COUNT(usp.problem_id)::decimal /
+            NULLIF(COUNT(sp.problem_id),0) * 100
+          ),0
+        ) AS progress
+
+      FROM sheets s
+
+      LEFT JOIN sheet_problems sp
+        ON sp.sheet_id = s.id
+
+      LEFT JOIN user_solved_problems usp
+        ON usp.problem_id = sp.problem_id
+        AND usp.user_id = $1
+
+      GROUP BY s.id
+      ORDER BY s.id
+      `,
+            [userId]
+        )
+
+        res.json(sheets.rows)
+
+    } catch (err) {
+
+        console.error(err)
+        res.status(500).json({ error: err.message })
+
+    }
+}
+

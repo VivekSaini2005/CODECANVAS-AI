@@ -4,32 +4,76 @@ const pool = require("../config/db")
 // MARK PROBLEM AS SOLVED
 // ======================================
 
-exports.updateProgress = async (req, res) => {
 
+exports.updateProgress = async (req, res) => {
     try {
 
-        const { problemId, platform } = req.body
+        const { problemId } = req.body
         const userId = req.userId
 
-        const progress = await pool.query(
-            `
-            INSERT INTO user_solved_problems
-            (user_id, problem_id, platform, solved_at)
-            VALUES($1,$2,$3,NOW())
-            ON CONFLICT (user_id, problem_id, platform)
-            DO UPDATE SET solved_at = NOW()
-            RETURNING *
-            `,
-            [userId, problemId, platform]
+        // check if already solved
+        const existing = await pool.query(
+            `SELECT id FROM user_solved_problems
+       WHERE user_id=$1 AND problem_id=$2`,
+            [userId, problemId]
         )
 
-        res.json(progress.rows[0])
+        // if solved → unmark
+        if (existing.rows.length > 0) {
+
+            await pool.query(
+                `DELETE FROM user_solved_problems
+         WHERE user_id=$1 AND problem_id=$2`,
+                [userId, problemId]
+            )
+
+            return res.json({ solved: false })
+        }
+
+        // if not solved → mark done
+        const progress = await pool.query(
+            `INSERT INTO user_solved_problems
+       (user_id, problem_id, solved_at)
+       VALUES($1,$2,NOW())
+       RETURNING *`,
+            [userId, problemId]
+        )
+
+        res.json({
+            solved: true,
+            data: progress.rows[0]
+        })
 
     } catch (err) {
         res.status(500).json({ error: err.message })
     }
-
 }
+// exports.updateProgress = async (req, res) => {
+
+//     try {
+
+//         const { problemId, platform } = req.body
+//         const userId = req.userId
+
+//         const progress = await pool.query(
+//             `
+//             INSERT INTO user_solved_problems
+//             (user_id, problem_id, platform, solved_at)
+//             VALUES($1,$2,$3,NOW())
+//             ON CONFLICT (user_id, problem_id, platform)
+//             DO UPDATE SET solved_at = NOW()
+//             RETURNING *
+//             `,
+//             [userId, problemId, platform]
+//         )
+
+//         res.json(progress.rows[0])
+
+//     } catch (err) {
+//         res.status(500).json({ error: err.message })
+//     }
+
+// }
 
 
 
@@ -46,6 +90,7 @@ exports.getUserProgress = async (req, res) => {
         const progress = await pool.query(
             `
             SELECT 
+                usp.problem_id,
                 p.title,
                 p.slug,
                 p.platform,
@@ -135,3 +180,4 @@ exports.getUserStats = async (req, res) => {
         res.status(500).json({ error: err.message })
     }
 }
+

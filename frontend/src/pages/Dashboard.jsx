@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react"
-import { fetchDashboardStats } from "../api/progressApi"
+import { fetchDashboardStats, fetchSheets, fetchSheetProblems, fetchSolvedProblemIds } from "../api/progressApi"
 import { fetchUserHeatmap } from "../api/platformStatsApi"
-import { CheckCircle2, Flame, ArrowUpCircle, Play, ArrowRight } from "lucide-react"
+import { CheckCircle2, Flame, ArrowUpCircle, Play, ArrowRight, BookOpen } from "lucide-react"
 import HeatMap from "../components/HeatMap"
+import { Link } from "react-router-dom"
 
 function Dashboard() {
   const [stats, setStats] = useState({
@@ -13,6 +14,8 @@ function Dashboard() {
   });
   
   const [heatmapData, setHeatmapData] = useState([]);
+  const [sheets, setSheets] = useState([]);
+  const [sheetProgress, setSheetProgress] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,10 +29,39 @@ function Dashboard() {
         console.error("Failed to fetch dashboard stats or heatmap", error);
       }
     };
+
+    const loadSheets = async () => {
+      try {
+        const [allSheets, solvedIds] = await Promise.all([
+          fetchSheets(),
+          fetchSolvedProblemIds()
+        ]);
+        setSheets(allSheets);
+
+        // Fetch problems for each sheet and compute progress
+        const progressMap = {};
+        await Promise.all(
+          allSheets.map(async (sheet) => {
+            try {
+              const problems = await fetchSheetProblems(sheet.id);
+              const total = problems.length;
+              const solved = problems.filter(p => solvedIds.has(p.id)).length;
+              progressMap[sheet.id] = { total, solved };
+            } catch {
+              progressMap[sheet.id] = { total: 0, solved: 0 };
+            }
+          })
+        );
+        setSheetProgress(progressMap);
+      } catch (error) {
+        console.error("Failed to fetch sheets", error);
+      }
+    };
     
     // Check if user is logged in before fetching
     if (localStorage.getItem('token')) {
       fetchData();
+      loadSheets();
     }
   }, []);
 
@@ -39,38 +71,58 @@ function Dashboard() {
       {/* Top Section */}
       <div className="flex xl:flex-row flex-col gap-6">
         
-        {/* Welcome Card */}
-        <div className="flex-1 bg-[#121622] border border-[#1e2332] rounded-2xl p-8 flex justify-between items-center bg-gradient-to-br from-[#121622] to-[#1a1f2e]">
-          <div className="max-w-md">
-            <h2 className="text-3xl font-bold text-white mb-3">
-              Welcome back, <span className="text-[#625df5]">Alex</span>! 👋
-            </h2>
-            <p className="text-gray-400 text-sm leading-relaxed mb-6">
-              You're on a roll! Maintain your streak to unlock the 'Elite Coder' badge by the end of this month.
-            </p>
-            <div className="flex gap-4">
-              <button className="bg-[#625df5] hover:bg-[#524de3] text-white px-5 py-2.5 rounded-xl font-medium transition-colors text-sm">
-                Resume Learning
-              </button>
-              <button className="bg-[#1e2332] hover:bg-[#252b3d] text-white px-5 py-2.5 rounded-xl font-medium transition-colors text-sm border border-[#2a3045]">
-                View Roadmap
-              </button>
+        {/* Sheets Progress Card */}
+        <div className="flex-1 bg-[#121622] border border-[#1e2332] rounded-2xl p-6 bg-gradient-to-br from-[#121622] to-[#1a1f2e] flex flex-col">
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-[#625df5]/15 flex items-center justify-center">
+                <BookOpen size={18} className="text-[#625df5]" />
+              </div>
+              <h2 className="text-lg font-bold text-white">Sheets Progress</h2>
             </div>
+            <Link to="/sheets" className="text-[#625df5] text-xs font-semibold flex items-center gap-1 hover:text-[#524de3] transition-colors">
+              View All <ArrowRight size={13} />
+            </Link>
           </div>
 
-          <div className="hidden sm:block">
-            {/* Goal Circle */}
-            <div className="relative w-32 h-32 flex items-center justify-center">
-              <svg className="w-full h-full transform -rotate-90">
-                <circle cx="64" cy="64" r="56" fill="transparent" stroke="#1e2332" strokeWidth="12" />
-                <circle cx="64" cy="64" r="56" fill="transparent" stroke="#625df5" strokeWidth="12" strokeDasharray="351" strokeDashoffset="87.75" className="drop-shadow-lg" />
-              </svg>
-              <div className="absolute flex flex-col items-center">
-                <span className="text-2xl font-bold text-white">75%</span>
-                <span className="text-[10px] text-gray-400 font-semibold tracking-wider uppercase">Monthly Goal</span>
-              </div>
+          {sheets.length === 0 ? (
+            <div className="flex flex-1 items-center justify-center text-gray-500 text-sm">
+              No sheets found.
             </div>
-          </div>
+          ) : (
+            <div className="flex flex-col gap-4 overflow-y-auto max-h-52 pr-1 scrollbar-thin">
+              {sheets.map(sheet => {
+                const prog = sheetProgress[sheet.id];
+                const total = prog?.total ?? 0;
+                const solved = prog?.solved ?? 0;
+                const pct = total > 0 ? Math.round((solved / total) * 100) : 0;
+                const barColor =
+                  pct === 100 ? "#10b981" :
+                  pct >= 50  ? "#625df5" :
+                  pct >= 20  ? "#f59e0b" : "#3b82f6";
+
+                return (
+                  <Link key={sheet.id} to={`/sheet/${sheet.id}`} className="group">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors truncate max-w-[70%]">
+                        {sheet.name}
+                      </span>
+                      <span className="text-xs font-bold text-gray-400 ml-2 shrink-0">
+                        {total > 0 ? `${solved}/${total}` : "—"} &nbsp;
+                        <span style={{ color: barColor }}>{pct}%</span>
+                      </span>
+                    </div>
+                    <div className="w-full bg-[#1a1f2e] rounded-full h-2">
+                      <div
+                        className="h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${pct}%`, backgroundColor: barColor }}
+                      />
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Small Stats Cards */}

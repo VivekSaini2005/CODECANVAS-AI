@@ -3,15 +3,15 @@ import API from "../api/axiosInstance"
 import { Link } from "react-router-dom"
 import ProgressBar from "../components/ProgressBar"
 
-function Sheets(){
+function Sheets() {
 
-  const [sheets,setSheets] = useState([])
+  const [sheets, setSheets] = useState([])
 
-  useEffect(()=>{
+  useEffect(() => {
 
-    const fetchSheets = async ()=>{
+    const fetchSheets = async () => {
 
-      const res = await API.get("/sheets")
+      const res = await API.get("/sheets/sheet-progress")
 
       setSheets(res.data)
 
@@ -19,9 +19,9 @@ function Sheets(){
 
     fetchSheets()
 
-  },[])
+  }, [])
 
-  return(
+  return (
 
     <div className="p-6">
 
@@ -29,25 +29,25 @@ function Sheets(){
         DSA Sheets
       </h1>
 
-      {sheets.map(sheet =>(
+      {sheets.map(sheet => (
 
         <Link key={sheet.id} to={`/sheet/${sheet.id}`}>
 
-            <div className="border border-gray-700 p-4 rounded mb-4">
+          <div className="border border-gray-700 p-4 rounded mb-4">
 
             <h2 className="text-lg font-semibold">
-                {sheet.name}
+              {sheet.name}
             </h2>
 
             <p className="text-sm text-gray-400">
-                {sheet.description}
+              {sheet.description}
             </p>
 
             <div className="mt-3">
-                <ProgressBar value={40} />
+              <ProgressBar value={sheet.progress} />
             </div>
 
-            </div>
+          </div>
 
         </Link>
 
