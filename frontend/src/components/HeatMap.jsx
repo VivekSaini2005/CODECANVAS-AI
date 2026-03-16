@@ -40,21 +40,21 @@ const HeatMap = ({ heatmap }) => {
     }
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+        <div className="bg-[#121622] border border-[#1e2332] rounded-2xl p-6 h-full flex flex-col">
 
             <div className="flex justify-between items-center mb-6">
 
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                <h2 className="text-lg font-bold text-white">
                     Activity Heatmap
                 </h2>
 
-                <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                <div className="flex items-center gap-2 text-xs text-gray-400">
                     <span>Less</span>
-                    <div className="w-[10px] h-[10px] rounded-[2px] bg-gray-100 dark:bg-gray-700/50"></div>
-                    <div className="w-[10px] h-[10px] rounded-[2px] bg-green-200 dark:bg-green-900/60"></div>
-                    <div className="w-[10px] h-[10px] rounded-[2px] bg-green-300 dark:bg-green-700/80"></div>
-                    <div className="w-[10px] h-[10px] rounded-[2px] bg-green-400 dark:bg-green-500"></div>
-                    <div className="w-[10px] h-[10px] rounded-[2px] bg-green-500 dark:bg-green-400"></div>
+                    <div className="w-[10px] h-[10px] rounded-[2px] bg-[#1a1f2e]"></div>
+                    <div className="w-[10px] h-[10px] rounded-[2px] bg-[#10b981]/20"></div>
+                    <div className="w-[10px] h-[10px] rounded-[2px] bg-[#10b981]/40"></div>
+                    <div className="w-[10px] h-[10px] rounded-[2px] bg-[#10b981]/70"></div>
+                    <div className="w-[10px] h-[10px] rounded-[2px] bg-[#10b981]"></div>
                     <span>More</span>
                 </div>
 
@@ -66,7 +66,7 @@ const HeatMap = ({ heatmap }) => {
 
                     {/* Day labels */}
 
-                    <div className="flex flex-col gap-[2px] text-[10px] text-gray-500 dark:text-gray-400 font-medium py-[1px] mt-6">
+                    <div className="flex flex-col gap-[2px] text-[10px] text-gray-500 font-medium py-[1px] mt-6">
 
                         <span className="h-[10px]">Sun</span>
                         <span className="h-[10px] opacity-0">Mon</span>
@@ -99,18 +99,18 @@ const HeatMap = ({ heatmap }) => {
 
                                 const count = activity[key] || 0;
 
-                                let bgColor = "bg-gray-100 dark:bg-gray-700/50";
+                                let bgColor = "bg-[#1a1f2e]";
 
-                                if (count === 1) bgColor = "bg-green-200 dark:bg-green-900/60";
-                                else if (count === 2) bgColor = "bg-green-300 dark:bg-green-700/80";
-                                else if (count === 3) bgColor = "bg-green-400 dark:bg-green-500";
-                                else if (count >= 4) bgColor = "bg-green-500 dark:bg-green-400";
+                                if (count === 1) bgColor = "bg-[#10b981]/20";
+                                else if (count === 2) bgColor = "bg-[#10b981]/40";
+                                else if (count === 3) bgColor = "bg-[#10b981]/70";
+                                else if (count >= 4) bgColor = "bg-[#10b981]";
 
                                 cells.push(
                                     <div
                                         key={key}
                                         title={`${count} submissions on ${key}`}
-                                        className={`w-[10px] h-[10px] rounded-[2px] ${bgColor} hover:ring-2 hover:ring-gray-400 dark:hover:ring-gray-500 transition-all cursor-pointer`}
+                                        className={`w-[10px] h-[10px] rounded-[2px] ${bgColor} hover:ring-2 hover:ring-gray-500 transition-all cursor-pointer`}
                                     />
                                 );
                             });
@@ -119,7 +119,7 @@ const HeatMap = ({ heatmap }) => {
 
                                 <div key={mIndex} className="flex flex-col gap-1 items-center">
 
-                                    <span className="text-xs text-gray-500 dark:text-gray-400 h-5">
+                                    <span className="text-xs text-gray-400 h-5">
                                         {month.name}
                                     </span>
 
