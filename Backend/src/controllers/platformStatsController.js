@@ -1,4 +1,5 @@
 const pool = require("../config/db")
+const { getHeatmapData } = require("../services/heatmapService");
 const axios = require("axios")
 const cheerio = require("cheerio")
 
@@ -320,3 +321,37 @@ exports.syncAllPlatforms = async (req, res) => {
     }
 
 }
+
+
+exports.getUserHeatmap = async (req, res) => {
+
+    try {
+        const userId = req.userId
+
+        const user = await pool.query(
+            "SELECT * FROM users WHERE id=$1",
+            [userId]
+        )
+
+        if (user.rows.length === 0) {
+            return res.status(404).json({ msg: "User not found" })
+        }
+
+        const leetcode_username = user.rows[0].leetcode_username
+        const codeforces_username = user.rows[0].codeforces_username
+        const codechef_username = user.rows[0].codechef_username
+
+        const heatmap = await getHeatmapData({
+            leetcode: leetcode_username,
+            codeforces: codeforces_username,
+            codechef: codechef_username
+        });
+
+        res.json(heatmap);
+
+    } catch (err) {
+
+        console.error(err);
+        res.status(500).json({ error: "Failed to fetch heatmap" });
+    }
+};

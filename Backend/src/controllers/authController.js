@@ -28,7 +28,7 @@ exports.register = async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
-        res.json({ user: user.rows[0] })
+        res.json({ user: user.rows[0], token: token })
 
     } catch (err) {
         res.status(500).json({ error: err.message })
@@ -82,7 +82,7 @@ exports.login = async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
-        res.json({ message: "Login successful" })
+        res.json({ message: "Login successful", token: token, user: user.rows[0] })
 
     } catch (err) {
         res.status(500).json({ error: err.message })
