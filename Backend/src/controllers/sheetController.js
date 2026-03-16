@@ -63,19 +63,39 @@ exports.getSheetProblems = async (req, res) => {
 
         const problems = await pool.query(
             `
-            SELECT 
-                p.id,
-                p.title,
-                p.slug,
-                p.link,
-                p.platform,
-                p.difficulty,
-                sp.order_index
-            FROM problems p
-            JOIN sheet_problems sp
-            ON sp.problem_id = p.id
-            WHERE sp.sheet_id = $1
-            ORDER BY sp.order_index ASC
+            SELECT
+    p.id,
+    p.title,
+    p.slug,
+    p.link,
+    p.platform,
+    p.difficulty,
+    sp.order_index,
+    ARRAY_AGG(c.name) AS company_tags
+
+FROM problems p
+
+JOIN sheet_problems sp
+ON sp.problem_id = p.id
+
+LEFT JOIN problem_companies pc
+ON pc.problem_id = p.id
+
+LEFT JOIN companies c
+ON c.id = pc.company_id
+
+WHERE sp.sheet_id = $1
+
+GROUP BY
+    p.id,
+    p.title,
+    p.slug,
+    p.link,
+    p.platform,
+    p.difficulty,
+    sp.order_index
+
+ORDER BY sp.order_index ASC
             `,
             [id]
         )

@@ -46,9 +46,8 @@ exports.getProblems = async (req, res) => {
 }
 
 
-// =====================================
 // GET SINGLE PROBLEM BY SLUG
-// =====================================
+
 
 exports.getProblem = async (req, res) => {
 
@@ -56,31 +55,59 @@ exports.getProblem = async (req, res) => {
 
     const { slug } = req.params
 
+
+    // GET PROBLEM
+
+
     const problem = await pool.query(
-      `SELECT * FROM problems WHERE slug = $1`,
+      `SELECT id, title, slug, difficulty, platform, link
+       FROM problems
+       WHERE slug = $1`,
       [slug]
     )
 
-    if (problem.rows.length === 0)
+    if (problem.rows.length === 0) {
       return res.status(404).json({ msg: "Problem not found" })
+    }
+
+    const problemId = problem.rows[0].id
+
+
+    // GET TAGS
 
 
     const tags = await pool.query(`
       SELECT t.name
       FROM tags t
-      JOIN problem_tags pt ON pt.tag_id = t.id
-      JOIN problems p ON p.id = pt.problem_id
-      WHERE p.slug = $1
-    `, [slug])
+      JOIN problem_tags pt
+      ON pt.tag_id = t.id
+      WHERE pt.problem_id = $1
+    `, [problemId])
 
+    // GET COMPANIES
+
+    const companies = await pool.query(`
+      SELECT c.name
+      FROM companies c
+      JOIN problem_companies pc
+      ON pc.company_id = c.id
+      WHERE pc.problem_id = $1
+    `, [problemId])
+
+
+    // RESPONSE
 
     res.json({
       problem: problem.rows[0],
-      tags: tags.rows
+      tags: tags.rows.map(t => t.name),
+      companies: companies.rows.map(c => c.name),
+      link: problem.rows[0].link
     })
 
   } catch (error) {
+
     res.status(500).json({ error: error.message })
+
   }
 
 }

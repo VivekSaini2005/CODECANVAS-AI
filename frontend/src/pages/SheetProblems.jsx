@@ -22,6 +22,7 @@ function SheetProblems() {
           API.get(`/sheets/${id}`),
           API.get("/progress")
         ])
+        // console.log(problemsRes.data)
 
         setProblems(problemsRes.data)
 
@@ -71,9 +72,9 @@ function SheetProblems() {
   const pct = total > 0 ? Math.round((solved / total) * 100) : 0
 
   const difficultyStyle = {
-    Easy:   { bg: "bg-[#10b981]/10", text: "text-[#10b981]" },
+    Easy: { bg: "bg-[#10b981]/10", text: "text-[#10b981]" },
     Medium: { bg: "bg-[#f59e0b]/10", text: "text-[#f59e0b]" },
-    Hard:   { bg: "bg-[#ef4444]/10", text: "text-[#ef4444]" },
+    Hard: { bg: "bg-[#ef4444]/10", text: "text-[#ef4444]" },
   }
 
   // ─── Render ──────────────────────────────────────────────────────────────────
@@ -207,9 +208,8 @@ function SheetProblems() {
                 <Link
                   to={`/solve/${p.id}`}
                   state={{ problem: p }}
-                  className={`text-sm font-medium hover:text-[#625df5] ${
-                    isSolved ? "line-through text-gray-500" : "text-gray-200"
-                  }`}
+                  className={`text-sm font-medium hover:text-[#625df5] ${isSolved ? "line-through text-gray-500" : "text-gray-200"
+                    }`}
                 >
                   {p.title}
                 </Link>

@@ -10,8 +10,8 @@ const {
 } = require("../controllers/sheetController")
 
 router.get("/sheet-progress", auth, getSheetsProg)
-router.get("/", getSheets)
 router.get("/:id", getSheetProblems)
+router.get("/", getSheets)
 router.post("/", auth, createSheet)
 
 module.exports = router
