@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import API from "../services/api"
+import API from "../api/axiosInstance"
 import { Link } from "react-router-dom"
 import ProgressBar from "../components/ProgressBar"
 

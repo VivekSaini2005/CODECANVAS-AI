@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import API from '../services/api';
+import API from '../api/axiosInstance';
 
 const Profile = () => {
   const [user, setUser] = useState({ name: '', email: '' });

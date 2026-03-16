@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams, Link } from "react-router-dom"
-import API from "../services/api"
+import API from "../api/axiosInstance"
 import ProblemTable from "../components/ProblemTable"
 
 function SheetProblems(){

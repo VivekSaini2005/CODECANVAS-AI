@@ -1,16 +1,21 @@
 import Sidebar from "../components/Sidebar"
+import Navbar from "../components/Navbar"
 
 function MainLayout({ children }) {
 
   return (
-    <div className="flex min-h-screen bg-gray-900 text-white">
+    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-[#0a0d14] text-gray-900 dark:text-gray-200 font-sans transition-colors duration-200">
+      
+      <div className="flex flex-1 overflow-hidden h-screen">
+        <Sidebar />
 
-      <Sidebar />
-
-      <div className="flex-1 p-6 overflow-y-auto">
-        {children}
+        <div className="flex-1 flex flex-col h-screen overflow-hidden">
+          <Navbar />
+          <div className="flex-1 p-6 overflow-y-auto">
+            {children}
+          </div>
+        </div>
       </div>
-
     </div>
   )
 }
