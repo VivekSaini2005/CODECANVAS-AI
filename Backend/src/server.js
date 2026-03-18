@@ -10,7 +10,7 @@ const submissionRoutes = require("./routes/submissionRoutes")
 const platformStatsRoutes = require("./routes/platformStats")
 const runcode = require("./routes/compilerRoute")
 const cookieParser = require("cookie-parser")
-
+const aiRoutes = require("./routes/aiRoutes")
 
 const app = express()
 
@@ -25,6 +25,7 @@ app.use("/api/progress", progressRoutes)
 app.use("/api/submissions", submissionRoutes)
 app.use("/api/stats", platformStatsRoutes)
 app.use("/api/run", runcode)
+app.use("/api/ai", aiRoutes)
 
 const PORT = process.env.PORT || 5000
 

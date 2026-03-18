@@ -146,7 +146,7 @@ function ProblemWorkspace() {
             Logic Lab Whiteboard
           </div>
 
-          <Whiteboard />
+          <Whiteboard problem = {problem}/>
 
         </div>
 
