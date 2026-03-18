@@ -1,15 +1,49 @@
+# ========================
 # Dependencies
+# ========================
 node_modules/
 
+# ========================
 # Environment Variables
+# (NEVER commit these!)
+# ========================
 .env
+.env.local
+.env.development
+.env.production
+.env.staging
+*.env
 
+# ========================
 # Logs
+# ========================
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# IDE/Others
-.DS_Store
-.vscode/
+# ========================
+# Build Output
+# ========================
 dist/
 build/
+.next/
+out/
+
+# ========================
+# IDE & OS Files
+# ========================
+.DS_Store
+.vscode/
+.idea/
+Thumbs.db
+
+# ========================
+# Misc
+# ========================
+.cache/
+coverage/
+*.pem
+*.key
+*.cert

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef, useCallback } from "react"
 import { useParams } from "react-router-dom"
 import API from "../api/axiosInstance"
 
@@ -13,6 +13,37 @@ function ProblemWorkspace() {
   const [tags, setTags] = useState([])
   const [companies, setCompanies] = useState([])
   const [link, setLink] = useState("")
+
+  // Resizable panel state
+  const [leftWidth, setLeftWidth] = useState(50) // percent
+  const containerRef = useRef(null)
+  const isResizing = useRef(false)
+
+  const handleMouseDown = useCallback((e) => {
+    isResizing.current = true
+    e.preventDefault()
+  }, [])
+
+  const handleMouseMove = useCallback((e) => {
+    if (!isResizing.current || !containerRef.current) return
+    const rect = containerRef.current.getBoundingClientRect()
+    const newLeft = ((e.clientX - rect.left) / rect.width) * 100
+    // Clamp between 20% and 80%
+    setLeftWidth(Math.min(80, Math.max(20, newLeft)))
+  }, [])
+
+  const handleMouseUp = useCallback(() => {
+    isResizing.current = false
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener("mousemove", handleMouseMove)
+    window.addEventListener("mouseup", handleMouseUp)
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove)
+      window.removeEventListener("mouseup", handleMouseUp)
+    }
+  }, [handleMouseMove, handleMouseUp])
 
   useEffect(() => {
 
@@ -136,24 +167,33 @@ function ProblemWorkspace() {
 
       {/* ================= WORKSPACE ================= */}
 
-      <div className="flex flex-1 overflow-hidden">
+      <div ref={containerRef} className="flex flex-1 overflow-hidden select-none">
 
         {/* LEFT WHITEBOARD */}
 
-        <div className="w-1/2 border-r border-gray-800 bg-[#0F172A]">
+        <div className="border-r border-gray-800 bg-[#0F172A] flex flex-col overflow-hidden" style={{ width: `${leftWidth}%` }}>
 
-          <div className="p-3 text-sm text-gray-400 border-b border-gray-800">
+          <div className="p-3 text-sm text-gray-400 border-b border-gray-800 flex-shrink-0">
             Logic Lab Whiteboard
           </div>
 
-          <Whiteboard problem = {problem}/>
+          <div className="flex-1 overflow-hidden">
+            <Whiteboard problem={problem}/>
+          </div>
 
         </div>
 
+        {/* DRAG HANDLE / DIVIDER */}
+        <div
+          className="w-1.5 flex-shrink-0 bg-gray-800 hover:bg-indigo-500/70 active:bg-indigo-500 cursor-col-resize transition-colors duration-150 flex items-center justify-center group"
+          onMouseDown={handleMouseDown}
+        >
+          <div className="w-0.5 h-8 bg-gray-600 rounded-full group-hover:bg-white/50 transition-colors" />
+        </div>
 
         {/* RIGHT COMPILER */}
 
-        <div className="w-1/2 bg-[#020617]">
+        <div className="bg-[#020617] flex-1 overflow-hidden">
 
           <Compiler />
 
@@ -167,4 +207,4 @@ function ProblemWorkspace() {
 
 }
 
-export default ProblemWorkspace
+export default ProblemWorkspace
