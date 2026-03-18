@@ -33,7 +33,8 @@
 //     </div>
 //   )
 // }
-import { Excalidraw } from "@excalidraw/excalidraw"
+
+import { Excalidraw, exportToBlob } from "@excalidraw/excalidraw"
 import "@excalidraw/excalidraw/index.css"
 import { useState } from "react"
 import API from "../api/axiosInstance"
@@ -47,23 +48,33 @@ export default function Whiteboard({ problem }) {
   const handleAction = async (actionType) => {
     try {
       if (!excalidrawAPI) {
-        alert("Whiteboard not ready yet!")
+        alert("Whiteboard not ready!")
         return
       }
 
       setLoading(true)
 
-      // ✅ Correct way
-      const elements = excalidrawAPI.getSceneElements()
-      console.log(problem);
-      console.log("Elements:", elements)
-
-      const res = await API.post("/ai/analyze", {
-        elements,
-        problem: problem?.title,
-        action: actionType
+      // 🔥 EXPORT IMAGE FROM CANVAS
+      const blob = await exportToBlob({
+        elements: excalidrawAPI.getSceneElements(),
+        appState: excalidrawAPI.getAppState(),
+        mimeType: "image/png"
       })
-      console.log(res);
+
+      const formData = new FormData()
+      formData.append("image", blob, "whiteboard.png")
+      formData.append("problem", problem?.title || "")
+      formData.append("action", actionType)
+
+      // console.log(problem);
+
+      const res = await API.post("/ai/analyze-image", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
+      // console.log(res);
+
       setResult(res.data)
 
     } catch (err) {
@@ -92,26 +103,14 @@ export default function Whiteboard({ problem }) {
       </div>
 
       {/* RESULT */}
-      {/* {result && (
-        <div className="absolute bottom-3 right-3 bg-black p-3 rounded w-72 text-xs">
-          <pre>{JSON.stringify(result, null, 2)}</pre>
-        </div>
-      )} */}
       {result && (
-        <div className="absolute bottom-3 right-3 z-50 bg-black p-3 rounded w-80 text-xs overflow-auto max-h-60 text-white shadow-lg">
-          
-          <p className="text-green-400 mb-2 font-bold">AI Response:</p>
-
-          <pre className="whitespace-pre-wrap font-sans text-sm">
-            {result.aiResponse}
-          </pre>
-
+        <div className="absolute bottom-3 right-3 z-50 bg-black text-white p-3 rounded w-80 text-xs overflow-auto max-h-60 shadow-lg pointer-events-auto">
+          <pre className="whitespace-pre-wrap">{result.aiResponse || "No response"}</pre>
         </div>
       )}
 
       {/* WHITEBOARD */}
-      <Excalidraw
-        excalidrawAPI={(api) => setExcalidrawAPI(api)}  // 🔥 THIS IS KEY
+      <Excalidraw excalidrawAPI={(api) => setExcalidrawAPI(api)} 
         UIOptions={{
           canvasActions: {
             loadScene: false,

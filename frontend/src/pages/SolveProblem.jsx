@@ -102,7 +102,7 @@ export default function SolveProblem() {
 
         {/* WHITEBOARD */}
         <div className="w-1/2 border-r border-[#1e2332]">
-          <Whiteboard />
+          <Whiteboard problem={problem} />
         </div>
 
         {/* COMPILER */}

@@ -1,10 +1,9 @@
-// src/routes/aiRoutes.js
-
 const express = require("express")
 const router = express.Router()
 
-const { analyzeDrawing } = require("../controllers/aiController")
+const upload = require("../middleware/upload")
+const { analyzeImage } = require("../controllers/aiController")
 
-router.post("/analyze", analyzeDrawing)
+router.post("/analyze-image", upload.single("image"), analyzeImage)
 
 module.exports = router

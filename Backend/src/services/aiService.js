@@ -1,76 +1,56 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai")
+const { GoogleGenAI } = require("@google/genai")
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
-
-const model = genAI.getGenerativeModel({
-  model: "gemini-3-flash-preview"
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY
 })
 
-async function getAIResponse(parsed, problem, action) {
+async function getAIImageResponse(imageBuffer, problem, action) {
   try {
 
+    // 🔥 Convert image → base64
+    const base64Image = imageBuffer.toString("base64")
+    console.log('1');
     let prompt = ""
 
-    // 🔥 Dynamic Prompt Based on Action
     if (action === "analyze") {
-      prompt = `
-You are a DSA mentor.
-
-Problem: ${problem}
-
-User drawing interpretation:
-${JSON.stringify(parsed)}
-
-Task:
-1. Analyze user's logic
-2. Identify mistakes
-3. Explain in simple terms
-      `
+      prompt = `You are a DSA mentor.
+Analyze this drawing and explain the logic and mistakes.
+Problem: ${problem}`
     }
 
     if (action === "pseudocode") {
-      prompt = `
-You are a DSA expert.
-
-Problem: ${problem}
-
-User approach:
-${JSON.stringify(parsed)}
-
-Task:
-Generate clean pseudocode only.
-Do not give full code.
-      `
+      prompt = `Generate pseudocode from this drawing.
+Problem: ${problem}`
     }
 
     if (action === "hint") {
-      prompt = `
-You are a strict coding mentor.
-
-Problem: ${problem}
-
-User approach:
-${JSON.stringify(parsed)}
-
-Task:
-Give only hint (no solution).
-Guide step-by-step thinking.
-      `
+      prompt = `Give only a hint (no solution).
+Problem: ${problem}`
     }
 
-    console.log(prompt);
-
-    const result = await model.generateContent(prompt)
-    // console.log(result)
-    const response = await result.response
-    // console.log(response)
-    console.log(response.text())
-    return response.text()
+    console.log('2');
+    // 🔥 Gemini Vision Call (NEW FORMAT)
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",   // ✅ from your code
+      contents: [
+        {
+          inlineData: {
+            mimeType: "image/png",
+            data: base64Image
+          }
+        },
+        {
+          text: prompt
+        }
+      ]
+    })
+    console.log('3');
+    return response.text
 
   } catch (error) {
-    console.error("Gemini Error:", error)
+    console.error("Gemini Vision Error:", error)
     return "AI failed"
   }
 }
 
-module.exports = { getAIResponse }
+module.exports = { getAIImageResponse }

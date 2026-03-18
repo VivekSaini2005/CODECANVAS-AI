@@ -1,23 +1,19 @@
-const { parseDrawing } = require("../utils/parseDrawing")
-const { getAIResponse } = require("../services/aiService")
+const { getAIImageResponse } = require("../services/aiService")
 
-exports.analyzeDrawing = async (req, res) => {
+exports.analyzeImage = async (req, res) => {
   try {
-    const { elements, problem, action } = req.body
-    // console.log(elements);
-    // console.log(action);
-    // console.log(problem);
-    const parsed = parseDrawing(elements)
-    // console.log(parsed);
-    // 🔥 CALL GEMINI
-    const aiResponse = await getAIResponse(parsed, problem, action)
-    console.log(aiResponse);
+    const { problem, action } = req.body
 
-    res.json({
-      success: true,
-      parsed,
-      aiResponse
-    })
+    const imageBuffer = req.file.buffer
+    console.log('4')
+    const aiResponse = await getAIImageResponse(
+      imageBuffer,
+      problem,
+      action
+    )
+    console.log('5')
+    console.log(aiResponse)
+    res.json({ success: true, aiResponse })
 
   } catch (err) {
     console.error(err)
