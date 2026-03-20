@@ -4,7 +4,7 @@ import { fetchUserProfile, updateUserProfile } from '../api/authApi';
 import { User, LogOut, Edit2, Save, X } from 'lucide-react';
 
 const Profile = () => {
-  const [user, setUser] = useState({ name: '', email: '', leetcode_username: '', codeforces_username: '', codechef_username: '' });
+  const [user, setUser] = useState({ name: '', email: '', leetcode_username: '', codeforces_username: '', codechef_username: '', profileimage: '' });
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -74,14 +74,14 @@ const Profile = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 animate-in fade-in duration-500 pb-20">
-      
+
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">Profile Settings</h1>
           <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">Manage your account details and coding platform identities.</p>
         </div>
         {!editMode ? (
-          <button 
+          <button
             onClick={handleEditToggle}
             className="flex items-center gap-2 bg-[#625df5] hover:bg-[#524de3] text-white px-5 py-2.5 rounded-xl transition-all shadow-md text-sm font-semibold"
           >
@@ -89,14 +89,14 @@ const Profile = () => {
           </button>
         ) : (
           <div className="flex gap-3">
-            <button 
+            <button
               onClick={handleEditToggle}
               className="flex items-center gap-2 bg-gray-200 dark:bg-[#1a1f2e] hover:bg-gray-300 dark:hover:bg-[#252b3d] text-gray-700 dark:text-gray-200 px-5 py-2.5 rounded-xl transition-all text-sm font-semibold"
               disabled={saving}
             >
               <X size={16} /> Cancel
             </button>
-            <button 
+            <button
               onClick={handleSave}
               disabled={saving}
               className="flex items-center gap-2 bg-[#10b981] hover:bg-[#059669] text-white px-5 py-2.5 rounded-xl transition-all shadow-md text-sm font-semibold disabled:opacity-70"
@@ -115,16 +115,16 @@ const Profile = () => {
 
       {/* Main Card */}
       <div className="bg-white dark:bg-[#121622] rounded-3xl p-6 sm:p-10 border border-gray-100 dark:border-[#1e2332] shadow-xl dark:shadow-none transition-colors">
-        
+
         <div className="flex flex-col md:flex-row items-center md:items-start gap-8 border-b border-gray-100 dark:border-[#1e2332] pb-10">
           <div className="relative">
             <div className="h-32 w-32 rounded-3xl bg-gradient-to-br from-[#625df5] to-[#45b7f1] p-1 shadow-lg">
               <div className="w-full h-full bg-white dark:bg-[#1a1f2e] rounded-[20px] overflow-hidden flex flex-col items-center justify-end">
-                  <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user.name?.split(' ')[0] || 'User')}&mouth=smile&eyes=default`} alt="avatar" className="w-full h-full object-cover" />
+                <img src={`${user.profileimage}`} alt="avatar" className="w-full h-full object-cover" />
               </div>
             </div>
           </div>
-          
+
           <div className="flex-1 space-y-2 text-center md:text-left mt-2">
             {editMode ? (
               <div className="space-y-4 max-w-sm mx-auto md:mx-0">
@@ -151,12 +151,12 @@ const Profile = () => {
           </div>
 
           <div className="md:ml-auto mt-4 md:mt-2">
-             <button
+            <button
               onClick={handleLogout}
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 transition-all border border-red-100 dark:border-transparent cursor-pointer"
-             >
+            >
               <LogOut size={16} /> Sign out
-             </button>
+            </button>
           </div>
         </div>
 
@@ -167,7 +167,7 @@ const Profile = () => {
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            
+
             {/* LeetCode */}
             <div className="bg-gray-50 dark:bg-[#0a0d14] rounded-2xl p-5 border border-gray-100 dark:border-[#1e2332] transition-colors relative overflow-hidden group">
               <div className="absolute top-0 left-0 w-1.5 h-full bg-[#f89f1b]"></div>

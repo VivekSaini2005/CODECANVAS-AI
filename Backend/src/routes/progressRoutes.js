@@ -6,11 +6,13 @@ const auth = require("../middleware/authMiddleware")
 const {
   updateProgress,
   getUserProgress,
-  getUserStats
+  getUserStats,
+  getLeaderboard
 } = require("../controllers/progressController")
 
-router.post("/",auth,updateProgress)
-router.get("/",auth,getUserProgress)
-router.get("/stats",auth,getUserStats)
+router.get("/leaderboard", auth, getLeaderboard)
+router.get("/stats", auth, getUserStats)
+router.post("/", auth, updateProgress)
+router.get("/", auth, getUserProgress)
 
 module.exports = router

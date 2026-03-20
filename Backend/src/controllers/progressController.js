@@ -181,3 +181,83 @@ exports.getUserStats = async (req, res) => {
     }
 }
 
+// controllers/leaderboardController.js
+
+exports.getLeaderboard = async (req, res) => {
+    try {
+        const { limit = 50 } = req.query; // optional limit
+        // console.log("before query");
+
+        const query = `
+      WITH manual_stats AS (
+          SELECT 
+              usp.user_id,
+
+              COUNT(*) FILTER (WHERE p.difficulty = 'easy') AS easy,
+              COUNT(*) FILTER (WHERE p.difficulty = 'medium') AS medium,
+              COUNT(*) FILTER (WHERE p.difficulty = 'hard') AS hard
+
+          FROM user_solved_problems usp
+          JOIN problems p ON p.id = usp.problem_id
+
+          GROUP BY usp.user_id
+      ),
+
+      platform_stats AS (
+          SELECT 
+              user_id,
+              easy_solved AS easy,
+              medium_solved AS medium,
+              hard_solved AS hard
+          FROM user_platform_stats
+          WHERE platform = 'leetcode'  -- change if needed
+      )
+
+      SELECT 
+          u.id,
+          u.name,
+          u.profileimage,
+
+          COALESCE(ms.easy, 0) + COALESCE(ps.easy, 0) AS total_easy,
+          COALESCE(ms.medium, 0) + COALESCE(ps.medium, 0) AS total_medium,
+          COALESCE(ms.hard, 0) + COALESCE(ps.hard, 0) AS total_hard,
+
+          (
+              (COALESCE(ms.easy, 0) + COALESCE(ps.easy, 0)) * 3 +
+              (COALESCE(ms.medium, 0) + COALESCE(ps.medium, 0)) * 5 +
+              (COALESCE(ms.hard, 0) + COALESCE(ps.hard, 0)) * 7
+          ) AS score
+
+      FROM users u
+
+      LEFT JOIN manual_stats ms ON ms.user_id = u.id
+      LEFT JOIN platform_stats ps ON ps.user_id = u.id
+
+      ORDER BY score DESC
+      LIMIT $1;
+    `;
+
+
+        const { rows } = await pool.query(query, [limit]);
+        // console.log(rows);
+
+        // 🔥 Add rank dynamically
+        const leaderboard = rows.map((user, index) => ({
+            rank: index + 1,
+            ...user
+        }));
+
+        return res.status(200).json({
+            success: true,
+            count: leaderboard.length,
+            leaderboard
+        });
+
+    } catch (error) {
+        console.error("Leaderboard Error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch leaderboard"
+        });
+    }
+};

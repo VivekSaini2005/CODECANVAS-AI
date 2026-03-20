@@ -38,7 +38,7 @@ exports.register = async (req, res) => {
 exports.getMe = async (req, res) => {
     try {
         const user = await pool.query(
-            'SELECT id, name, email, leetcode_username, codeforces_username, codechef_username FROM users WHERE id=$1',
+            'SELECT id, name, email, leetcode_username, codeforces_username, codechef_username, profileimage FROM users WHERE id=$1',
             [req.userId]
         )
 
