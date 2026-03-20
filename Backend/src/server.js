@@ -11,6 +11,7 @@ const platformStatsRoutes = require("./routes/platformStats")
 const runcode = require("./routes/compilerRoute")
 const cookieParser = require("cookie-parser")
 const aiRoutes = require("./routes/aiRoutes")
+const userRoute = require("./routes/userRoutes")
 
 const app = express()
 
@@ -26,6 +27,7 @@ app.use("/api/submissions", submissionRoutes)
 app.use("/api/stats", platformStatsRoutes)
 app.use("/api/run", runcode)
 app.use("/api/ai", aiRoutes)
+app.use("/api/user",userRoute)
 
 const PORT = process.env.PORT || 5000
 
