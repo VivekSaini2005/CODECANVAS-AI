@@ -141,7 +141,7 @@ export default function SolveProblem() {
           </span>
         ))}
 
-        {problem.company_tags?.map(company => (
+        {(problem.company_tags || problem.companies)?.map(company => (
           <span
             key={company}
             className="text-xs bg-indigo-500/20 text-indigo-400 px-2 py-1 rounded"
