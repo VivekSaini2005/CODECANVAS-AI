@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import API from "../api/axiosInstance"
 import { CheckCircle, XCircle, Shuffle } from "lucide-react"
 
 export default function ProblemsPage() {
+    const navigate = useNavigate()
     const [problems, setProblems] = useState([])
     const [solvedIds, setSolvedIds] = useState(new Set())
     const [toggling, setToggling] = useState(null)
@@ -205,9 +206,12 @@ export default function ProblemsPage() {
 
                                 {/* TITLE */}
                                 <td className="p-4">
-                                    <Link to={`/problem/${p.slug}`} className={`hover:text-blue-400 font-medium text-[14px] ${isSolved ? 'line-through text-gray-500 hover:text-gray-400' : 'text-gray-200'}`}>
+                                    <button
+                                        onClick={() => navigate(`/solve/${p.id}`, { state: { problem: p } })}
+                                        className={`hover:text-blue-400 font-medium text-[14px] text-left ${isSolved ? 'line-through text-gray-500 hover:text-gray-400' : 'text-gray-200'}`}
+                                    >
                                         {indexOfFirst + index + 1}. {p.title}
-                                    </Link>
+                                    </button>
                                 </td>
 
                                 {/* SHEET */}

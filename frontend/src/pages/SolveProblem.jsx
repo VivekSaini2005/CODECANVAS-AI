@@ -1,4 +1,4 @@
-import { useParams, useLocation, Link } from "react-router-dom"
+import { useParams, useLocation, useNavigate } from "react-router-dom"
 import { useRef, useState, useCallback, useEffect } from "react"
 import Whiteboard from "../components/Whiteboard"
 import Compiler from "../components/Compiler"
@@ -12,6 +12,7 @@ export default function SolveProblem() {
 
   const { problemId } = useParams()
   const location = useLocation()
+  const navigate = useNavigate()
 
   const problem = location.state?.problem
 
@@ -80,12 +81,12 @@ export default function SolveProblem() {
       <div className="flex items-center gap-6 px-6 py-3 border-b border-[#1e2332] bg-[#121622]">
 
         {/* Back */}
-        <Link
-          to="/sheets"
+        <button
+          onClick={() => navigate(-1)}
           className="text-gray-400 hover:text-white text-sm"
         >
           ← Back
-        </Link>
+        </button>
 
         {/* Title */}
         <h1 className="font-semibold text-white">

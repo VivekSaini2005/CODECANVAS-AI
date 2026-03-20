@@ -5,7 +5,7 @@ import Navbar from "../components/Navbar"
 function MainLayout({ children }) {
   const location = useLocation()
   
-  const hideLayout = location.pathname.startsWith('/solve') || location.pathname.startsWith('/problem')
+  const hideLayout = location.pathname.startsWith('/solve') || location.pathname.startsWith('/problem/')
 
   if (hideLayout) {
     return (
