@@ -12,6 +12,7 @@ export default function RecommendedProblems() {
             try {
 
                 const res = await API.get("/problems/recommended")
+                const problemdata = await API.get("/problems")
                 setProblems(res.data)
 
             } catch (err) {
@@ -49,7 +50,8 @@ export default function RecommendedProblems() {
 
                     <Link
                         key={p.id}
-                        to={`/problem/${p.slug}`}
+                        to={`/solve/${p.id}`}
+                        state={{ problem: p }}
                         className="block hover:translate-x-1 transition flex justify-between items-center"
                     >
 

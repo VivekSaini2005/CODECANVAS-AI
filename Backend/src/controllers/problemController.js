@@ -167,23 +167,72 @@ exports.getRecommendedProblems = async (req, res) => {
 
     const result = await pool.query(
       `
-      SELECT 
-          p.id,
-          p.title,
-          p.slug,
-          p.difficulty
+        WITH random_problems AS (
 
-      FROM problems p
+            SELECT p.id
+            FROM problems p
 
-      LEFT JOIN user_solved_problems usp
-      ON usp.problem_id = p.id
-      AND usp.user_id = $1
+            LEFT JOIN user_solved_problems usp
+                ON usp.problem_id = p.id
+                AND usp.user_id = $1
 
-      WHERE usp.problem_id IS NULL
+            WHERE usp.problem_id IS NULL
 
-      ORDER BY RANDOM()
+            ORDER BY p.id
+            OFFSET FLOOR(
+                RANDOM() * (
+                    SELECT COUNT(*)
+                    FROM problems p2
+                    LEFT JOIN user_solved_problems usp2
+                        ON usp2.problem_id = p2.id
+                        AND usp2.user_id = $1
+                    WHERE usp2.problem_id IS NULL
+                )
+            )
 
-      LIMIT 3
+            LIMIT 3
+        )
+
+        SELECT
+            p.id,
+            p.title,
+            p.slug,
+            p.difficulty,
+
+            CONCAT('/solve/', p.slug) AS link,
+
+            ARRAY_AGG(DISTINCT c.name)
+                FILTER (WHERE c.name IS NOT NULL) AS companies,
+
+            ARRAY_AGG(DISTINCT t2.name)
+                FILTER (WHERE t2.name IS NOT NULL) AS tags,
+
+            (ARRAY_AGG(DISTINCT s.name)
+                FILTER (WHERE s.name IS NOT NULL))[1] AS sheet
+
+        FROM random_problems rp
+
+        JOIN problems p ON p.id = rp.id
+
+        LEFT JOIN problem_companies pc
+            ON pc.problem_id = p.id
+
+        LEFT JOIN companies c
+            ON c.id = pc.company_id
+
+        LEFT JOIN problem_tags pt2
+            ON pt2.problem_id = p.id
+
+        LEFT JOIN tags t2
+            ON t2.id = pt2.tag_id
+
+        LEFT JOIN sheet_problems sp
+            ON sp.problem_id = p.id
+
+        LEFT JOIN sheets s
+            ON s.id = sp.sheet_id
+
+        GROUP BY p.id;
       `,
       [userId]
     )
