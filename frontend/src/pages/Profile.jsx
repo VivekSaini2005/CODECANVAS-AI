@@ -258,7 +258,6 @@ const Profile = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
-  // NEW STATES
   const [imageFile, setImageFile] = useState(null);
   const [previewImage, setPreviewImage] = useState('');
 
@@ -302,7 +301,6 @@ const Profile = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // IMAGE CHANGE
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -318,7 +316,7 @@ const Profile = () => {
     try {
       let updatedUser = { ...formData };
 
-      // ✅ Upload image if selected
+      // Upload image if selected
       if (imageFile) {
         const formDataImg = new FormData();
         formDataImg.append("image", imageFile);
@@ -332,17 +330,22 @@ const Profile = () => {
         updatedUser.profileimage = res.data.image;
       }
 
-      // ✅ Update profile data
+      // Update profile
       const response = await updateUserProfile(updatedUser);
 
-      setUser(response.user);
-      setFormData(response.user);
+      // 🔥 FIX: handle both response formats
+      const updated = response.user || response;
+
+      setUser(updated);
+      setFormData(updated);
       setEditMode(false);
       setPreviewImage('');
       setImageFile(null);
 
       window.dispatchEvent(new Event('storage'));
+
     } catch (err) {
+      console.error(err);
       setError(
         err.response?.data?.msg ||
         err.response?.data?.error ||
@@ -355,7 +358,7 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className="flex h-[calc(100vh-80px)] items-center justify-center text-gray-500 dark:text-gray-400">
+      <div className="flex h-[calc(100vh-80px)] items-center justify-center text-gray-500">
         Loading profile data...
       </div>
     );
@@ -394,7 +397,7 @@ const Profile = () => {
 
         <div className="flex items-center gap-6">
 
-          {/* PROFILE IMAGE */}
+          {/* IMAGE */}
           <div className="relative">
             <div className="h-32 w-32 rounded-2xl overflow-hidden bg-gray-700">
               <img
@@ -404,9 +407,8 @@ const Profile = () => {
               />
             </div>
 
-            {/* EDIT BUTTON */}
             {editMode && (
-              <label className="absolute bottom-2 right-2 bg-[#625df5] p-2 rounded-full cursor-pointer shadow-lg">
+              <label className="absolute bottom-2 right-2 bg-[#625df5] p-2 rounded-full cursor-pointer">
                 <Camera size={16} className="text-white" />
                 <input
                   type="file"
@@ -426,7 +428,7 @@ const Profile = () => {
                 name="name"
                 value={formData.name || ''}
                 onChange={handleChange}
-                className="bg-[#0a0d14] p-2 rounded-lg text-white"
+                className="bg-[#0a0d14] border border-[#1e2332] px-3 py-2 rounded-lg text-white focus:outline-none focus:border-[#625df5]"
               />
             ) : (
               <>
@@ -444,27 +446,51 @@ const Profile = () => {
           </button>
         </div>
 
-        {/* PLATFORMS */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* PLATFORM SECTION */}
+        <div className="pt-10">
+          <h3 className="text-xl font-semibold text-white mb-6">
+            Platform Integrations
+          </h3>
 
-          {["leetcode_username", "codeforces_username", "codechef_username"].map((field) => (
-            <div key={field} className="bg-[#0a0d14] p-4 rounded-xl">
-              {editMode ? (
-                <input
-                  type="text"
-                  name={field}
-                  value={formData[field] || ''}
-                  onChange={handleChange}
-                  className="w-full bg-transparent outline-none text-white"
-                />
-              ) : (
-                <p className="text-white">
-                  {user[field] || "Not connected"}
-                </p>
-              )}
-            </div>
-          ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
 
+            {[
+              { label: "LeetCode Username", name: "leetcode_username", color: "#f89f1b" },
+              { label: "Codeforces Username", name: "codeforces_username", color: "#3b5998" },
+              { label: "CodeChef Username", name: "codechef_username", color: "#5B4638" }
+            ].map((platform) => (
+              <div
+                key={platform.name}
+                className="bg-[#0a0d14] rounded-2xl p-5 border border-[#1e2332] relative"
+              >
+                <div
+                  className="absolute top-0 left-0 w-1.5 h-full"
+                  style={{ backgroundColor: platform.color }}
+                ></div>
+
+                <label className="block text-xs text-gray-400 uppercase mb-2 ml-2">
+                  {platform.label}
+                </label>
+
+                {editMode ? (
+                  <input
+                    type="text"
+                    name={platform.name}
+                    value={formData[platform.name] || ""}
+                    onChange={handleChange}
+                    className="w-full bg-[#121622] border border-[#1e2332] text-white rounded-lg px-3 py-2"
+                  />
+                ) : (
+                  <div className="text-gray-200 ml-2">
+                    {user[platform.name] || (
+                      <span className="text-gray-500 text-sm">Not connected</span>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+
+          </div>
         </div>
 
       </div>

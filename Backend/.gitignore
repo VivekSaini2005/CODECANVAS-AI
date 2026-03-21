@@ -47,3 +47,5 @@ coverage/
 *.pem
 *.key
 *.cert
+
+src/config/insertData
