@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react"
 import { useParams, Link } from "react-router-dom"
 import API from "../api/axiosInstance"
-import { CheckCircle2, Circle, ExternalLink, ArrowLeft } from "lucide-react"
+import { CheckCircle2, Circle, ExternalLink, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react"
 
 function SheetProblems() {
   const { id } = useParams()
@@ -11,6 +11,8 @@ function SheetProblems() {
   const [sheetName, setSheetName] = useState("")
   const [loading, setLoading] = useState(true)
   const [toggling, setToggling] = useState(null) // problem id being toggled
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
 
   // ─── Fetch problems + solved IDs ────────────────────────────────────────────
   useEffect(() => {
@@ -70,6 +72,20 @@ function SheetProblems() {
   const total = problems.length
   const solved = problems.filter(p => solvedIds.has(p.id)).length
   const pct = total > 0 ? Math.round((solved / total) * 100) : 0
+
+  // ─── Pagination logic ────────────────────────────────────────────────────────
+  const totalPages = Math.ceil(problems.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const paginatedProblems = problems.slice(startIndex, endIndex)
+
+  const handlePreviousPage = () => {
+    setCurrentPage(prev => Math.max(1, prev - 1))
+  }
+
+  const handleNextPage = () => {
+    setCurrentPage(prev => Math.min(totalPages, prev + 1))
+  }
 
   const difficultyStyle = {
     Easy: { bg: "bg-[#10b981]/10", text: "text-[#10b981]" },
@@ -161,7 +177,7 @@ function SheetProblems() {
             No problems in this sheet yet.
           </div>
         ) : (
-          problems.map((p, idx) => {
+          paginatedProblems.map((p, idx) => {
             const isSolved = solvedIds.has(p.id)
             const isToggling = toggling === p.id
             const diff = difficultyStyle[p.difficulty] ?? { bg: "bg-gray-700/20", text: "text-gray-400" }
@@ -172,7 +188,7 @@ function SheetProblems() {
                 className={`
                   grid grid-cols-[2.5rem_1fr_6rem_7rem_2.5rem] gap-x-4 px-5 py-4
                   items-center transition-colors duration-200
-                  ${idx !== problems.length - 1 ? "border-b border-[#1e2332]" : ""}
+                  ${idx !== paginatedProblems.length - 1 ? "border-b border-[#1e2332]" : ""}
                   ${isSolved ? "bg-[#10b981]/5" : "hover:bg-[#1e2332]/50"}
                 `}
               >
@@ -242,6 +258,35 @@ function SheetProblems() {
           })
         )}
       </div>
+
+      {/* Pagination Controls */}
+      {problems.length > itemsPerPage && (
+        <div className="bg-[#121622] border border-[#1e2332] rounded-2xl p-5 flex items-center justify-between">
+          <button
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1b2a3c] border border-[#2a3a4e] text-gray-400 hover:text-white hover:border-[#3b82f6] disabled:opacity-50 disabled:cursor-not-allowed transition"
+          >
+            <ChevronLeft size={16} />
+            Previous
+          </button>
+
+          <div className="flex items-center gap-2">
+            <span className="text-gray-400 text-sm">
+              Page <span className="font-semibold text-white">{currentPage}</span> of <span className="font-semibold text-white">{totalPages}</span>
+            </span>
+          </div>
+
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1b2a3c] border border-[#2a3a4e] text-gray-400 hover:text-white hover:border-[#3b82f6] disabled:opacity-50 disabled:cursor-not-allowed transition"
+          >
+            Next
+            <ChevronRight size={16} />
+          </button>
+        </div>
+      )}
 
     </div>
   )
