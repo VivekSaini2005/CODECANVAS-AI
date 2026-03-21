@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { fetchDashboardStats, fetchSheets, fetchSheetProblems, fetchSolvedProblemIds } from "../api/progressApi"
-import { fetchUserHeatmap } from "../api/platformStatsApi"
+import { fetchUserHeatmap, fetchUserPlatformStats } from "../api/platformStatsApi"
 import { CheckCircle2, Flame, ArrowUpCircle, Play, ArrowRight, BookOpen } from "lucide-react"
 import HeatMap from "../components/HeatMap"
 import { Link } from "react-router-dom"
@@ -12,7 +12,8 @@ function Dashboard() {
     totalSolved: 0,
     sheetsCompleted: 0,
     currentStreak: 0,
-    submissions: 128 // Mocked since it doesn't come from API currently
+    submissions: 0,
+    totalQuestions: 0
   });
 
   const [heatmapData, setHeatmapData] = useState([]);
@@ -23,6 +24,7 @@ function Dashboard() {
     const fetchData = async () => {
       try {
         const data = await fetchDashboardStats();
+
         setStats(prev => ({ ...prev, ...data }));
 
         const heatmap = await fetchUserHeatmap();
@@ -31,6 +33,19 @@ function Dashboard() {
         console.error("Failed to fetch dashboard stats or heatmap", error);
       }
     };
+
+    const loadPlatformStats = async () => {
+      try {
+        const data = await fetchUserPlatformStats();
+
+        const totalQuestions = data.leetcode?.totalSolved + data.codeforces?.solved + data.codechef?.totalSolved;
+
+        setStats(prev => ({ ...prev, ...data, totalQuestions }));
+
+      } catch (error) {
+        console.error("Failed to fetch platform stats", error);
+      }
+    }
 
     const loadSheets = async () => {
       try {
@@ -63,6 +78,7 @@ function Dashboard() {
     // Check if user is logged in before fetching
     if (localStorage.getItem('token')) {
       fetchData();
+      loadPlatformStats();
       loadSheets();
     }
   }, []);
@@ -161,13 +177,13 @@ function Dashboard() {
                 <ArrowUpCircle size={20} className="text-[#3b82f6]" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-white">{stats.submissions}</h3>
-                <p className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Total Submissions</p>
+                <h3 className="text-2xl font-bold text-white">{stats.totalQuestions}</h3>
+                <p className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Total Questions</p>
               </div>
             </div>
-            <div className="bg-[#10b981]/10 text-[#10b981] text-xs font-bold px-2 py-1 rounded">
-              +12.4%
-            </div>
+            {/* <div className="bg-[#10b981]/10 text-[#10b981] text-xs font-bold px-2 py-1 rounded">
+              
+            </div> */}
           </div>
 
         </div>
