@@ -1,17 +1,19 @@
 import { useState, useEffect } from "react"
 import { fetchDashboardStats, fetchSheets, fetchSheetProblems, fetchSolvedProblemIds } from "../api/progressApi"
 import { fetchUserHeatmap, fetchUserPlatformStats } from "../api/platformStatsApi"
-import { CheckCircle2, Flame, ArrowUpCircle, Play, ArrowRight, BookOpen } from "lucide-react"
+import { CheckCircle2, Flame, ArrowUpCircle, Play, ArrowRight, BookOpen, Zap } from "lucide-react"
 import HeatMap from "../components/HeatMap"
 import { Link } from "react-router-dom"
 import RecentProblems from "../components/RecentProblem"
 import RecommendedProblems from "../components/Recommended"
+import { calculateStreak, calculateLongestStreak } from "../utils/streakCalculator"
 
 function Dashboard() {
   const [stats, setStats] = useState({
     totalSolved: 0,
     sheetsCompleted: 0,
     currentStreak: 0,
+    maxStreak: 0,
     submissions: 0,
     totalQuestions: 0
   });
@@ -19,6 +21,7 @@ function Dashboard() {
   const [heatmapData, setHeatmapData] = useState([]);
   const [sheets, setSheets] = useState([]);
   const [sheetProgress, setSheetProgress] = useState({});
+  const [isLoadingHeatmap, setIsLoadingHeatmap] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,6 +32,11 @@ function Dashboard() {
 
         const heatmap = await fetchUserHeatmap();
         setHeatmapData(heatmap);
+
+        // Calculate both current and longest streak from heatmap data
+        const currentStreak = calculateStreak(heatmap);
+        const maxStreak = calculateLongestStreak(heatmap);
+        setStats(prev => ({ ...prev, currentStreak, maxStreak }));
       } catch (error) {
         console.error("Failed to fetch dashboard stats or heatmap", error);
       }
@@ -82,6 +90,24 @@ function Dashboard() {
       loadSheets();
     }
   }, []);
+
+  // Refresh heatmap data and recalculate streak
+  const handleRefreshHeatmap = async () => {
+    setIsLoadingHeatmap(true);
+    try {
+      const heatmap = await fetchUserHeatmap();
+      setHeatmapData(heatmap);
+      
+      // Recalculate both current and longest streak with new data
+      const currentStreak = calculateStreak(heatmap);
+      const maxStreak = calculateLongestStreak(heatmap);
+      setStats(prev => ({ ...prev, currentStreak, maxStreak }));
+    } catch (error) {
+      console.error("Failed to refresh heatmap data", error);
+    } finally {
+      setIsLoadingHeatmap(false);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-6 max-w-7xl mx-auto pb-10">
@@ -168,6 +194,17 @@ function Dashboard() {
                 <p className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Day Streak</p>
               </div>
             </div>
+
+            {/* Max Streak */}
+            <div className="bg-[#121622] border border-[#1e2332] rounded-2xl p-6 w-40 flex flex-col justify-between">
+              <div className="w-10 h-10 rounded-full bg-[#ec4899]/10 flex items-center justify-center mb-4">
+                <Zap size={20} className="text-[#ec4899]" />
+              </div>
+              <div>
+                <h3 className="text-3xl font-bold text-white mb-1">{stats.maxStreak}</h3>
+                <p className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">Max Streak</p>
+              </div>
+            </div>
           </div>
 
           {/* Submissions */}
@@ -196,7 +233,11 @@ function Dashboard() {
         {/* Activity Analytics */}
         {/* Activity Analytics (Replaced with Heatmap) */}
         <div className="flex-[2] overflow-hidden flex flex-col">
-          <HeatMap heatmap={heatmapData} />
+          <HeatMap 
+            heatmap={heatmapData} 
+            onRefresh={handleRefreshHeatmap}
+            isLoading={isLoadingHeatmap}
+          />
         </div>
 
         {/* Topic Strength

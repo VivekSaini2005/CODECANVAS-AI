@@ -1,6 +1,7 @@
 import React from "react";
+import { RefreshCw } from "lucide-react";
 
-const HeatMap = ({ heatmap }) => {
+const HeatMap = ({ heatmap, onRefresh, isLoading }) => {
 
     const today = new Date();
 
@@ -48,14 +49,27 @@ const HeatMap = ({ heatmap }) => {
                     Activity Heatmap
                 </h2>
 
-                <div className="flex items-center gap-2 text-xs text-gray-400">
-                    <span>Less</span>
-                    <div className="w-[10px] h-[10px] rounded-[2px] bg-[#1a1f2e]"></div>
-                    <div className="w-[10px] h-[10px] rounded-[2px] bg-[#10b981]/20"></div>
-                    <div className="w-[10px] h-[10px] rounded-[2px] bg-[#10b981]/40"></div>
-                    <div className="w-[10px] h-[10px] rounded-[2px] bg-[#10b981]/70"></div>
-                    <div className="w-[10px] h-[10px] rounded-[2px] bg-[#10b981]"></div>
-                    <span>More</span>
+                <div className="flex items-center gap-4">
+                    <button
+                        onClick={onRefresh}
+                        disabled={isLoading}
+                        className="p-2 rounded-lg bg-[#625df5]/10 hover:bg-[#625df5]/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        title="Refresh heatmap data"
+                    >
+                        <RefreshCw
+                            size={18}
+                            className={`text-[#625df5] ${isLoading ? "animate-spin" : ""}`}
+                        />
+                    </button>
+                    <div className="flex items-center gap-2 text-xs text-gray-400">
+                        <span>Less</span>
+                        <div className="w-[10px] h-[10px] rounded-[2px] bg-[#1a1f2e]"></div>
+                        <div className="w-[10px] h-[10px] rounded-[2px] bg-[#10b981]/20"></div>
+                        <div className="w-[10px] h-[10px] rounded-[2px] bg-[#10b981]/40"></div>
+                        <div className="w-[10px] h-[10px] rounded-[2px] bg-[#10b981]/70"></div>
+                        <div className="w-[10px] h-[10px] rounded-[2px] bg-[#10b981]"></div>
+                        <span>More</span>
+                    </div>
                 </div>
 
             </div>
