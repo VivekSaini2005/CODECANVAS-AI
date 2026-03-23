@@ -13,7 +13,7 @@ router.post("/sync-all", auth, controller.syncAllPlatforms)
 
 router.get("/heatmap", auth, controller.getUserHeatmap);
 // router.get("/apitest/:username", auth, apitestcontroller.getLeetcodeHeatmap);
-// router.get("/apitest/:username", auth, apitestcontroller.getCodeforcesHeatmap);
-router.get("/apitest/:username", auth, apitestcontroller.getCodechefHeatmap);
+router.get("/apitest/:username", auth, apitestcontroller.getCodeforcesHeatmap);
+// router.get("/apitest/:username", auth, apitestcontroller.getCodechefHeatmap);
 
 module.exports = router

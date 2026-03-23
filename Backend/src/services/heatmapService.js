@@ -10,6 +10,28 @@ function formatDate(timestamp) {
     return new Date(timestamp).toISOString().split("T")[0];
 }
 
+// 🔧 Normalize date format from YYYY-M-D to YYYY-MM-DD
+function normalizeDateFormat(dateStr) {
+    if (typeof dateStr !== 'string') {
+        console.warn("Invalid date format:", dateStr);
+        return null;
+    }
+
+    // Handle formats like '2026-1-14' and convert to '2026-01-14'
+    const parts = dateStr.split('-');
+    
+    if (parts.length !== 3) {
+        console.warn("Invalid date format:", dateStr);
+        return null;
+    }
+
+    const year = parts[0];
+    const month = parts[1].padStart(2, '0');
+    const day = parts[2].padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
+
 async function getHeatmapData({
     leetcode,
     codeforces,
@@ -80,31 +102,92 @@ async function getHeatmapData({
 
 
     // 3️⃣ CODECHEF (SCRAPING)
-
-
     if (codechef) {
 
-        const url = `https://www.codechef.com/users/${codechef}`;
+        try {
+            const url = `https://www.codechef.com/users/${codechef}`;
 
-        const { data } = await axios.get(url);
+            const { data } = await axios.get(url, {
+                headers: {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+                    "Accept": "text/html",
+                    "Referer": "https://www.codechef.com/"
+                },
+                timeout: 10000
+            });
 
-        const $ = cheerio.load(data);
+            const $ = cheerio.load(data);
 
-        // CodeChef doesn't expose submissions directly
-        // So here we only detect activity (best possible)
+            const activityMap = {};
 
-        $(".rating-data-section").each((i, el) => {
+            $("script").each((i, el) => {
+                const text = $(el).html();
 
-            const text = $(el).text();
+                if (text && text.includes("userDailySubmissionsStats")) {
 
-            const match = text.match(/\d{4}-\d{2}-\d{2}/g);
+                    const match = text.match(/userDailySubmissionsStats\s*=\s*(\[[\s\S]*?\])/);
 
-            if (match) {
+                    if (match) {
+                        try {
+                            const parsed = JSON.parse(match[1]);
 
-                match.forEach(date => addSubmission(submissionMap, date));
-            }
-        });
+                            parsed.forEach(item => {
+                                if (item.date && item.value !== undefined) {
+
+                                    const normalizedDate = normalizeDateFormat(item.date);
+
+                                    // aggregate duplicates
+                                    if (normalizedDate) {
+                                        activityMap[normalizedDate] =
+                                            (activityMap[normalizedDate] || 0) + item.value;
+                                    }
+                                }
+                            });
+
+                        } catch (err) {
+                            console.error("CodeChef JSON parse error:", err.message);
+                        }
+                    }
+                }
+            });
+
+            //push into your main submissionMap
+            Object.keys(activityMap).forEach(date => {
+                if (date) { // Validate date is not null
+                    if (!submissionMap[date]) submissionMap[date] = 0;
+                    submissionMap[date] += activityMap[date]; // Add count directly
+                }
+            });
+
+        } catch (err) {
+            console.error("CodeChef heatmap fetch error:", err.message);
+            // Continue with other platforms even if CodeChef fails
+        }
     }
+
+    // if (codechef) {
+
+    //     const url = `https://www.codechef.com/users/${codechef}`;
+
+    //     const { data } = await axios.get(url);
+
+    //     const $ = cheerio.load(data);
+
+    //     // CodeChef doesn't expose submissions directly
+    //     // So here we only detect activity (best possible)
+
+    //     $(".rating-data-section").each((i, el) => {
+
+    //         const text = $(el).text();
+
+    //         const match = text.match(/\d{4}-\d{2}-\d{2}/g);
+
+    //         if (match) {
+
+    //             match.forEach(date => addSubmission(submissionMap, date));
+    //         }
+    //     });
+    // }
 
     // FORMAT FINAL OUTPUT
 
