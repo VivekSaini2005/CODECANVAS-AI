@@ -1,4 +1,7 @@
 const pool = require("../config/db")
+const SCORING_WEIGHTS = require("../config/scoringConfig")
+const heatmapService = require("../services/heatmapService");
+const streakCalculator = require("../utils/streakCalculator");
 
 // ======================================
 // MARK PROBLEM AS SOLVED
@@ -185,79 +188,201 @@ exports.getUserStats = async (req, res) => {
 
 exports.getLeaderboard = async (req, res) => {
     try {
-        const { limit = 50 } = req.query; // optional limit
-        // console.log("before query");
+        const { limit = 50 } = req.query;
+
+        // Get scoring weights from config
+        const { easy: easyPoints, medium: mediumPoints, hard: hardPoints } = SCORING_WEIGHTS.difficulty;
 
         const query = `
-      WITH manual_stats AS (
-          SELECT 
-              usp.user_id,
+        WITH manual_stats AS (
+            SELECT 
+                usp.user_id,
+                COUNT(*) FILTER (WHERE lower(p.difficulty) = 'easy') AS easy,
+                COUNT(*) FILTER (WHERE lower(p.difficulty) = 'medium') AS medium,
+                COUNT(*) FILTER (WHERE lower(p.difficulty) = 'hard') AS hard
+            FROM user_solved_problems usp
+            JOIN problems p ON p.id = usp.problem_id
+            GROUP BY usp.user_id
+        ),
 
-              COUNT(*) FILTER (WHERE p.difficulty = 'easy') AS easy,
-              COUNT(*) FILTER (WHERE p.difficulty = 'medium') AS medium,
-              COUNT(*) FILTER (WHERE p.difficulty = 'hard') AS hard
+        platform_stats AS (
+            SELECT 
+                user_id,
+                SUM(COALESCE(easy_solved, 0)) AS easy,
+                SUM(COALESCE(medium_solved, 0)) AS medium,
+                SUM(COALESCE(hard_solved, 0)) AS hard,
+                MAX(rating) FILTER (WHERE lower(platform) = 'leetcode') AS lc_rating,
+                MAX(rating) FILTER (WHERE lower(platform) = 'codeforces') AS cf_rating,
+                MAX(rating) FILTER (WHERE lower(platform) = 'codechef') AS cc_rating
+            FROM user_platform_stats
+            GROUP BY user_id
+        )
 
-          FROM user_solved_problems usp
-          JOIN problems p ON p.id = usp.problem_id
+        SELECT 
+            u.id,
+            u.name,
+            u.profileimage,
+            u.leetcode_username,
+            u.codeforces_username,
+            u.codechef_username,
 
-          GROUP BY usp.user_id
-      ),
+            COALESCE(ps.lc_rating, 0) AS lc_rating,
+            COALESCE(ps.cf_rating, 0) AS cf_rating,
+            COALESCE(ps.cc_rating, 0) AS cc_rating,
 
-      platform_stats AS (
-          SELECT 
-              user_id,
-              easy_solved AS easy,
-              medium_solved AS medium,
-              hard_solved AS hard
-          FROM user_platform_stats
-          WHERE platform = 'leetcode'  -- change if needed
-      )
+            -- totals
+            CAST((COALESCE(ms.easy, 0) + COALESCE(ps.easy, 0)) AS INTEGER) AS total_easy,
+            CAST((COALESCE(ms.medium, 0) + COALESCE(ps.medium, 0)) AS INTEGER) AS total_medium,
+            CAST((COALESCE(ms.hard, 0) + COALESCE(ps.hard, 0)) AS INTEGER) AS total_hard
 
-      SELECT 
-          u.id,
-          u.name,
-          u.profileimage,
+        FROM users u
+        LEFT JOIN manual_stats ms ON ms.user_id = u.id
+        LEFT JOIN platform_stats ps ON ps.user_id = u.id;
+        `;
 
-          COALESCE(ms.easy, 0) + COALESCE(ps.easy, 0) AS total_easy,
-          COALESCE(ms.medium, 0) + COALESCE(ps.medium, 0) AS total_medium,
-          COALESCE(ms.hard, 0) + COALESCE(ps.hard, 0) AS total_hard,
+        const { rows } = await pool.query(query);
 
-          (
-              (COALESCE(ms.easy, 0) + COALESCE(ps.easy, 0)) * 3 +
-              (COALESCE(ms.medium, 0) + COALESCE(ps.medium, 0)) * 5 +
-              (COALESCE(ms.hard, 0) + COALESCE(ps.hard, 0)) * 7
-          ) AS score
+        let enrichedUsers = [];
+        
+        for (const user of rows) {
+            
+            const easy = user.total_easy;
+            const medium = user.total_medium;
+            const hard = user.total_hard;
+            const lcRating = parseInt(user.lc_rating) || 0;
+            const cfRating = parseInt(user.cf_rating) || 0;
+            const ccRating = parseInt(user.cc_rating) || 0;
 
-      FROM users u
+            // Score calculation based on the required formula (streak factor removed)
+            const score = Math.round(
+                (easy * easyPoints) + 
+                (medium * mediumPoints) + 
+                (hard * hardPoints) + 
+                ((lcRating + cfRating + 300 + ccRating + 100) / 10)
+            );
 
-      LEFT JOIN manual_stats ms ON ms.user_id = u.id
-      LEFT JOIN platform_stats ps ON ps.user_id = u.id
+            enrichedUsers.push({
+                ...user,
+                score
+            });
+        }
 
-      ORDER BY score DESC
-      LIMIT $1;
-    `;
+        // Sort dynamically
+        enrichedUsers.sort((a, b) => b.score - a.score);
 
+        // Rank with tie handling
+        let currentRank = 1;
+        let pRank = 1;
+        
+        const leaderboard = enrichedUsers.map((user, index) => {
+            if (index > 0 && user.score < enrichedUsers[index - 1].score) {
+                currentRank = index + 1;
+            }
 
-        const { rows } = await pool.query(query, [limit]);
-        // console.log(rows);
+            return {
+                rank: currentRank,
+                ...user
+            };
+        });
 
-        // 🔥 Add rank dynamically
-        const leaderboard = rows.map((user, index) => ({
-            rank: index + 1,
-            ...user
-        }));
-
-        return res.status(200).json({
+        res.status(200).json({
             success: true,
-            count: leaderboard.length,
-            leaderboard
+            leaderboard: leaderboard.slice(0, parseInt(limit)),
+            scoringWeights: SCORING_WEIGHTS.difficulty
         });
 
     } catch (error) {
         console.error("Leaderboard Error:", error);
-        return res.status(500).json({
+        res.status(500).json({
             success: false,
-            message: "Failed to fetch leaderboard"
+            message: error.message
         });
     }
 };
+
+//         const query = `
+//       WITH manual_stats AS (
+//           SELECT 
+//               usp.user_id,
+
+//               COUNT(*) FILTER (WHERE p.difficulty = 'easy') AS easy,
+//               COUNT(*) FILTER (WHERE p.difficulty = 'medium') AS medium,
+//               COUNT(*) FILTER (WHERE p.difficulty = 'hard') AS hard
+
+//           FROM user_solved_problems usp
+//           JOIN problems p ON p.id = usp.problem_id
+
+//           GROUP BY usp.user_id
+//       ),
+
+//       platform_stats AS (
+//           SELECT 
+//               user_id,
+//               SUM(COALESCE(easy_solved, 0)) AS easy,
+//               SUM(COALESCE(medium_solved, 0)) AS medium,
+//               SUM(COALESCE(hard_solved, 0)) AS hard
+//           FROM user_platform_stats
+//           GROUP BY user_id
+//       )
+
+//       SELECT 
+//           u.id,
+//           u.name,
+//           u.profileimage,
+
+//           -- CodeCanva Problems
+//           COALESCE(ms.easy, 0) AS codecanva_easy,
+//           COALESCE(ms.medium, 0) AS codecanva_medium,
+//           COALESCE(ms.hard, 0) AS codecanva_hard,
+
+//           -- LeetCode Problems
+//           COALESCE(ps.easy, 0) AS leetcode_easy,
+//           COALESCE(ps.medium, 0) AS leetcode_medium,
+//           COALESCE(ps.hard, 0) AS leetcode_hard,
+
+//           -- Combined Totals
+//           COALESCE(ms.easy, 0) + COALESCE(ps.easy, 0) AS total_easy,
+//           COALESCE(ms.medium, 0) + COALESCE(ps.medium, 0) AS total_medium,
+//           COALESCE(ms.hard, 0) + COALESCE(ps.hard, 0) AS total_hard,
+
+//           -- Combined Score
+//           (
+//               (COALESCE(ms.easy, 0) + COALESCE(ps.easy, 0)) * $2 +
+//               (COALESCE(ms.medium, 0) + COALESCE(ps.medium, 0)) * $3 +
+//               (COALESCE(ms.hard, 0) + COALESCE(ps.hard, 0)) * $4
+//           ) AS score
+
+//       FROM users u
+
+//       LEFT JOIN manual_stats ms ON ms.user_id = u.id
+//       LEFT JOIN platform_stats ps ON ps.user_id = u.id
+
+//       ORDER BY score DESC
+//       LIMIT $1;
+//     `;
+
+
+//         const { rows } = await pool.query(query, [limit, easyPoints, mediumPoints, hardPoints]);
+//         // console.log(rows);
+
+//         // 🔥 Add rank dynamically
+//         const leaderboard = rows.map((user, index) => ({
+//             rank: index + 1,
+//             ...user
+//         }));
+
+//         return res.status(200).json({
+//             success: true,
+//             count: leaderboard.length,
+//             leaderboard,
+//             scoringWeights: SCORING_WEIGHTS.difficulty  // Return weights for frontend reference
+//         });
+
+//     } catch (error) {
+//         console.error("Leaderboard Error:", error);
+//         return res.status(500).json({
+//             success: false,
+//             message: "Failed to fetch leaderboard"
+//         });
+//     }
+// };

@@ -10,6 +10,7 @@ router.post("/codeforces", auth, controller.syncCodeforces)
 router.post("/codechef", auth, controller.syncCodechef)
 
 router.post("/sync-all", auth, controller.syncAllPlatforms)
+router.get("/stored", auth, controller.getPlatformStats)
 
 router.get("/heatmap", auth, controller.getUserHeatmap);
 // router.get("/apitest/:username", auth, apitestcontroller.getLeetcodeHeatmap);

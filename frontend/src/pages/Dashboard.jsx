@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { fetchDashboardStats, fetchSheets, fetchSheetProblems, fetchSolvedProblemIds } from "../api/progressApi"
-import { fetchUserHeatmap, fetchUserPlatformStats } from "../api/platformStatsApi"
+import { fetchUserHeatmap, fetchUserPlatformStats, syncUserPlatformStats } from "../api/platformStatsApi"
 import { CheckCircle2, Flame, ArrowUpCircle, Play, ArrowRight, BookOpen, Zap } from "lucide-react"
 import HeatMap from "../components/HeatMap"
 import { Link } from "react-router-dom"
@@ -46,7 +46,7 @@ function Dashboard() {
       try {
         const data = await fetchUserPlatformStats();
 
-        const totalQuestions = data.leetcode?.totalSolved + data.codeforces?.solved + data.codechef?.totalSolved;
+        const totalQuestions = (data.leetcode?.totalSolved || 0) + (data.codeforces?.solved || 0) + (data.codechef?.totalSolved || 0);
 
         setStats(prev => ({ ...prev, ...data, totalQuestions }));
 
@@ -95,13 +95,21 @@ function Dashboard() {
   const handleRefreshHeatmap = async () => {
     setIsLoadingHeatmap(true);
     try {
+      // First sync platforms
+      await syncUserPlatformStats();
+      
+      // Then fetch the latest heatmap data
       const heatmap = await fetchUserHeatmap();
       setHeatmapData(heatmap);
       
+      // And the latest platform stats
+      const data = await fetchUserPlatformStats();
+      const totalQuestions = (data.leetcode?.totalSolved || 0) + (data.codeforces?.solved || 0) + (data.codechef?.totalSolved || 0);
+
       // Recalculate both current and longest streak with new data
       const currentStreak = calculateStreak(heatmap);
       const maxStreak = calculateLongestStreak(heatmap);
-      setStats(prev => ({ ...prev, currentStreak, maxStreak }));
+      setStats(prev => ({ ...prev, currentStreak, maxStreak, totalQuestions }));
     } catch (error) {
       console.error("Failed to refresh heatmap data", error);
     } finally {

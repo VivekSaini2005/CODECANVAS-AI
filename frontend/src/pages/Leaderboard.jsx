@@ -82,6 +82,7 @@ export default function LeaderboardPage() {
                         <tr>
                             <th className="px-6 py-4 text-center">Rank</th>
                             <th className="px-6 py-4">User</th>
+                            <th className="px-6 py-4 text-center">Ratings (LC / CF / CC)</th>
                             <th className="px-6 py-4 text-right">Solved</th>
                             <th className="px-6 py-4 text-right">Score</th>
                         </tr>
@@ -91,13 +92,13 @@ export default function LeaderboardPage() {
 
                         {users.map((user) => {
 
-                            const solved =
+                            const totalSolved =
                                 (Number(user.total_easy) || 0) +
                                 (Number(user.total_medium) || 0) +
                                 (Number(user.total_hard) || 0);
 
                             return (
-                                <tr key={user.id} className="hover:bg-gray-50">
+                                <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-800">
 
                                     {/* Rank */}
                                     <td className="px-6 py-4 text-center">
@@ -120,9 +121,18 @@ export default function LeaderboardPage() {
 
                                     </td>
 
-                                    {/* Solved */}
-                                    <td className="px-6 py-4 text-right font-bold text-orange-500">
-                                        {solved}
+                                    {/* Ratings */}
+                                    <td className="px-6 py-4 text-center text-sm font-medium">
+                                        <span className="text-yellow-600" title="LeetCode">{user.lc_rating || 0}</span>
+                                        <span className="text-gray-400 mx-1">|</span>
+                                        <span className="text-blue-500" title="Codeforces">{user.cf_rating || 0}</span>
+                                        <span className="text-gray-400 mx-1">|</span>
+                                        <span className="text-green-600" title="CodeChef">{user.cc_rating || 0}</span>
+                                    </td>
+
+                                    {/* Total Solved */}
+                                    <td className="px-6 py-4 text-right font-bold text-green-500">
+                                        {totalSolved}
                                     </td>
 
                                     {/* Score */}

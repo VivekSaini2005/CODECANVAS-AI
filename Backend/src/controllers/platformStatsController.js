@@ -25,6 +25,8 @@ exports.syncLeetcode = async (req, res) => {
         const username = user.rows[0].leetcode_username
 
         if (!username) {
+            console.log("LeetCode username not set");
+            if (!res) throw new Error("LeetCode username not set");
             return res.status(400).json({ msg: "LeetCode username not set" })
         }
         // console.log(username);
@@ -34,7 +36,7 @@ exports.syncLeetcode = async (req, res) => {
             "https://leetcode.com/graphql",
             {
                 query: `
-          query userProblemsSolved($username: String!) {
+          query userProfile($username: String!) {
             matchedUser(username: $username) {
               submitStats {
                 acSubmissionNum {
@@ -42,6 +44,9 @@ exports.syncLeetcode = async (req, res) => {
                   count
                 }
               }
+            }
+            userContestRanking(username: $username) {
+              rating
             }
           }
         `,
@@ -65,6 +70,10 @@ exports.syncLeetcode = async (req, res) => {
         // 4️⃣ Extract stats
         const stats =
             response.data.data.matchedUser.submitStats.acSubmissionNum
+
+        // Extract rating
+        const rawRating = response.data.data.userContestRanking?.rating;
+        const rating = rawRating ? Math.round(rawRating) : 0;
 
         let totalSolved = 0
         let easySolved = 0
@@ -93,14 +102,15 @@ exports.syncLeetcode = async (req, res) => {
         await pool.query(
             `
       INSERT INTO user_platform_stats
-      (user_id,platform,total_solved,easy_solved,medium_solved,hard_solved)
-      VALUES($1,'leetcode',$2,$3,$4,$5)
+      (user_id,platform,total_solved,easy_solved,medium_solved,hard_solved,rating)
+      VALUES($1,'leetcode',$2,$3,$4,$5,$6)
       ON CONFLICT (user_id,platform)
       DO UPDATE SET
         total_solved=$2,
         easy_solved=$3,
         medium_solved=$4,
         hard_solved=$5,
+        rating=$6,
         last_synced=NOW()
       `,
             [
@@ -108,7 +118,8 @@ exports.syncLeetcode = async (req, res) => {
                 totalSolved,
                 easySolved,
                 mediumSolved,
-                hardSolved
+                hardSolved,
+                rating
             ]
         )
 
@@ -120,7 +131,8 @@ exports.syncLeetcode = async (req, res) => {
         //     totalSolved,
         //     easySolved,
         //     mediumSolved,
-        //     hardSolved
+        //     hardSolved,
+        //     rating
         // })
 
         return {
@@ -129,14 +141,16 @@ exports.syncLeetcode = async (req, res) => {
             totalSolved,
             easySolved,
             mediumSolved,
-            hardSolved
+            hardSolved,
+            rating
         }
 
     }
     catch (err) {
 
-        console.error(err)
+        console.error("LeetCode sync error:", err.message)
 
+        if (!res) throw err;
         res.status(500).json({
             error: "Failed to fetch LeetCode stats"
         })
@@ -162,8 +176,11 @@ exports.syncCodeforces = async (req, res) => {
 
         const username = user.rows[0].codeforces_username
 
-        if (!username)
+        if (!username) {
+            console.log("Codeforces username not set");
+            if (!res) throw new Error("Codeforces username not set");
             return res.status(400).json({ msg: "Codeforces username not set" })
+        }
 
 
         const info = await axios.get(
@@ -219,6 +236,9 @@ exports.syncCodeforces = async (req, res) => {
 
     }
     catch (err) {
+        console.error("Codeforces sync error:", err.message);
+        // Throw the error instead of sending a response when called internally
+        if (!res) throw err;
         res.status(500).json({ error: err.message })
     }
 
@@ -242,8 +262,11 @@ exports.syncCodechef = async (req, res) => {
 
         const username = user.rows[0].codechef_username
 
-        if (!username)
+        if (!username) {
+            console.log("CodeChef username not set");
+            if (!res) throw new Error("CodeChef username not set");
             return res.status(400).json({ msg: "CodeChef username not set" })
+        }
 
         const url = `https://www.codechef.com/users/${username}`
 
@@ -251,8 +274,15 @@ exports.syncCodechef = async (req, res) => {
 
         const $ = cheerio.load(response.data)
 
-        const rating = $(".rating-number").first().text().trim()
+        let rating = $(".rating-number").first().text().trim()
         const stars = $(".rating").first().text().trim()
+
+        // If the rating is empty/not found, set it to 0 or null so PostgreSQL doesn't crash on empty string
+        if (!rating || rating === "") {
+            rating = 0; // or null, if your DB allows null
+        } else {
+            rating = parseInt(rating) || 0;
+        }
 
         // console.log($(".rating-data-section.problems-solved").text());
 
@@ -260,7 +290,8 @@ exports.syncCodechef = async (req, res) => {
 
         const match = solvedText.match(/Total Problems Solved:\s*(\d+)/)
 
-        const totalSolved = match ? parseInt(match[1]) : 0
+        let totalSolved = match ? parseInt(match[1]) : 0
+        if(isNaN(totalSolved)) totalSolved = 0;
 
         await pool.query(
             `
@@ -292,6 +323,8 @@ exports.syncCodechef = async (req, res) => {
 
     }
     catch (err) {
+        console.error("Codechef sync error:", err.message);
+        if (!res) throw err;
         res.status(500).json({ error: err.message })
     }
 
@@ -299,16 +332,94 @@ exports.syncCodechef = async (req, res) => {
 
 
 
+// GET ALL PLATFORMS FROM DB ONLY
+exports.getPlatformStats = async (req, res) => {
+    try {
+        const userId = req.userId;
+
+        const { rows } = await pool.query(
+            "SELECT * FROM user_platform_stats WHERE user_id=$1",
+            [userId]
+        );
+
+        let leetcode = null;
+        let codeforces = null;
+        let codechef = null;
+
+        rows.forEach(row => {
+            if (row.platform === "leetcode") {
+                leetcode = {
+                    platform: "leetcode",
+                    totalSolved: row.total_solved,
+                    easySolved: row.easy_solved,
+                    mediumSolved: row.medium_solved,
+                    hardSolved: row.hard_solved,
+                    rating: row.rating,
+                    lastSynced: row.last_synced
+                };
+            } else if (row.platform === "codeforces") {
+                codeforces = {
+                    platform: "codeforces",
+                    solved: row.total_solved,
+                    rating: row.rating,
+                    lastSynced: row.last_synced
+                };
+            } else if (row.platform === "codechef") {
+                codechef = {
+                    platform: "codechef",
+                    totalSolved: row.total_solved,
+                    rating: row.rating,
+                    lastSynced: row.last_synced
+                };
+            }
+        });
+
+        res.json({
+            leetcode,
+            codeforces,
+            codechef
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to fetch stored platform stats" });
+    }
+};
+
 // SYNC ALL PLATFORMS
 
 exports.syncAllPlatforms = async (req, res) => {
 
     try {
+        console.log("start platform sync");
+        
+        let leetcode = null;
+        let codeforces = null;
+        let codechef = null;
 
-        const leetcode = await exports.syncLeetcode(req)
-        const codeforces = await exports.syncCodeforces(req)
-        const codechef = await exports.syncCodechef(req)
-
+        try {
+            leetcode = await exports.syncLeetcode(req, null)
+            console.log("leetcode done");
+        } catch (e) {
+            console.log("leetcode sync neglected/failed:", e.message);
+        }
+        
+        try {
+            codeforces = await exports.syncCodeforces(req, null)
+            console.log("codeforces done"); 
+        } catch (e) {
+            console.log("codeforces sync neglected/failed:", e.message);
+        }
+        
+        try {
+            codechef = await exports.syncCodechef(req, null)
+            console.log("codechef done");
+        } catch (e) {
+            console.log("codechef sync neglected/failed:", e.message);
+        }
+        
+        console.log("all sync attempts completed");
+        
         res.json({
             leetcode,
             codeforces,
@@ -317,7 +428,8 @@ exports.syncAllPlatforms = async (req, res) => {
 
     }
     catch (err) {
-        res.status(500).json({ error: err.message })
+        console.error("Critical error in syncAllPlatforms:", err);
+        res.status(500).json({ error: err.message})
     }
 
 }
