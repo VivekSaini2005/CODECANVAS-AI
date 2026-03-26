@@ -92,11 +92,6 @@ export default function LeaderboardPage() {
 
                         {users.map((user) => {
 
-                            const totalSolved =
-                                (Number(user.total_easy) || 0) +
-                                (Number(user.total_medium) || 0) +
-                                (Number(user.total_hard) || 0);
-
                             return (
                                 <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-800">
 
@@ -132,7 +127,7 @@ export default function LeaderboardPage() {
 
                                     {/* Total Solved */}
                                     <td className="px-6 py-4 text-right font-bold text-green-500">
-                                        {totalSolved}
+                                        {user.total_solved}
                                     </td>
 
                                     {/* Score */}

@@ -22,6 +22,7 @@ function Dashboard() {
   const [sheets, setSheets] = useState([]);
   const [sheetProgress, setSheetProgress] = useState({});
   const [isLoadingHeatmap, setIsLoadingHeatmap] = useState(false);
+  const [isHeatMapExpanded, setIsHeatMapExpanded] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -240,11 +241,13 @@ function Dashboard() {
 
         {/* Activity Analytics */}
         {/* Activity Analytics (Replaced with Heatmap) */}
-        <div className="flex-[2] overflow-hidden flex flex-col">
-          <HeatMap 
-            heatmap={heatmapData} 
+        <div className={`${isHeatMapExpanded ? 'w-full' : 'flex-[2]'} overflow-hidden flex flex-col transition-all duration-300`}>
+          <HeatMap
+            heatmap={heatmapData}
             onRefresh={handleRefreshHeatmap}
             isLoading={isLoadingHeatmap}
+            isExpanded={isHeatMapExpanded}
+            onToggleExpand={() => setIsHeatMapExpanded(!isHeatMapExpanded)}
           />
         </div>
 
@@ -288,8 +291,12 @@ function Dashboard() {
             <span className="text-[10px] font-bold tracking-widest text-gray-400 uppercase">AI Tip: Focus on Dynamic Programming</span>
           </div>
         </div> */}
-        <RecommendedProblems />
-
+        
+        {!isHeatMapExpanded && (
+          <div className="flex-1 overflow-hidden transition-all duration-300 flex flex-col min-w-0">
+            <RecommendedProblems />
+          </div>
+        )}
 
       </div>
 

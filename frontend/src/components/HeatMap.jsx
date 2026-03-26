@@ -1,7 +1,7 @@
 import React from "react";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, ChevronsRight, ChevronsLeft } from "lucide-react";
 
-const HeatMap = ({ heatmap, onRefresh, isLoading }) => {
+const HeatMap = ({ heatmap, onRefresh, isLoading, isExpanded, onToggleExpand }) => {
 
     const today = new Date();
 
@@ -61,7 +61,16 @@ const HeatMap = ({ heatmap, onRefresh, isLoading }) => {
                             className={`text-[#625df5] ${isLoading ? "animate-spin" : ""}`}
                         />
                     </button>
-                    <div className="flex items-center gap-2 text-xs text-gray-400">
+                    {onToggleExpand && (
+                        <button
+                            onClick={onToggleExpand}
+                            className="p-2 rounded-lg bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
+                            title={isExpanded ? "Collapse" : "Expand"}
+                        >
+                            {isExpanded ? <ChevronsLeft size={18} /> : <ChevronsRight size={18} />}
+                        </button>
+                    )}
+                    <div className="flex flex-col sm:flex-row items-center gap-2 text-xs text-gray-400 ml-2">
                         <span>Less</span>
                         <div className="w-[10px] h-[10px] rounded-[2px] bg-[#1a1f2e]"></div>
                         <div className="w-[10px] h-[10px] rounded-[2px] bg-[#10b981]/20"></div>
@@ -74,36 +83,39 @@ const HeatMap = ({ heatmap, onRefresh, isLoading }) => {
 
             </div>
 
-            <div className="flex overflow-x-auto pb-2 custom-scrollbar">
+            <div className={`flex overflow-x-auto pb-2 ${isExpanded ? "justify-center" : ""} scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]`}>
 
-                <div className="min-w-max flex gap-2">
+                <div className={`min-w-max flex gap-2 ${isExpanded ? 'gap-4' : 'gap-2'}`}>
 
                     {/* Day labels */}
 
-                    <div className="flex flex-col gap-[2px] text-[10px] text-gray-500 font-medium py-[1px] mt-6">
+                    <div className={`flex flex-col text-[10px] text-gray-500 font-medium py-[1px] mt-6 ${isExpanded ? 'gap-[4px]' : 'gap-[2px]'}`}>
 
-                        <span className="h-[10px]">Sun</span>
-                        <span className="h-[10px] opacity-0">Mon</span>
-                        <span className="h-[10px]">Tue</span>
-                        <span className="h-[10px] opacity-0">Wed</span>
-                        <span className="h-[10px]">Thu</span>
-                        <span className="h-[10px] opacity-0">Fri</span>
-                        <span className="h-[10px]">Sat</span>
+                        <span className={`${isExpanded ? 'h-[12px]' : 'h-[10px]'}`}>Sun</span>
+                        <span className={`${isExpanded ? 'h-[12px]' : 'h-[10px]'} opacity-0`}>Mon</span>
+                        <span className={`${isExpanded ? 'h-[12px]' : 'h-[10px]'}`}>Tue</span>
+                        <span className={`${isExpanded ? 'h-[12px]' : 'h-[10px]'} opacity-0`}>Wed</span>
+                        <span className={`${isExpanded ? 'h-[12px]' : 'h-[10px]'}`}>Thu</span>
+                        <span className={`${isExpanded ? 'h-[12px]' : 'h-[10px]'} opacity-0`}>Fri</span>
+                        <span className={`${isExpanded ? 'h-[12px]' : 'h-[10px]'}`}>Sat</span>
 
                     </div>
 
                     {/* Months */}
 
-                    <div className="flex gap-[6px]">
+                    <div className={`flex ${isExpanded ? 'gap-[10px]' : 'gap-[6px]'}`}>
 
                         {monthsData.map((month, mIndex) => {
 
                             const cells = [];
 
                             const firstDay = month.days[0].getDay();
+                            
+                            const cellSize = isExpanded ? "12px" : "10px";
+                            const cellClass = isExpanded ? "w-[12px] h-[12px]" : "w-[10px] h-[10px]";
 
                             for (let i = 0; i < firstDay; i++) {
-                                cells.push(<div key={`empty-${i}`} className="w-[10px] h-[10px]" />);
+                                cells.push(<div key={`empty-${i}`} className={cellClass} />);
                             }
 
                             month.days.forEach((d) => {
@@ -124,25 +136,25 @@ const HeatMap = ({ heatmap, onRefresh, isLoading }) => {
                                     <div
                                         key={key}
                                         title={`${count} submissions on ${key}`}
-                                        className={`w-[10px] h-[10px] rounded-[2px] ${bgColor} hover:ring-2 hover:ring-gray-500 transition-all cursor-pointer`}
+                                        className={`${cellClass} rounded-[2px] ${bgColor} hover:ring-2 hover:ring-gray-500 transition-all cursor-pointer`}
                                     />
                                 );
                             });
 
                             return (
 
-                                <div key={mIndex} className="flex flex-col gap-1 items-center">
+                                <div key={mIndex} className="flex flex-col gap-1 items-start">
 
-                                    <span className="text-xs text-gray-400 h-5">
+                                    <span className={`text-xs text-gray-400 h-5 ${isExpanded ? 'ml-1' : ''}`}>
                                         {month.name}
                                     </span>
 
                                     <div
-                                        className="grid gap-[2px]"
+                                        className={`grid ${isExpanded ? 'gap-[4px]' : 'gap-[2px]'}`}
                                         style={{
-                                            gridTemplateRows: "repeat(7, 10px)",
+                                            gridTemplateRows: `repeat(7, ${cellSize})`,
                                             gridAutoFlow: "column",
-                                            gridAutoColumns: "10px"
+                                            gridAutoColumns: cellSize
                                         }}
                                     >
                                         {cells}
