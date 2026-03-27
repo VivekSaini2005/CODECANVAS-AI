@@ -9,7 +9,7 @@ async function getAIImageResponse(imageBuffer, problem, action) {
 
     // 🔥 Convert image → base64
     const base64Image = imageBuffer.toString("base64")
-    console.log('1');
+    // console.log('1');
     let prompt = ""
 
     if (action === "analyze") {
@@ -28,7 +28,7 @@ Problem: ${problem}`
 Problem: ${problem}`
     }
 
-    console.log('2');
+    // console.log('2');
     // 🔥 Gemini Vision Call (NEW FORMAT)
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",   // ✅ from your code
@@ -44,7 +44,7 @@ Problem: ${problem}`
         }
       ]
     })
-    console.log('3');
+    // console.log('3');
     return response.text
 
   } catch (error) {
@@ -53,4 +53,36 @@ Problem: ${problem}`
   }
 }
 
-module.exports = { getAIImageResponse }
+async function getAIChatResponse(chatHistory, message, problem) {
+  try {
+    // Reconstruct history replacing dummy roles to expected genai format
+    const contents = chatHistory.map(msg => ({
+      role: msg.role === 'user' ? 'user' : 'model',
+      parts: [{ text: msg.text }]
+    }));
+
+    // Add the new user message
+    let promptText = message;
+    if (problem) {
+      promptText += `\n(Context - Problem: ${problem})`;
+    }
+
+    contents.push({
+      role: 'user',
+      parts: [{ text: promptText }]
+    });
+
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: contents
+    });
+
+    return response.text;
+
+  } catch (error) {
+    console.error("Gemini Chat Error:", error);
+    return "AI failed to respond. Please try again.";
+  }
+}
+
+module.exports = { getAIImageResponse, getAIChatResponse }

@@ -52,9 +52,42 @@ export default function Whiteboard({ problem, onAIStart, onAIResult }) {
       // Notify parent that AI work has started
       if (onAIStart) onAIStart()
 
-      // Export image from canvas
+      const allElements = excalidrawAPI.getSceneElements()
+      const visibleElements = allElements.filter(el => !el.isDeleted)
+      const isBoardEmpty = visibleElements.length === 0
+
+      if (isBoardEmpty) {
+        if (actionType === "analyze") {
+          if (onAIResult) onAIResult({ success: false, aiResponse: "Board has no image", action: "analyze" })
+          setLoading(false)
+          setCurrentAction(null)
+          return
+        } else {
+          // For hint or pseudocode with empty board, just do a text request
+          const userMsg = actionType === "hint" 
+            ? "Can you give me a hint based on question?" 
+            : "Can you generate pseudocode based on my question?";
+            
+          const res = await API.post("/ai/chat-continue", {
+             chatHistory: [],
+             message: userMsg,
+             problem: problem?.title || ""
+          })
+          
+          if (res.data && res.data.aiResponse) {
+            res.data.aiResponse = String(res.data.aiResponse).replace(/\\n/g, '\n').replace(/\\t/g, '\t')
+          }
+          
+          if (onAIResult) onAIResult({ ...res.data, action: actionType })
+          setLoading(false)
+          setCurrentAction(null)
+          return
+        }
+      }
+
+      // Export image from canvas (only if NOT empty)
       const blob = await exportToBlob({
-        elements: excalidrawAPI.getSceneElements(),
+        elements: allElements,
         appState: excalidrawAPI.getAppState(),
         mimeType: "image/png"
       })
@@ -75,7 +108,7 @@ export default function Whiteboard({ problem, onAIStart, onAIResult }) {
       }
 
       // Pass result to parent
-      if (onAIResult) onAIResult(res.data)
+      if (onAIResult) onAIResult({ ...res.data, action: actionType })
 
     } catch (err) {
       console.error(err)
