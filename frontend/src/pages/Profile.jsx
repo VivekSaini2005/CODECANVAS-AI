@@ -91,7 +91,7 @@
 //           <div className="flex gap-3">
 //             <button
 //               onClick={handleEditToggle}
-//               className="flex items-center gap-2 bg-gray-200 dark:bg-[#1a1f2e] hover:bg-gray-300 dark:hover:bg-[#252b3d] text-gray-700 dark:text-gray-200 px-5 py-2.5 rounded-xl transition-all text-sm font-semibold"
+//               className="flex items-center gap-2 bg-gray-200 dark:bg-[#1a1f2e] hover:bg-gray-300 dark:hover:bg-gray-300 dark:hover:bg-[#252b3d] text-gray-700 dark:text-gray-200 px-5 py-2.5 rounded-xl transition-all text-sm font-semibold"
 //               disabled={saving}
 //             >
 //               <X size={16} /> Cancel
@@ -135,7 +135,7 @@
 //                     name="name"
 //                     value={formData.name || ''}
 //                     onChange={handleChange}
-//                     className="w-full bg-gray-50 dark:bg-[#0a0d14] border border-gray-200 dark:border-[#1e2332] text-gray-900 dark:text-white rounded-xl px-4 py-2.5 focus:outline-none focus:border-[#625df5] focus:ring-1 focus:ring-[#625df5] transition-all"
+//                     className="w-full bg-gray-50 dark:bg-[#0a0d14] border border-gray-200 dark:border-[#1e2332] text-white rounded-xl px-4 py-2.5 focus:outline-none focus:border-[#625df5] focus:ring-1 focus:ring-[#625df5] transition-all"
 //                     placeholder="Your Name"
 //                   />
 //                 </div>
@@ -178,12 +178,12 @@
 //                   name="leetcode_username"
 //                   value={formData.leetcode_username || ''}
 //                   onChange={handleChange}
-//                   className="w-full bg-white dark:bg-[#121622] border border-gray-200 dark:border-[#1e2332] text-gray-900 dark:text-white rounded-lg px-3 py-2.5 focus:outline-none focus:border-[#f89f1b] focus:ring-1 focus:ring-[#f89f1b] transition-all text-sm ml-1"
+//                   className="w-full bg-white dark:bg-[#121622] border border-gray-200 dark:border-[#1e2332] text-white rounded-lg px-3 py-2.5 focus:outline-none focus:border-[#f89f1b] focus:ring-1 focus:ring-[#f89f1b] transition-all text-sm ml-1"
 //                   placeholder="e.g. tourist"
 //                 />
 //               ) : (
 //                 <div className="text-base font-semibold text-gray-900 dark:text-gray-200 mt-1 ml-1">
-//                   {user.leetcode_username || <span className="text-gray-400 italic text-sm font-medium">Not connected</span>}
+//                   {user.leetcode_username || <span className="text-gray-500 dark:text-gray-400 italic text-sm font-medium">Not connected</span>}
 //                 </div>
 //               )}
 //             </div>
@@ -198,12 +198,12 @@
 //                   name="codeforces_username"
 //                   value={formData.codeforces_username || ''}
 //                   onChange={handleChange}
-//                   className="w-full bg-white dark:bg-[#121622] border border-gray-200 dark:border-[#1e2332] text-gray-900 dark:text-white rounded-lg px-3 py-2.5 focus:outline-none focus:border-[#3b5998] focus:ring-1 focus:ring-[#3b5998] transition-all text-sm ml-1"
+//                   className="w-full bg-white dark:bg-[#121622] border border-gray-200 dark:border-[#1e2332] text-white rounded-lg px-3 py-2.5 focus:outline-none focus:border-[#3b5998] focus:ring-1 focus:ring-[#3b5998] transition-all text-sm ml-1"
 //                   placeholder="e.g. tourist"
 //                 />
 //               ) : (
 //                 <div className="text-base font-semibold text-gray-900 dark:text-gray-200 mt-1 ml-1">
-//                   {user.codeforces_username || <span className="text-gray-400 italic text-sm font-medium">Not connected</span>}
+//                   {user.codeforces_username || <span className="text-gray-500 dark:text-gray-400 italic text-sm font-medium">Not connected</span>}
 //                 </div>
 //               )}
 //             </div>
@@ -218,12 +218,12 @@
 //                   name="codechef_username"
 //                   value={formData.codechef_username || ''}
 //                   onChange={handleChange}
-//                   className="w-full bg-white dark:bg-[#121622] border border-gray-200 dark:border-[#1e2332] text-gray-900 dark:text-white rounded-lg px-3 py-2.5 focus:outline-none focus:border-[#5B4638] focus:ring-1 focus:ring-[#5B4638] transition-all text-sm ml-1"
+//                   className="w-full bg-white dark:bg-[#121622] border border-gray-200 dark:border-[#1e2332] text-white rounded-lg px-3 py-2.5 focus:outline-none focus:border-[#5B4638] focus:ring-1 focus:ring-[#5B4638] transition-all text-sm ml-1"
 //                   placeholder="e.g. tourist"
 //                 />
 //               ) : (
 //                 <div className="text-base font-semibold text-gray-900 dark:text-gray-200 mt-1 ml-1">
-//                   {user.codechef_username || <span className="text-gray-400 italic text-sm font-medium">Not connected</span>}
+//                   {user.codechef_username || <span className="text-gray-500 dark:text-gray-400 italic text-sm font-medium">Not connected</span>}
 //                 </div>
 //               )}
 //             </div>
@@ -369,7 +369,7 @@ const Profile = () => {
 
       {/* HEADER */}
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-white">Profile Settings</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Profile Settings</h1>
 
         {!editMode ? (
           <button
@@ -393,7 +393,7 @@ const Profile = () => {
       {error && <p className="text-red-500">{error}</p>}
 
       {/* PROFILE CARD */}
-      <div className="bg-[#121622] p-6 rounded-3xl">
+      <div className="bg-white dark:bg-[#121622] p-6 rounded-3xl">
 
         <div className="flex items-center gap-6">
 
@@ -409,7 +409,7 @@ const Profile = () => {
 
             {editMode && (
               <label className="absolute bottom-2 right-2 bg-[#625df5] p-2 rounded-full cursor-pointer">
-                <Camera size={16} className="text-white" />
+                <Camera size={16} className="text-gray-900 dark:text-white" />
                 <input
                   type="file"
                   accept="image/*"
@@ -428,12 +428,12 @@ const Profile = () => {
                 name="name"
                 value={formData.name || ''}
                 onChange={handleChange}
-                className="bg-[#0a0d14] border border-[#1e2332] px-3 py-2 rounded-lg text-white focus:outline-none focus:border-[#625df5]"
+                className="bg-gray-50 dark:bg-[#0a0d14] border border-gray-200 dark:border-[#1e2332] px-3 py-2 rounded-lg text-white focus:outline-none focus:border-[#625df5]"
               />
             ) : (
               <>
-                <h2 className="text-2xl font-bold text-white">{user.name}</h2>
-                <p className="text-gray-400">{user.email}</p>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{user.name}</h2>
+                <p className="text-gray-500 dark:text-gray-400">{user.email}</p>
               </>
             )}
           </div>
@@ -448,7 +448,7 @@ const Profile = () => {
 
         {/* PLATFORM SECTION */}
         <div className="pt-10">
-          <h3 className="text-xl font-semibold text-white mb-6">
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
             Platform Integrations
           </h3>
 
@@ -461,14 +461,14 @@ const Profile = () => {
             ].map((platform) => (
               <div
                 key={platform.name}
-                className="bg-[#0a0d14] rounded-2xl p-5 border border-[#1e2332] relative"
+                className="bg-gray-50 dark:bg-[#0a0d14] rounded-2xl p-5 border border-gray-200 dark:border-[#1e2332] relative"
               >
                 <div
                   className="absolute top-0 left-0 w-1.5 h-full"
                   style={{ backgroundColor: platform.color }}
                 ></div>
 
-                <label className="block text-xs text-gray-400 uppercase mb-2 ml-2">
+                <label className="block text-xs text-gray-500 dark:text-gray-400 uppercase mb-2 ml-2">
                   {platform.label}
                 </label>
 
@@ -478,10 +478,10 @@ const Profile = () => {
                     name={platform.name}
                     value={formData[platform.name] || ""}
                     onChange={handleChange}
-                    className="w-full bg-[#121622] border border-[#1e2332] text-white rounded-lg px-3 py-2"
+                    className="w-full bg-white dark:bg-[#121622] border border-gray-200 dark:border-[#1e2332] text-white rounded-lg px-3 py-2"
                   />
                 ) : (
-                  <div className="text-gray-200 ml-2">
+                  <div className="text-gray-900 dark:text-gray-200 ml-2">
                     {user[platform.name] || (
                       <span className="text-gray-500 text-sm">Not connected</span>
                     )}

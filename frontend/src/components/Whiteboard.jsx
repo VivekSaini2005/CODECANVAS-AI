@@ -4,13 +4,14 @@ import { useState } from "react"
 import API from "../api/axiosInstance"
 import { Sparkles, Code, Lightbulb, Loader2, Bot, Sun, Moon, GripHorizontal } from "lucide-react"
 import { useRef } from "react"
+import { useTheme } from "../context/ThemeContext"
 
 export default function Whiteboard({ problem, onAIStart, onAIResult }) {
 
   const [excalidrawAPI, setExcalidrawAPI] = useState(null)
   const [loading, setLoading] = useState(false)
   const [currentAction, setCurrentAction] = useState(null)
-  const [theme, setTheme] = useState("dark")
+  const { theme, toggleTheme } = useTheme()
 
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const isDragging = useRef(false)
@@ -125,19 +126,19 @@ export default function Whiteboard({ problem, onAIStart, onAIResult }) {
 
       {/* AI TOOLBAR - Modern Glassmorphic Pill */}
       <div
-        className="absolute bottom-16 left-1/2 z-[100] flex gap-3 p-2 bg-gradient-to-b from-[#1e293b]/90 to-[#0f172a]/95 backdrop-blur-xl border border-white/10 rounded-2xl pointer-events-auto items-center hover:border-white/20 transition-colors"
+        className="absolute bottom-16 left-1/2 z-[100] flex gap-3 p-2 bg-gradient-to-b from-[#1e293b]/90 to-[#0f172a]/95 backdrop-blur-xl border border-gray-200 dark:border-white/10 rounded-2xl pointer-events-auto items-center hover:border-white/20 transition-colors"
         style={{ transform: `translate(calc(-50% + ${position.x}px), ${position.y}px)` }}
       >
 
         {/* DRAG HANDLE */}
         <div
-          className="pl-2 pr-3 border-r border-white/10 mr-1 flex items-center cursor-grab active:cursor-grabbing touch-none select-none"
+          className="pl-2 pr-3 border-r border-gray-200 dark:border-white/10 mr-1 flex items-center cursor-grab active:cursor-grabbing touch-none select-none"
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerUp}
         >
-          <GripHorizontal className="w-5 h-5 text-gray-400 hover:text-white transition-colors pointer-events-none" />
+          <GripHorizontal className="w-5 h-5 text-gray-500 dark:text-gray-400 hover:text-white transition-colors pointer-events-none" />
           <Bot className="w-5 h-5 text-indigo-400 drop-shadow-[0_0_8px_rgba(99,102,241,0.8)] ml-2 pointer-events-none hidden sm:block" />
         </div>
 
@@ -171,7 +172,7 @@ export default function Whiteboard({ problem, onAIStart, onAIResult }) {
         <div className="w-px h-6 bg-white/10 mx-1 hidden sm:block"></div>
 
         <button
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          onClick={toggleTheme}
           className="p-2 text-indigo-200 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95"
           title="Toggle Theme"
         >

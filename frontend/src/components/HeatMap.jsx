@@ -41,11 +41,11 @@ const HeatMap = ({ heatmap, onRefresh, isLoading, isExpanded, onToggleExpand }) 
     }
 
     return (
-        <div className="bg-[#121622] border border-[#1e2332] rounded-2xl p-6 h-full flex flex-col">
+        <div className="bg-white dark:bg-[#121622] border border-gray-200 dark:border-[#1e2332] rounded-2xl p-6 h-full flex flex-col">
 
             <div className="flex justify-between items-center mb-6">
 
-                <h2 className="text-lg font-bold text-white">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                     Activity Heatmap
                 </h2>
 
@@ -64,15 +64,15 @@ const HeatMap = ({ heatmap, onRefresh, isLoading, isExpanded, onToggleExpand }) 
                     {onToggleExpand && (
                         <button
                             onClick={onToggleExpand}
-                            className="p-2 rounded-lg bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
+                            className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 transition-colors"
                             title={isExpanded ? "Collapse" : "Expand"}
                         >
                             {isExpanded ? <ChevronsLeft size={18} /> : <ChevronsRight size={18} />}
                         </button>
                     )}
-                    <div className="flex flex-col sm:flex-row items-center gap-2 text-xs text-gray-400 ml-2">
+                    <div className="flex flex-col sm:flex-row items-center gap-2 text-xs text-gray-500 dark:text-gray-400 ml-2">
                         <span>Less</span>
-                        <div className="w-[10px] h-[10px] rounded-[2px] bg-[#1a1f2e]"></div>
+                        <div className="w-[10px] h-[10px] rounded-[2px] bg-gray-100 dark:bg-[#1a1f2e]"></div>
                         <div className="w-[10px] h-[10px] rounded-[2px] bg-[#10b981]/20"></div>
                         <div className="w-[10px] h-[10px] rounded-[2px] bg-[#10b981]/40"></div>
                         <div className="w-[10px] h-[10px] rounded-[2px] bg-[#10b981]/70"></div>
@@ -125,7 +125,7 @@ const HeatMap = ({ heatmap, onRefresh, isLoading, isExpanded, onToggleExpand }) 
 
                                 const count = activity[key] || 0;
 
-                                let bgColor = "bg-[#1a1f2e]";
+                                let bgColor = "bg-gray-100 dark:bg-[#1a1f2e]";
 
                                 if (count === 1) bgColor = "bg-[#10b981]/20";
                                 else if (count === 2) bgColor = "bg-[#10b981]/40";
@@ -145,7 +145,7 @@ const HeatMap = ({ heatmap, onRefresh, isLoading, isExpanded, onToggleExpand }) 
 
                                 <div key={mIndex} className="flex flex-col gap-1 items-start">
 
-                                    <span className={`text-xs text-gray-400 h-5 ${isExpanded ? 'ml-1' : ''}`}>
+                                    <span className={`text-xs text-gray-500 dark:text-gray-400 h-5 ${isExpanded ? 'ml-1' : ''}`}>
                                         {month.name}
                                     </span>
 

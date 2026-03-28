@@ -119,9 +119,9 @@ export default function LeaderboardPage() {
                                     {/* Ratings */}
                                     <td className="px-6 py-4 text-center text-sm font-medium">
                                         <span className="text-yellow-600" title="LeetCode">{user.lc_rating || 0}</span>
-                                        <span className="text-gray-400 mx-1">|</span>
+                                        <span className="text-gray-500 dark:text-gray-400 mx-1">|</span>
                                         <span className="text-blue-500" title="Codeforces">{user.cf_rating || 0}</span>
-                                        <span className="text-gray-400 mx-1">|</span>
+                                        <span className="text-gray-500 dark:text-gray-400 mx-1">|</span>
                                         <span className="text-green-600" title="CodeChef">{user.cc_rating || 0}</span>
                                     </td>
 

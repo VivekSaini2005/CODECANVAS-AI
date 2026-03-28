@@ -69,7 +69,7 @@ const Login = () => {
 
         <div className="flex flex-col items-center">
           <div className="mt-25 w-12 h-12 rounded-xl bg-gradient-to-br from-[#625df5] to-[#45b7f1] flex items-center justify-center shadow-lg mb-4">
-            <Code2 size={24} className="text-white" />
+            <Code2 size={24} className="text-gray-900 dark:text-white" />
           </div>
           <h2 className="text-center text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
             Welcome back

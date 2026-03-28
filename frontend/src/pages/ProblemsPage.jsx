@@ -59,12 +59,12 @@ export default function ProblemsPage() {
     }
 
     const difficultyColor = (difficulty) => {
-        if (!difficulty) return "bg-[#1e2332] text-gray-400 border border-[#2a3a4e]";
+        if (!difficulty) return "bg-gray-100 dark:bg-[#1e2332] text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-[#2a3a4e]";
         const lower = difficulty.toLowerCase()
-        if (lower === "easy") return "bg-[#112a22] text-[#10b981] border border-[#10b981]/20"
-        if (lower === "medium") return "bg-[#3f3115] text-[#f59e0b] border border-[#f59e0b]/20"
-        if (lower === "hard") return "bg-[#3b1c1c] text-[#ef4444] border border-[#ef4444]/20"
-        return "bg-[#1e2332] text-gray-400 border border-[#2a3a4e]"
+        if (lower === "easy") return "bg-green-50 dark:bg-[#112a22] text-green-600 dark:text-[#10b981] border border-green-200 dark:border-[#10b981]/20"
+        if (lower === "medium") return "bg-yellow-50 dark:bg-[#3f3115] text-yellow-600 dark:text-[#f59e0b] border border-yellow-200 dark:border-[#f59e0b]/20"
+        if (lower === "hard") return "bg-red-50 dark:bg-[#3b1c1c] text-red-600 dark:text-[#ef4444] border border-red-200 dark:border-[#ef4444]/20"
+        return "bg-gray-100 dark:bg-[#1e2332] text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-[#2a3a4e]"
     }
 
     // Compute unique tags and companies from all problems
@@ -103,15 +103,15 @@ export default function ProblemsPage() {
         setPage(1)
     }
 
-    const selectClass = "bg-[#121622] border border-[#1e2332] text-gray-300 px-4 py-2.5 rounded-lg text-[13px] outline-none focus:border-[#3b82f6] appearance-none bg-no-repeat bg-[position:right_0.75rem_center] bg-[image:url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%239CA3AF%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] pr-10 min-w-[140px] cursor-pointer hover:border-[#2a3a4e] transition-colors";
+    const selectClass = "bg-white dark:bg-[#121622] border border-gray-200 dark:border-[#1e2332] text-gray-700 dark:text-gray-300 px-4 py-2.5 rounded-lg text-[13px] outline-none focus:border-[#3b82f6] appearance-none bg-no-repeat bg-[position:right_0.75rem_center] bg-[image:url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%239CA3AF%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] pr-10 min-w-[140px] cursor-pointer hover:border-[#2a3a4e] transition-colors";
 
     return (
         <div className="p-8 max-w-7xl mx-auto pb-10">
             {/* HEADER */}
             <div className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-2xl font-bold text-white mb-2">Explore Problems</h1>
-                    <p className="text-gray-400 text-[13px]">
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Explore Problems</h1>
+                    <p className="text-gray-500 dark:text-gray-400 text-[13px]">
                         Master your skills with curated coding challenges.
                     </p>
                 </div>
@@ -165,9 +165,9 @@ export default function ProblemsPage() {
                     ))}
                 </select>
 
-                <button 
+                <button
                     onClick={resetFilters}
-                    className="border border-[#1e2332] text-gray-300 px-5 py-2.5 rounded-lg text-[13px] font-medium hover:bg-[#121622] transition-colors gap-2.5 flex items-center ml-auto"
+                    className="border border-gray-200 dark:border-[#1e2332] text-gray-700 dark:text-gray-300 px-5 py-2.5 rounded-lg text-[13px] font-medium bg-white dark:bg-transparent hover:bg-gray-50 dark:hover:bg-[#121622] transition-colors gap-2.5 flex items-center ml-auto"
                 >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
                     Reset Filters
@@ -175,10 +175,10 @@ export default function ProblemsPage() {
             </div>
 
             {/* TABLE */}
-            <div className="border border-[#1e2332] rounded-xl overflow-hidden bg-[#0d111a]">
+            <div className="border border-gray-200 dark:border-[#1e2332] rounded-xl overflow-hidden bg-white dark:bg-[#0d111a]">
                 <table className="w-full text-sm">
-                    <thead className="text-gray-400 text-[11px] uppercase tracking-widest font-bold">
-                        <tr className="text-left border-b border-[#1e2332]">
+                    <thead className="text-gray-500 dark:text-gray-400 text-[11px] uppercase tracking-widest font-bold">
+                        <tr className="text-left border-b border-gray-200 dark:border-[#1e2332]">
                             <th className="p-[18px] pl-8 w-24">STATUS</th>
                             <th className="p-[18px]">TITLE</th>
                             <th className="p-[18px]">SHEET</th>
@@ -192,7 +192,7 @@ export default function ProblemsPage() {
                             const isToggling = toggling === p.id
                             
                             return (
-                            <tr key={p.id} className="border-b border-[#1e2332] last:border-0 hover:bg-[#121622] transition-colors group">
+                            <tr key={p.id} className="border-b border-gray-200 dark:border-[#1e2332] last:border-0 hover:bg-gray-50 dark:hover:bg-[#121622] bg-white dark:bg-[#0d111a] transition-colors group">
                                 {/* STATUS */}
                                 <td className="p-4 pl-10 cursor-pointer" onClick={() => !isToggling && toggleSolved(p.id)}>
                                     {isSolved ? (
@@ -208,14 +208,14 @@ export default function ProblemsPage() {
                                 <td className="p-4">
                                     <button
                                         onClick={() => navigate(`/solve/${p.id}`, { state: { problem: p } })}
-                                        className={`hover:text-blue-400 font-medium text-[14px] text-left ${isSolved ? 'line-through text-gray-500 hover:text-gray-400' : 'text-gray-200'}`}
+                                        className={`hover:text-blue-400 font-medium text-[14px] text-left ${isSolved ? 'line-through text-gray-500 hover:text-gray-500 dark:text-gray-400' : 'text-gray-900 dark:text-gray-200'}`}
                                     >
                                         {indexOfFirst + index + 1}. {p.title}
                                     </button>
                                 </td>
 
                                 {/* SHEET */}
-                                <td className="p-4 text-gray-400 text-[13px]">
+                                <td className="p-4 text-gray-500 dark:text-gray-400 text-[13px]">
                                     {p.sheet || "Blind 75"}
                                 </td>
 
@@ -234,12 +234,12 @@ export default function ProblemsPage() {
                                     {p.companies && p.companies.length > 0 ? (
                                         <>
                                             {p.companies.slice(0, 2).map((c, i) => (
-                                                <span key={i} className="w-[22px] h-[22px] flex items-center justify-center bg-[#1e2332] rounded-full text-[9px] font-bold text-gray-300 ring-1 ring-inset ring-[#2a3a4e]" title={c}>
+                                                <span key={i} className="w-[22px] h-[22px] flex items-center justify-center bg-gray-200 dark:bg-[#1e2332] rounded-full text-[9px] font-bold text-gray-700 dark:text-gray-300 ring-1 ring-inset ring-[#2a3a4e]" title={c}>
                                                     {c.charAt(0).toUpperCase()}
                                                 </span>
                                             ))}
                                             {p.companies.length > 2 && (
-                                                <span className="w-[22px] h-[22px] flex items-center justify-center bg-[#1e2332] rounded-full text-[9px] font-bold text-gray-500 ring-1 ring-inset ring-[#2a3a4e]">
+                                                <span className="w-[22px] h-[22px] flex items-center justify-center bg-gray-200 dark:bg-[#1e2332] rounded-full text-[9px] font-bold text-gray-500 ring-1 ring-inset ring-[#2a3a4e]">
                                                     +{p.companies.length - 2}
                                                 </span>
                                             )}
@@ -257,7 +257,7 @@ export default function ProblemsPage() {
 
             {/* PAGINATION */}
             <div className="flex justify-between items-center mt-8">
-                <div className="text-[13px] text-gray-400">
+                <div className="text-[13px] text-gray-500 dark:text-gray-400">
                     Showing {filteredProblems.length === 0 ? 0 : indexOfFirst + 1}-{Math.min(indexOfLast, filteredProblems.length)} of {filteredProblems.length} problems
                 </div>
 
@@ -265,7 +265,7 @@ export default function ProblemsPage() {
                     <button 
                         onClick={() => setPage(Math.max(1, page - 1))}
                         disabled={page === 1}
-                        className="px-3.5 py-1.5 border border-[#1e2332] bg-transparent text-gray-400 text-[13px] font-medium rounded-lg hover:bg-[#1e2332] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-3.5 py-1.5 border border-gray-200 dark:border-[#1e2332] bg-transparent text-gray-500 dark:text-gray-400 text-[13px] font-medium rounded-lg hover:bg-gray-200 dark:bg-[#1e2332] transition disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         Previous
                     </button>
@@ -277,7 +277,7 @@ export default function ProblemsPage() {
                                 <button 
                                     key={p}
                                     onClick={() => setPage(p)}
-                                    className={`min-w-[32px] h-8 px-2 rounded-lg text-[13px] font-medium transition ${page === p ? 'bg-[#3b82f6] text-white shadow-sm shadow-[#3b82f6]/20 border border-[#3b82f6]' : 'text-gray-400 hover:bg-[#1e2332] bg-transparent border border-transparent hover:border-[#1e2332]'}`}
+                                    className={`min-w-[32px] h-8 px-2 rounded-lg text-[13px] font-medium transition ${page === p ? 'bg-[#3b82f6] text-white shadow-sm shadow-[#3b82f6]/20 border border-[#3b82f6]' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:bg-[#1e2332] bg-transparent border border-transparent hover:border-gray-200 dark:border-[#1e2332]'}`}
                                 >
                                     {p}
                                 </button>
@@ -291,7 +291,7 @@ export default function ProblemsPage() {
                     <button 
                         onClick={() => setPage(Math.min(totalPages, page + 1))}
                         disabled={page === totalPages || totalPages === 0}
-                        className="px-3.5 py-1.5 border border-[#1e2332] bg-transparent text-gray-400 text-[13px] font-medium rounded-lg hover:bg-[#1e2332] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-3.5 py-1.5 border border-gray-200 dark:border-[#1e2332] bg-transparent text-gray-500 dark:text-gray-400 text-[13px] font-medium rounded-lg hover:bg-gray-200 dark:bg-[#1e2332] transition disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         Next
                     </button>

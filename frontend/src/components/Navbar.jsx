@@ -4,11 +4,11 @@ import { Search, Bell, Moon, Sun, User as UserIcon, LogOut, Check } from "lucide
 import { fetchUserProfile } from "../api/authApi"
 import { getNotifications, markNotificationRead } from "../api/discussApi"
 import { useSocket } from "../hooks/useSocket"
+import { useTheme } from "../context/ThemeContext"
 
 function Navbar() {
   const navigate = useNavigate();
-  // Initialize theme from localStorage or default to dark
-  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "dark")
+  const { theme, toggleTheme } = useTheme();
   const [token, setToken] = useState(() => localStorage.getItem("token"))
   const [userData, setUserData] = useState(null)
   const [showDropdown, setShowDropdown] = useState(false)
@@ -43,16 +43,6 @@ function Navbar() {
   }, []);
 
   useEffect(() => {
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark")
-    } else {
-      document.documentElement.classList.remove("dark")
-    }
-    localStorage.setItem("theme", theme)
-  }, [theme])
-
-  // Fetch User Data when Token Exists
-  useEffect(() => {
     const getUserData = async () => {
       if (token) {
         try {
@@ -77,10 +67,6 @@ function Navbar() {
     };
     getUserData();
   }, [token]);
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === "dark" ? "light" : "dark")
-  }
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -136,7 +122,7 @@ function Navbar() {
 
       {/* Search Bar */}
       <div className="flex-1 max-w-xl relative hidden md:block">
-        <Search size={18} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" />
+        <Search size={18} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 dark:text-gray-500" />
         <input
           type="text"
           placeholder="Search problems, sheets, or tutorials..."
@@ -153,7 +139,7 @@ function Navbar() {
           {token && (
             <div className="relative profile-dropdown-container" ref={notifRef}>
               <button 
-                className="hover:text-gray-800 dark:hover:text-gray-200 transition-colors relative flex items-center justify-center p-2" 
+                className="hover:text-gray-800 dark:hover:text-gray-900 dark:text-gray-200 transition-colors relative flex items-center justify-center p-2" 
                 title="Notifications"
                 onClick={() => setShowNotifications(!showNotifications)}
               >
@@ -180,7 +166,7 @@ function Navbar() {
                         <div 
                           key={notif.id} 
                           onClick={() => handleNotificationClick(notif)}
-                          className={`cursor-pointer px-4 py-3 border-b border-gray-50 dark:border-[#1a1f2e] last:border-0 hover:bg-gray-50 dark:hover:bg-[#1a1f2e] transition-colors ${!notif.is_read ? 'bg-indigo-50/30 dark:bg-indigo-900/10' : ''}`}
+                          className={`cursor-pointer px-4 py-3 border-b border-gray-50 dark:border-[#1a1f2e] last:border-0 hover:bg-gray-50 dark:hover:bg-gray-100 dark:bg-[#1a1f2e] transition-colors ${!notif.is_read ? 'bg-indigo-50/30 dark:bg-indigo-900/10' : ''}`}
                         >
                           <div className="flex justify-between items-start gap-2">
                             <p className="text-sm text-gray-800 dark:text-gray-200 line-clamp-2 pr-4">
@@ -192,7 +178,7 @@ function Navbar() {
                                   e.stopPropagation(); // prevent closing
                                   handleMarkAsRead(notif.notification_id || notif.id);
                                 }}
-                                className="text-gray-400 hover:text-[#625df5] flex-shrink-0"
+                                className="text-gray-500 dark:text-gray-400 hover:text-[#625df5] flex-shrink-0"
                                 title="Mark as read"
                               >
                                 <Check size={16} />
@@ -211,7 +197,7 @@ function Navbar() {
             </div>
           )}
 
-          <button onClick={toggleTheme} className="hover:text-gray-800 dark:hover:text-gray-200 transition-colors" title="Toggle Theme">
+          <button onClick={toggleTheme} className="hover:text-gray-800 dark:hover:text-gray-900 dark:text-gray-200 transition-colors" title="Toggle Theme">
             {theme === "dark" ? <Sun size={20} className="text-yellow-400" /> : <Moon size={20} />}
           </button>
         </div>
@@ -247,7 +233,7 @@ function Navbar() {
                 <div className="py-1">
                   <Link
                     to="/profile"
-                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-[#1a1f2e] hover:text-[#625df5] dark:hover:text-white transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-100 dark:bg-[#1a1f2e] hover:text-[#625df5] dark:hover:text-white transition-colors"
                     onClick={() => setShowDropdown(false)}
                   >
                     <UserIcon size={16} />
@@ -267,7 +253,7 @@ function Navbar() {
           </div>
         ) : (
           <div className="flex items-center gap-3">
-            <Link to="/login" className="text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Login</Link>
+            <Link to="/login" className="text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-white transition-colors">Login</Link>
             <Link to="/register" className="text-sm font-semibold bg-[#625df5] hover:bg-[#524de3] text-white px-4 py-2 rounded-xl transition-colors shadow-md">Register</Link>
           </div>
         )}

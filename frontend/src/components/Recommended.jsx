@@ -27,18 +27,18 @@ export default function RecommendedProblems() {
 
     const difficultyColor = (difficulty) => {
 
-        if (difficulty === "easy") return "text-green-400"
-        if (difficulty === "medium") return "text-yellow-400"
-        if (difficulty === "hard") return "text-red-400"
+        if (difficulty === "easy") return "text-green-600 dark:text-green-400"
+        if (difficulty === "medium") return "text-yellow-600 dark:text-yellow-400"
+        if (difficulty === "hard") return "text-red-600 dark:text-red-400"
 
     }
 
     return (
 
-        <div className="flex-1 bg-[#121622] border border-[#1e2332] rounded-2xl p-6 flex flex-col h-full">
+        <div className="flex-1 bg-white dark:bg-[#121622] border border-gray-200 dark:border-[#1e2332] rounded-2xl p-6 flex flex-col h-full">
 
             {/* Title */}
-            <h2 className="text-white text-lg font-bold mb-6">
+            <h2 className="text-gray-900 dark:text-white text-lg font-bold mb-6">
                 Recommended
             </h2>
 
@@ -55,7 +55,7 @@ export default function RecommendedProblems() {
                         className="block hover:translate-x-1 transition flex justify-between items-center"
                     >
 
-                        <h3 className="text-sm font-medium text-gray-300">
+                        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
                             {p.title}
                         </h3>
 
@@ -71,10 +71,10 @@ export default function RecommendedProblems() {
 
 
             {/* Browse Button */}
-            <div className="mt-auto pt-6 border-t border-[#1e2332] text-center">
+            <div className="mt-auto pt-6 border-t border-gray-200 dark:border-[#1e2332] text-center">
                 <Link
                     to="/problems"
-                    className="text-[10px] font-bold tracking-widest text-gray-400 uppercase hover:text-white transition-colors"
+                    className="text-[10px] font-bold tracking-widest text-gray-500 dark:text-gray-400 uppercase hover:text-white transition-colors"
                 >
                     BROWSE ALL PROBLEMS
                 </Link>

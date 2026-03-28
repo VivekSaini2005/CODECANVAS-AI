@@ -29,9 +29,9 @@ export default function RecentProblems() {
 
     const difficultyColor = (difficulty) => {
 
-        if (difficulty === "easy") return "text-green-400"
-        if (difficulty === "medium") return "text-yellow-400"
-        if (difficulty === "hard") return "text-red-400"
+        if (difficulty === "easy") return "text-green-600 dark:text-green-400"
+        if (difficulty === "medium") return "text-yellow-600 dark:text-yellow-400"
+        if (difficulty === "hard") return "text-red-600 dark:text-red-400"
 
     }
 
@@ -50,11 +50,11 @@ export default function RecentProblems() {
     }
 
     return (
-        <div className="bg-[#0f1b2d] border border-[#1e2a3a] rounded-2xl p-6">
+        <div className="bg-white dark:bg-[#0f1b2d] border border-gray-200 dark:border-[#1e2a3a] rounded-2xl p-6">  
 
             {/* Header */}
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-white text-xl font-semibold">Recent Activity</h2>
+                <h2 className="text-gray-900 dark:text-white text-xl font-semibold">Recent Activity</h2>
 
                 <Link
                     to="/problems"
@@ -69,7 +69,7 @@ export default function RecentProblems() {
             <div className="space-y-4">
 
                 {paginatedProblems.length === 0 ? (
-                    <div className="text-center py-8 text-gray-400">
+                    <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                         <p className="text-sm">No problems found</p>
                     </div>
                 ) : (
@@ -77,7 +77,7 @@ export default function RecentProblems() {
 
                         <div
                             key={p.id}
-                            className="flex items-center justify-between bg-[#1b2a3c] border border-[#2a3a4e] rounded-xl px-5 py-4 hover:border-[#3b82f6] transition"
+                            className="flex items-center justify-between bg-gray-50 dark:bg-[#1b2a3c] border border-gray-200 dark:border-[#2a3a4e] rounded-xl px-5 py-4 hover:border-[#3b82f6] dark:hover:border-[#3b82f6] transition"
                         >
 
                             {/* Left Section */}
@@ -91,11 +91,11 @@ export default function RecentProblems() {
                                 {/* Title + Difficulty */}
                                 <div>
 
-                                    <h3 className="text-white font-medium">
+                                    <h3 className="text-gray-900 dark:text-white font-medium">
                                         {p.title}
                                     </h3>
 
-                                    <p className="text-sm text-gray-400">
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">
                                         Difficulty:{" "}
                                         <span className={difficultyColor(p.difficulty)}>
                                             {p.difficulty}
@@ -109,7 +109,7 @@ export default function RecentProblems() {
                             {/* Right View */}
                             <Link
                                 to={`/problem/${p.slug}`}
-                                className="text-gray-400 hover:text-white text-sm"
+                                className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-sm font-medium"
                             >
                                 View
                             </Link>
@@ -123,26 +123,26 @@ export default function RecentProblems() {
 
             {/* Pagination Controls */}
             {problems.length > itemsPerPage && (
-                <div className="mt-6 pt-6 border-t border-[#2a3a4e] flex items-center justify-between">
+                <div className="mt-6 pt-6 border-t border-gray-200 dark:border-[#2a3a4e] flex items-center justify-between">
                     <button
                         onClick={handlePreviousPage}
                         disabled={currentPage === 1}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1b2a3c] border border-[#2a3a4e] text-gray-400 hover:text-white hover:border-[#3b82f6] disabled:opacity-50 disabled:cursor-not-allowed transition"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-50 dark:bg-[#1b2a3c] border border-gray-200 dark:border-[#2a3a4e] text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:border-[#3b82f6] disabled:opacity-50 disabled:cursor-not-allowed transition"
                     >
                         <ChevronLeft size={16} />
                         Previous
                     </button>
 
                     <div className="flex items-center gap-2">
-                        <span className="text-gray-400 text-sm">
-                            Page <span className="font-semibold text-white">{currentPage}</span> of <span className="font-semibold text-white">{totalPages}</span>
+                        <span className="text-gray-500 dark:text-gray-400 text-sm">
+                            Page <span className="font-semibold text-gray-900 dark:text-white">{currentPage}</span> of <span className="font-semibold text-gray-900 dark:text-white">{totalPages}</span>
                         </span>
                     </div>
 
                     <button
                         onClick={handleNextPage}
                         disabled={currentPage === totalPages}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1b2a3c] border border-[#2a3a4e] text-gray-400 hover:text-white hover:border-[#3b82f6] disabled:opacity-50 disabled:cursor-not-allowed transition"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-50 dark:bg-[#1b2a3c] border border-gray-200 dark:border-[#2a3a4e] text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:border-[#3b82f6] disabled:opacity-50 disabled:cursor-not-allowed transition"
                     >
                         Next
                         <ChevronRight size={16} />

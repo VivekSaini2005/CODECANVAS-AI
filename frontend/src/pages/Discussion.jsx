@@ -172,7 +172,7 @@ function Discussion() {
       <div key={comment.id} className={`mt-3 ${depth > 0 ? "ml-6 pl-4 border-l-2 border-gray-200 dark:border-gray-700" : ""}`}>
         <div className="flex items-center gap-2 mb-1">
           <span className="font-semibold text-sm text-gray-800 dark:text-gray-200">@{comment.username}</span>
-          <span className="text-xs text-gray-400">{new Date(comment.created_at).toLocaleDateString()}</span>
+          <span className="text-xs text-gray-500 dark:text-gray-400">{new Date(comment.created_at).toLocaleDateString()}</span>
         </div>
         <p className="text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-[#1a1f2e] p-3 rounded-lg border border-gray-100 dark:border-gray-800">
           {comment.content}
@@ -254,14 +254,14 @@ function Discussion() {
             placeholder="Post Title..."
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
-            className="w-full bg-gray-50 dark:bg-[#0f121b] border border-gray-200 dark:border-[#1e2332] text-gray-900 dark:text-white rounded-lg px-4 py-3 mb-4 focus:ring-2 focus:ring-[#625df5] focus:border-transparent outline-none"
+            className="w-full bg-gray-50 dark:bg-[#0f121b] border border-gray-200 dark:border-[#1e2332] text-white rounded-lg px-4 py-3 mb-4 focus:ring-2 focus:ring-[#625df5] focus:border-transparent outline-none"
             required
           />
           <textarea
             placeholder="Write your post content here..."
             value={newContent}
             onChange={(e) => setNewContent(e.target.value)}
-            className="w-full h-32 bg-gray-50 dark:bg-[#0f121b] border border-gray-200 dark:border-[#1e2332] text-gray-900 dark:text-white rounded-lg px-4 py-3 mb-4 focus:ring-2 focus:ring-[#625df5] focus:border-transparent outline-none resize-none"
+            className="w-full h-32 bg-gray-50 dark:bg-[#0f121b] border border-gray-200 dark:border-[#1e2332] text-white rounded-lg px-4 py-3 mb-4 focus:ring-2 focus:ring-[#625df5] focus:border-transparent outline-none resize-none"
             required
           />
           <div className="flex justify-end">
@@ -298,7 +298,7 @@ function Discussion() {
                     className={`p-1.5 rounded-md transition-colors ${
                       userVotes[post.id] === 1 
                         ? "text-[#625df5] bg-indigo-50 dark:bg-[#1e2332]" 
-                        : "text-gray-400 hover:text-[#625df5] hover:bg-gray-100 dark:hover:bg-[#1e2332]"
+                        : "text-gray-500 dark:text-gray-400 hover:text-[#625df5] hover:bg-gray-100 dark:hover:bg-gray-200 dark:bg-[#1e2332]"
                     }`}
                   >
                     <ThumbsUp size={18} />
@@ -311,7 +311,7 @@ function Discussion() {
                     className={`p-1.5 rounded-md transition-colors ${
                       userVotes[post.id] === -1 
                         ? "text-red-500 bg-red-50 dark:bg-[#1e2332]" 
-                        : "text-gray-400 hover:text-red-500 hover:bg-gray-100 dark:hover:bg-[#1e2332]"
+                        : "text-gray-500 dark:text-gray-400 hover:text-red-500 hover:bg-gray-100 dark:hover:bg-gray-200 dark:bg-[#1e2332]"
                     }`}
                   >
                     <ThumbsDown size={18} />

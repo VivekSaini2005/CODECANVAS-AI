@@ -35,7 +35,7 @@ function Sidebar() {
       {/* Logo */}
       <div className="px-6 py-6 flex items-center gap-2">
         <div className="w-8 h-8 rounded bg-gradient-to-br from-[#625df5] to-[#45b7f1] flex items-center justify-center shadow-lg">
-          <Code2 size={18} className="text-white" />
+          <Code2 size={18} className="text-gray-900 dark:text-white" />
         </div>
         <h1 className="text-xl font-bold text-gray-900 dark:text-white tracking-wide">
           CodeCanvas <span className="text-[#625df5] text-sm ml-1">AI</span>
@@ -58,13 +58,13 @@ function Sidebar() {
                   flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
                   ${active
                     ? "bg-indigo-50 dark:bg-[#1e2332] text-[#625df5] font-semibold"
-                    : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#1a1f2e]"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-900 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-100 dark:bg-[#1a1f2e]"
                   }
                 `}
               >
                 <item.icon
                   size={20}
-                  className={active ? "text-[#625df5]" : "text-gray-400"}
+                  className={active ? "text-[#625df5]" : "text-gray-500 dark:text-gray-400"}
                 />
                 <span>{item.name}</span>
               </Link>
@@ -88,13 +88,13 @@ function Sidebar() {
                   flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
                   ${active
                     ? "bg-indigo-50 dark:bg-[#1e2332] text-[#625df5] font-semibold"
-                    : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#1a1f2e]"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-900 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-100 dark:bg-[#1a1f2e]"
                   }
                 `}
               >
                 <item.icon
                   size={20}
-                  className={active ? "text-[#625df5]" : "text-gray-400"}
+                  className={active ? "text-[#625df5]" : "text-gray-500 dark:text-gray-400"}
                 />
                 <span>{item.name}</span>
               </Link>

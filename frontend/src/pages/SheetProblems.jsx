@@ -88,9 +88,9 @@ function SheetProblems() {
   }
 
   const difficultyStyle = {
-    Easy: { bg: "bg-[#10b981]/10", text: "text-[#10b981]" },
-    Medium: { bg: "bg-[#f59e0b]/10", text: "text-[#f59e0b]" },
-    Hard: { bg: "bg-[#ef4444]/10", text: "text-[#ef4444]" },
+    Easy: { bg: "bg-green-50 dark:bg-[#10b981]/10", text: "text-green-600 dark:text-[#10b981]" },
+    Medium: { bg: "bg-yellow-50 dark:bg-[#f59e0b]/10", text: "text-yellow-600 dark:text-[#f59e0b]" },
+    Hard: { bg: "bg-red-50 dark:bg-[#ef4444]/10", text: "text-red-600 dark:text-[#ef4444]" },
   }
 
   // ─── Render ──────────────────────────────────────────────────────────────────
@@ -101,12 +101,12 @@ function SheetProblems() {
       <div className="flex items-center gap-3">
         <Link
           to="/sheets"
-          className="w-8 h-8 rounded-lg bg-[#1e2332] hover:bg-[#252b3d] flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+          className="w-8 h-8 rounded-lg bg-gray-200 dark:bg-[#1e2332] hover:bg-gray-300 dark:hover:bg-[#252b3d] flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-white transition-colors"
         >
           <ArrowLeft size={16} />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-white">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             {sheetName || "Sheet Problems"}
           </h1>
           {!loading && (
@@ -119,9 +119,9 @@ function SheetProblems() {
 
       {/* Progress bar */}
       {!loading && total > 0 && (
-        <div className="bg-[#121622] border border-[#1e2332] rounded-2xl p-5">
+        <div className="bg-white dark:bg-[#121622] border border-gray-200 dark:border-[#1e2332] rounded-2xl p-5">
           <div className="flex justify-between items-center mb-3">
-            <span className="text-sm font-semibold text-gray-300">Overall Progress</span>
+            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Overall Progress</span>
             <span
               className="text-sm font-bold"
               style={{ color: pct === 100 ? "#10b981" : pct >= 50 ? "#625df5" : "#f59e0b" }}
@@ -129,7 +129,7 @@ function SheetProblems() {
               {pct}%
             </span>
           </div>
-          <div className="w-full bg-[#1a1f2e] rounded-full h-2.5">
+          <div className="w-full bg-gray-100 dark:bg-[#1a1f2e] rounded-full h-2.5">
             <div
               className="h-2.5 rounded-full transition-all duration-500"
               style={{
@@ -157,10 +157,10 @@ function SheetProblems() {
       )}
 
       {/* Problems Table */}
-      <div className="bg-[#121622] border border-[#1e2332] rounded-2xl overflow-hidden">
+      <div className="bg-white dark:bg-[#121622] border border-gray-200 dark:border-[#1e2332] rounded-2xl overflow-hidden">
 
         {/* Header */}
-        <div className="grid grid-cols-[2.5rem_1fr_6rem_7rem_2.5rem] gap-x-4 px-5 py-3 border-b border-[#1e2332]">
+        <div className="grid grid-cols-[2.5rem_1fr_6rem_7rem_2.5rem] gap-x-4 px-5 py-3 border-b border-gray-200 dark:border-[#1e2332]">
           <span />
           <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Problem</span>
           <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Difficulty</span>
@@ -180,7 +180,7 @@ function SheetProblems() {
           paginatedProblems.map((p, idx) => {
             const isSolved = solvedIds.has(p.id)
             const isToggling = toggling === p.id
-            const diff = difficultyStyle[p.difficulty] ?? { bg: "bg-gray-700/20", text: "text-gray-400" }
+            const diff = difficultyStyle[p.difficulty] ?? { bg: "bg-gray-700/20", text: "text-gray-500 dark:text-gray-400" }
 
             return (
               <div
@@ -188,8 +188,8 @@ function SheetProblems() {
                 className={`
                   grid grid-cols-[2.5rem_1fr_6rem_7rem_2.5rem] gap-x-4 px-5 py-4
                   items-center transition-colors duration-200
-                  ${idx !== paginatedProblems.length - 1 ? "border-b border-[#1e2332]" : ""}
-                  ${isSolved ? "bg-[#10b981]/5" : "hover:bg-[#1e2332]/50"}
+                  ${idx !== paginatedProblems.length - 1 ? "border-b border-gray-200 dark:border-[#1e2332]" : ""}
+                  ${isSolved ? "bg-[#10b981]/5" : "hover:bg-gray-200 dark:bg-[#1e2332]/50"}
                 `}
               >
                 {/* Checkbox */}
@@ -208,7 +208,7 @@ function SheetProblems() {
                 {/* Title */}
                 {/* <span
                   className={`text-sm font-medium transition-colors ${
-                    isSolved ? "line-through text-gray-500" : "text-gray-200"
+                    isSolved ? "line-through text-gray-500" : "text-gray-900 dark:text-gray-200"
                   }`}
                 >
                   {p.title}
@@ -216,7 +216,7 @@ function SheetProblems() {
                 {/* <Link
                   to={`/solve/${p.id}`}
                   className={`text-sm font-medium hover:text-[#625df5] ${
-                    isSolved ? "line-through text-gray-500" : "text-gray-200"
+                    isSolved ? "line-through text-gray-500" : "text-gray-900 dark:text-gray-200"
                   }`}
                 >
                   {p.title}
@@ -224,7 +224,7 @@ function SheetProblems() {
                 <Link
                   to={`/solve/${p.id}`}
                   state={{ problem: p }}
-                  className={`text-sm font-medium hover:text-[#625df5] ${isSolved ? "line-through text-gray-500" : "text-gray-200"
+                  className={`text-sm font-medium hover:text-[#625df5] ${isSolved ? "line-through text-gray-500" : "text-gray-900 dark:text-gray-200"
                     }`}
                 >
                   {p.title}
@@ -236,7 +236,7 @@ function SheetProblems() {
                 </span>
 
                 {/* Platform */}
-                <span className="text-xs text-gray-400 font-medium truncate">
+                <span className="text-xs text-gray-500 dark:text-gray-400 font-medium truncate">
                   {p.platform}
                 </span>
 
@@ -261,26 +261,26 @@ function SheetProblems() {
 
       {/* Pagination Controls */}
       {problems.length > itemsPerPage && (
-        <div className="bg-[#121622] border border-[#1e2332] rounded-2xl p-5 flex items-center justify-between">
+        <div className="bg-white dark:bg-[#121622] border border-gray-200 dark:border-[#1e2332] rounded-2xl p-5 flex items-center justify-between">
           <button
             onClick={handlePreviousPage}
             disabled={currentPage === 1}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1b2a3c] border border-[#2a3a4e] text-gray-400 hover:text-white hover:border-[#3b82f6] disabled:opacity-50 disabled:cursor-not-allowed transition"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1b2a3c] border border-[#2a3a4e] text-gray-500 dark:text-gray-400 hover:text-white hover:border-[#3b82f6] disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
             <ChevronLeft size={16} />
             Previous
           </button>
 
           <div className="flex items-center gap-2">
-            <span className="text-gray-400 text-sm">
-              Page <span className="font-semibold text-white">{currentPage}</span> of <span className="font-semibold text-white">{totalPages}</span>
+            <span className="text-gray-500 dark:text-gray-400 text-sm">
+              Page <span className="font-semibold text-gray-900 dark:text-white">{currentPage}</span> of <span className="font-semibold text-gray-900 dark:text-white">{totalPages}</span>
             </span>
           </div>
 
           <button
             onClick={handleNextPage}
             disabled={currentPage === totalPages}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1b2a3c] border border-[#2a3a4e] text-gray-400 hover:text-white hover:border-[#3b82f6] disabled:opacity-50 disabled:cursor-not-allowed transition"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1b2a3c] border border-[#2a3a4e] text-gray-500 dark:text-gray-400 hover:text-white hover:border-[#3b82f6] disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
             Next
             <ChevronRight size={16} />

@@ -8,7 +8,7 @@ function ProblemTable({ problems }) {
 
       <thead>
 
-        <tr className="text-left text-gray-400">
+        <tr className="text-left text-gray-500 dark:text-gray-400">
 
           <th className="p-2">Problem</th>
           <th>Difficulty</th>
@@ -22,7 +22,7 @@ function ProblemTable({ problems }) {
 
         {problems.map(p => (
 
-          <tr key={p.id} className="border-t border-gray-700">
+          <tr key={p.id} className="border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-200">
 
             <td className="p-2">
 

@@ -63,7 +63,7 @@ function ProblemWorkspace() {
   }, [slug])
 
 
-  if (!problem) return <div className="text-white p-10">Loading...</div>
+  if (!problem) return <div className="text-gray-900 dark:text-white p-10">Loading...</div>
 
 
   return (
@@ -80,7 +80,7 @@ function ProblemWorkspace() {
             CodeCanvas AI
           </h1>
 
-          <div className="flex gap-4 text-sm text-gray-400">
+          <div className="flex gap-4 text-sm text-gray-500 dark:text-gray-400">
             <span className="cursor-pointer hover:text-white">Problems</span>
             <span className="cursor-pointer hover:text-white">Contests</span>
             <span className="cursor-pointer hover:text-white">Leaderboard</span>
@@ -173,7 +173,7 @@ function ProblemWorkspace() {
 
         <div className="border-r border-gray-800 bg-[#0F172A] flex flex-col overflow-hidden" style={{ width: `${leftWidth}%` }}>
 
-          <div className="p-3 text-sm text-gray-400 border-b border-gray-800 flex-shrink-0">
+          <div className="p-3 text-sm text-gray-500 dark:text-gray-400 border-b border-gray-800 flex-shrink-0">
             Logic Lab Whiteboard
           </div>
 

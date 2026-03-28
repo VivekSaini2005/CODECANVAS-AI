@@ -39,7 +39,7 @@ function Sheets() {
               {sheet.name}
             </h2>
 
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               {sheet.description}
             </p>
 

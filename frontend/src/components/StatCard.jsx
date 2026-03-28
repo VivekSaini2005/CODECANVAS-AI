@@ -3,7 +3,7 @@ function StatCard({ title, value }) {
   return (
     <div className="bg-gray-800 p-5 rounded-lg">
 
-      <p className="text-gray-400 text-sm">
+      <p className="text-gray-500 dark:text-gray-400 text-sm">
         {title}
       </p>
 
