@@ -19,3 +19,8 @@ export const updateUserProfile = async (profileData) => {
   const response = await API.put('/auth/update-profile', profileData);
   return response.data;
 };
+
+export const googleLoginUser = async (credential) => {
+  const response = await API.post('/auth/google', { credential });
+  return response.data;
+};

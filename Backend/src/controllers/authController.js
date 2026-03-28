@@ -108,3 +108,59 @@ exports.updateProfile = async (req, res) => {
         res.status(500).json({ error: err.message })
     }
 }
+
+const { OAuth2Client } = require('google-auth-library');
+const crypto = require('crypto');
+
+exports.googleLogin = async (req, res) => {
+    try {
+        const { credential } = req.body;
+        
+        if (!credential) {
+            return res.status(400).json({ error: "No credential provided" });
+        }
+
+        const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+        const ticket = await client.verifyIdToken({
+            idToken: credential,
+            audience: process.env.GOOGLE_CLIENT_ID
+        });
+        
+        const payload = ticket.getPayload();
+        const { email, name } = payload;
+
+        let userResult = await pool.query("SELECT * FROM users WHERE email=$1", [email]);
+        let user;
+
+        if (userResult.rows.length === 0) {
+            const randomPassword = crypto.randomBytes(8).toString('hex');
+            const hashed = await bcrypt.hash(randomPassword, 10);
+            
+            const insertResult = await pool.query(
+                "INSERT INTO users(id, name, email, password) VALUES($1, $2, $3, $4) RETURNING *",
+                [uuidv4(), name, email, hashed]
+            );
+            user = insertResult.rows[0];
+        } else {
+            user = userResult.rows[0];
+        }
+
+        const token = jwt.sign(
+            { id: user.id },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
+        );
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        });
+
+        res.json({ message: "Login successful", token: token, user: user });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
