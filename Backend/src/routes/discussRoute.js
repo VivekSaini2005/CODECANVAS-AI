@@ -1,7 +1,7 @@
 const express = require("express")
 const router = express.Router()
 
-const discussionController = require("../controllers/dicussionController")
+const discussionController = require("../controllers/discussionController")
 const auth = require("../middleware/authMiddleware")
 
 
