@@ -13,6 +13,7 @@ import ProtectedRoute from "./components/ProtectedRoute"
 import SolveProblem from "./pages/SolveProblem"
 import ProblemsPage from "./pages/ProblemsPage"
 import Leaderboard from "./pages/Leaderboard"
+import Discussion from "./pages/Discussion"
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
           <Route path="/sheets" element={<Sheets />} />
           <Route path="/sheet/:id" element={<SheetProblems />} />
           <Route path="/problems" element={<ProblemsPage />} />
+          <Route path="/discuss" element={<Discussion />} />
           <Route path="/problem/:slug" element={<Problem />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

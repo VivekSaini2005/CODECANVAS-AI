@@ -4,7 +4,8 @@ import {
   FileText,
   Code2,
   BarChart2,
-  User
+  User,
+  MessageSquare
 } from "lucide-react";
 
 function Sidebar() {
@@ -15,6 +16,7 @@ function Sidebar() {
     { name: "Problem Sheets", path: "/sheets", icon: FileText },
     { name: "Problems", path: "/problems", icon: Code2 },
     { name: "Leaderboard", path: "/leaderboard", icon: BarChart2 },
+    { name: "Discuss", path: "/discuss", icon: MessageSquare },
   ];
 
   const bottomNavItems = [
