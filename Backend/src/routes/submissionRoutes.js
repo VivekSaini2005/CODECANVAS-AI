@@ -8,7 +8,7 @@ const {
   getUserSubmissions
 } = require("../controllers/submissionController")
 
-router.post("/",auth,createSubmission)
-router.get("/",auth,getUserSubmissions)
+router.post("/",createSubmission)
+router.get("/",getUserSubmissions)
 
 module.exports = router

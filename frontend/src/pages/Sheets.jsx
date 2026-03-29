@@ -10,11 +10,13 @@ function Sheets() {
   useEffect(() => {
 
     const fetchSheets = async () => {
-
-      const res = await API.get("/sheets/sheet-progress")
-
-      setSheets(res.data)
-
+      try {
+        const token = localStorage.getItem("token");
+        const res = await API.get(token ? "/sheets/sheet-progress" : "/sheets");
+        setSheets(res.data)
+      } catch(err) {
+        console.error(err);
+      }
     }
 
     fetchSheets()

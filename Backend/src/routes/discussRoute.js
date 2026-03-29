@@ -6,7 +6,7 @@ const auth = require("../middleware/authMiddleware")
 
 
 router.post("/",auth,discussionController.createPost);
-router.get("/",auth,discussionController.getPosts);
+router.get("/",discussionController.getPosts);
 router.get("/:postId/comments",discussionController.getComments);
 router.post("/:postId/comments",auth,discussionController.addComment);
 router.post("/vote",auth,discussionController.vote);

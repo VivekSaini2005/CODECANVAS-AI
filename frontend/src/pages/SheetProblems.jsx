@@ -1,10 +1,11 @@
 import { useEffect, useState, useCallback } from "react"
-import { useParams, Link } from "react-router-dom"
+import { useParams, Link, useNavigate } from "react-router-dom"
 import API from "../api/axiosInstance"
 import { CheckCircle2, Circle, ExternalLink, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react"
 
 function SheetProblems() {
   const { id } = useParams()
+  const navigate = useNavigate()
 
   const [problems, setProblems] = useState([])
   const [solvedIds, setSolvedIds] = useState(new Set())
@@ -20,9 +21,12 @@ function SheetProblems() {
       setLoading(true)
       try {
         // Fetch sheet problems
+        const token = localStorage.getItem("token");
+        const progressPromise = token ? API.get("/progress").catch(() => ({ data: [] })) : Promise.resolve({ data: [] });
+
         const [problemsRes, progressRes] = await Promise.all([
           API.get(`/sheets/${id}`),
-          API.get("/progress")
+          progressPromise
         ])
         // console.log(problemsRes.data)
 
@@ -50,6 +54,13 @@ function SheetProblems() {
 
   // ─── Toggle solved status ────────────────────────────────────────────────────
   const toggleSolved = useCallback(async (problemId) => {
+    const token = localStorage.getItem("token")
+    if (!token) {
+      alert("First login then continue")
+      navigate("/login")
+      return;
+    }
+
     setToggling(problemId)
     try {
       const res = await API.post("/progress", { problemId })
@@ -66,7 +77,7 @@ function SheetProblems() {
     } finally {
       setToggling(null)
     }
-  }, [])
+  }, [navigate])
 
   // ─── Derived stats ───────────────────────────────────────────────────────────
   const total = problems.length
@@ -221,14 +232,22 @@ function SheetProblems() {
                 >
                   {p.title}
                 </Link> */}
-                <Link
-                  to={`/solve/${p.id}`}
-                  state={{ problem: p }}
-                  className={`text-sm font-medium hover:text-[#625df5] ${isSolved ? "line-through text-gray-500" : "text-gray-900 dark:text-gray-200"
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const token = localStorage.getItem("token");
+                    if (!token) {
+                      alert("First login then continue");
+                      navigate("/login");
+                      return;
+                    }
+                    navigate(`/solve/${p.id}`, { state: { problem: p } });
+                  }}
+                  className={`text-sm text-left font-medium hover:text-[#625df5] ${isSolved ? "line-through text-gray-500" : "text-gray-900 dark:text-gray-200"
                     }`}
                 >
                   {p.title}
-                </Link>
+                </button>
 
                 {/* Difficulty */}
                 <span className={`text-[11px] font-bold px-2 py-0.5 rounded w-fit ${diff.bg} ${diff.text}`}>

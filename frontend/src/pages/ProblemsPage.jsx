@@ -16,15 +16,18 @@ export default function ProblemsPage() {
     const [selectedTag, setSelectedTag] = useState("Topic Tags")
     const [selectedCompany, setSelectedCompany] = useState("Companies")
 
-    const ITEMS_PER_PAGE = 5;
+    const ITEMS_PER_PAGE = 10;
 
     useEffect(() => {
         const fetchAll = async () => {
             try {
                 // Fetch problems and progress
+                const token = localStorage.getItem("token");
+                const progressPromise = token ? API.get("/progress").catch(() => ({ data: [] })) : Promise.resolve({ data: [] });
+                
                 const [problemsRes, progressRes] = await Promise.all([
                     API.get(`/problems`),
-                    API.get("/progress")
+                    progressPromise
                 ])
                 setProblems(problemsRes.data)
 
@@ -40,6 +43,13 @@ export default function ProblemsPage() {
     }, [])
 
     const toggleSolved = async (problemId) => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("First login then continue");
+            navigate("/login");
+            return;
+        }
+
         setToggling(problemId)
         try {
             const res = await API.post("/progress", { problemId })
@@ -207,7 +217,16 @@ export default function ProblemsPage() {
                                 {/* TITLE */}
                                 <td className="p-4">
                                     <button
-                                        onClick={() => navigate(`/solve/${p.id}`, { state: { problem: p } })}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            const token = localStorage.getItem("token");
+                                            if (!token) {
+                                                alert("First login then continue");
+                                                navigate("/login");
+                                                return;
+                                            }
+                                            navigate(`/solve/${p.id}`, { state: { problem: p } });
+                                        }}
                                         className={`hover:text-blue-400 font-medium text-[14px] text-left ${isSolved ? 'line-through text-gray-500 hover:text-gray-500 dark:text-gray-400' : 'text-gray-900 dark:text-gray-200'}`}
                                     >
                                         {indexOfFirst + index + 1}. {p.title}
