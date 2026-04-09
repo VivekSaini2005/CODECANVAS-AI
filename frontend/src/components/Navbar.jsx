@@ -118,28 +118,33 @@ function Navbar() {
   const seedUrl = userData?.name ? encodeURIComponent(userFirstName) : 'Coder';
 
   return (
-    <div className="bg-white dark:bg-[#0a0d14] p-4 px-6 flex justify-between items-center border-b border-gray-200 dark:border-[#1e2332] transition-colors duration-200 shadow-sm dark:shadow-none relative z-50">
+    <div className="sticky top-0 z-30 backdrop-blur-xl bg-white/70 dark:bg-[#0b0f1a]/80 p-4 px-8 flex justify-between items-center border-b border-gray-200 dark:border-white/5 transition-all duration-300 shadow-sm dark:shadow-none">
 
       {/* Search Bar */}
-      <div className="flex-1 max-w-xl relative hidden md:block">
-        <Search size={18} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 dark:text-gray-500" />
+      <div className="flex-1 max-w-xl relative hidden md:block group">
+        <Search size={18} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 transition-colors group-hover:text-[#625df5]" />
         <input
           type="text"
           placeholder="Search problems, sheets, or tutorials..."
-          className="w-full bg-gray-100 dark:bg-[#121622] text-gray-900 dark:text-gray-200 border border-transparent dark:border-[#1e2332] rounded-xl pl-12 pr-4 py-2.5 focus:outline-none focus:border-[#625df5] dark:focus:border-[#625df5] focus:ring-1 focus:ring-[#625df5] transition-all text-sm"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && e.target.value.trim()) {
+              navigate(`/problems?search=${encodeURIComponent(e.target.value.trim())}`);
+            }
+          }}
+          className="w-full bg-gray-100 dark:bg-white/5 text-gray-900 dark:text-gray-200 border border-transparent dark:border-white/5 rounded-full pl-12 pr-6 py-2.5 focus:outline-none focus:border-[#625df5] dark:focus:border-indigo-500/50 focus:ring-2 focus:ring-[#625df5]/30 transition-all text-sm group-hover:bg-gray-200 dark:group-hover:bg-white/10"
         />
       </div>
 
       {/* Right Actions */}
-      <div className="flex items-center gap-4 sm:gap-6 ml-auto">
+      <div className="flex items-center gap-6 sm:gap-8 ml-auto">
 
         {/* Icons */}
-        <div className="flex items-center gap-4 text-gray-500 dark:text-gray-400">
+        <div className="flex items-center gap-5 text-gray-500 dark:text-gray-400">
 
           {token && (
             <div className="relative profile-dropdown-container" ref={notifRef}>
               <button 
-                className="hover:text-gray-800 dark:hover:text-gray-900 dark:text-gray-200 transition-colors relative flex items-center justify-center p-2" 
+                className="text-gray-500 dark:text-gray-300 hover:text-[#625df5] dark:hover:text-indigo-400 transition-all duration-200 hover:scale-110 relative flex items-center justify-center p-2 rounded-full hover:bg-[#625df5]/10" 
                 title="Notifications"
                 onClick={() => setShowNotifications(!showNotifications)}
               >
@@ -197,27 +202,27 @@ function Navbar() {
             </div>
           )}
 
-          <button onClick={toggleTheme} className="hover:text-gray-800 dark:hover:text-gray-900 dark:text-gray-200 transition-colors" title="Toggle Theme">
-            {theme === "dark" ? <Sun size={20} className="text-yellow-400" /> : <Moon size={20} />}
+          <button onClick={toggleTheme} className="text-gray-500 dark:text-gray-300 hover:text-yellow-500 dark:hover:text-yellow-400 transition-all duration-200 hover:scale-110 p-2 rounded-full hover:bg-yellow-500/10" title="Toggle Theme">
+            {theme === "dark" ? <Sun size={20} className="text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" /> : <Moon size={20} />}
           </button>
         </div>
 
         {/* Divider */}
-        <div className="h-8 w-px bg-gray-200 dark:bg-[#1e2332]"></div>
+        <div className="h-8 w-px bg-gray-200 dark:bg-white/10 hidden sm:block"></div>
 
         {/* User Auth Section */}
         {token ? (
           <div className="relative profile-dropdown-container">
             <div
-              className="flex items-center gap-3 cursor-pointer group"
+              className="flex items-center gap-4 cursor-pointer group"
               onClick={() => setShowDropdown(!showDropdown)}
             >
               <div className="flex flex-col items-end hidden sm:flex">
-                <span className="text-sm font-semibold text-gray-800 dark:text-gray-200 group-hover:text-[#625df5] dark:group-hover:text-white transition-colors">{userFirstName}</span>
+                <span className="text-sm font-bold text-gray-800 dark:text-gray-200 group-hover:text-[#625df5] dark:group-hover:text-indigo-400 transition-colors drop-shadow-sm">{userFirstName}</span>
                 <span className="text-[10px] uppercase text-gray-500 tracking-wider"></span>
               </div>
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#625df5] to-[#45b7f1] p-[2px] cursor-pointer group-hover:scale-105 transition-transform">
-                <div className="w-full h-full bg-white dark:bg-[#1a1f2e] rounded-[10px] overflow-hidden flex flex-col justify-end items-center">
+              <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#625df5] to-[#45b7f1] p-[2px] cursor-pointer hover:scale-105 transition-all duration-300 shadow-md hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] ring-2 ring-transparent group-hover:ring-[#625df5]/50">
+                <div className="w-full h-full bg-white dark:bg-[#0b0f1a] rounded-full overflow-hidden flex flex-col justify-end items-center">
                   <img src={`${userData?.profileimage}`} alt="avatar" className="w-full h-full object-cover" />
                 </div>
               </div>

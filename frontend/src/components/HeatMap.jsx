@@ -41,42 +41,49 @@ const HeatMap = ({ heatmap, onRefresh, isLoading, isExpanded, onToggleExpand }) 
     }
 
     return (
-        <div className="bg-white dark:bg-[#121622] border border-gray-200 dark:border-[#1e2332] rounded-2xl p-6 h-full flex flex-col">
+        <div className="glass border border-gray-200 dark:border-white/5 rounded-2xl p-8 h-full flex flex-col shadow-soft hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
 
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center mb-8">
 
-                <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-                    Activity Heatmap
-                </h2>
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500/20 to-green-500/10 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                        <RefreshCw size={20} className="text-emerald-500 dark:text-emerald-400" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                        Activity Heatmap
+                    </h2>
+                </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-5">
                     <button
                         onClick={onRefresh}
                         disabled={isLoading}
-                        className="p-2 rounded-lg bg-[#625df5]/10 hover:bg-[#625df5]/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="p-2.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed group"
                         title="Refresh heatmap data"
                     >
                         <RefreshCw
                             size={18}
-                            className={`text-[#625df5] ${isLoading ? "animate-spin" : ""}`}
+                            className={`text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform ${isLoading ? "animate-spin" : ""}`}
                         />
                     </button>
                     {onToggleExpand && (
                         <button
                             onClick={onToggleExpand}
-                            className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 transition-colors"
+                            className="p-2.5 rounded-lg bg-gray-100 dark:bg-white/5 text-gray-500 hover:text-gray-900 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/10 transition-all hover:scale-110"
                             title={isExpanded ? "Collapse" : "Expand"}
                         >
                             {isExpanded ? <ChevronsLeft size={18} /> : <ChevronsRight size={18} />}
                         </button>
                     )}
-                    <div className="flex flex-col sm:flex-row items-center gap-2 text-xs text-gray-500 dark:text-gray-400 ml-2">
+                    <div className="flex flex-col sm:flex-row items-center gap-2 text-[11px] font-semibold text-gray-400 ml-4 tracking-wide uppercase px-3 py-1.5 rounded-full bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5">
                         <span>Less</span>
-                        <div className="w-[10px] h-[10px] rounded-[2px] bg-gray-100 dark:bg-[#1a1f2e]"></div>
-                        <div className="w-[10px] h-[10px] rounded-[2px] bg-[#10b981]/20"></div>
-                        <div className="w-[10px] h-[10px] rounded-[2px] bg-[#10b981]/40"></div>
-                        <div className="w-[10px] h-[10px] rounded-[2px] bg-[#10b981]/70"></div>
-                        <div className="w-[10px] h-[10px] rounded-[2px] bg-[#10b981]"></div>
+                        <div className="flex items-center gap-1.5 mx-1">
+                            <div className="w-3 h-3 rounded-sm bg-gray-100 dark:bg-[#161b22] border border-gray-200 dark:border-white/5"></div>
+                            <div className="w-3 h-3 rounded-sm bg-[#0e4429] border border-white/5"></div>
+                            <div className="w-3 h-3 rounded-sm bg-[#006d32] border border-white/5"></div>
+                            <div className="w-3 h-3 rounded-sm bg-[#26a641] border border-white/5"></div>
+                            <div className="w-3 h-3 rounded-sm bg-[#39d353] border border-white/5 shadow-[0_0_8px_rgba(57,211,83,0.3)]"></div>
+                        </div>
                         <span>More</span>
                     </div>
                 </div>
@@ -125,18 +132,18 @@ const HeatMap = ({ heatmap, onRefresh, isLoading, isExpanded, onToggleExpand }) 
 
                                 const count = activity[key] || 0;
 
-                                let bgColor = "bg-gray-100 dark:bg-[#1a1f2e]";
+                                let bgColor = "bg-gray-100 dark:bg-[#161b22] border-gray-200 dark:border-white/5";
 
-                                if (count === 1) bgColor = "bg-[#10b981]/20";
-                                else if (count === 2) bgColor = "bg-[#10b981]/40";
-                                else if (count === 3) bgColor = "bg-[#10b981]/70";
-                                else if (count >= 4) bgColor = "bg-[#10b981]";
+                                if (count === 1) bgColor = "bg-[#0e4429] border-white/5";
+                                else if (count === 2) bgColor = "bg-[#006d32] border-white/5";
+                                else if (count === 3) bgColor = "bg-[#26a641] border-white/5";
+                                else if (count >= 4) bgColor = "bg-[#39d353] border-white/5 shadow-[0_0_8px_rgba(57,211,83,0.3)]";
 
                                 cells.push(
                                     <div
                                         key={key}
                                         title={`${count} submissions on ${key}`}
-                                        className={`${cellClass} rounded-[2px] ${bgColor} hover:ring-2 hover:ring-gray-500 transition-all cursor-pointer`}
+                                        className={`${cellClass} rounded-sm border ${bgColor} hover:scale-[1.25] hover:z-10 hover:shadow-md hover:ring-2 hover:ring-emerald-400/50 transition-all duration-200 cursor-pointer`}
                                     />
                                 );
                             });

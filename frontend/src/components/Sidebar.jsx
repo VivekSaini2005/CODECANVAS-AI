@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -5,10 +6,13 @@ import {
   Code2,
   BarChart2,
   User,
-  MessageSquare
+  MessageSquare,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 
 function Sidebar() {
+  const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
 
   const navItems = [
@@ -30,23 +34,33 @@ function Sidebar() {
   };
 
   return (
-    <div className="w-64 bg-white dark:bg-[#0f121b] border-r border-gray-200 dark:border-[#1e2332] flex flex-col h-screen sticky top-0 z-10 shadow-sm">
+    <div className={`relative ${collapsed ? "w-20" : "w-64"} bg-white dark:bg-gradient-to-b dark:from-[#0b0f1a] dark:to-[#0f172a] border-r border-gray-200 dark:border-white/5 flex flex-col h-screen sticky top-0 z-40 glass shadow-soft transition-all duration-300 ease-in-out overflow-visible`}>
+
+      {/* Toggle Button */}
+      <div 
+        onClick={() => setCollapsed(!collapsed)}
+        className="absolute top-6 right-0 translate-x-1/2 z-50 w-9 h-9 rounded-full bg-[#111827] border border-white/10 shadow-lg flex items-center justify-center cursor-pointer hover:scale-110 active:scale-95 hover:shadow-indigo-500/20 transition-all duration-300 ease-in-out group focus:outline-none"
+      >
+        <ChevronLeft size={16} className={`text-white/80 group-hover:text-white transition-transform duration-300 ${collapsed ? 'rotate-180' : ''}`} />
+      </div>
 
       {/* Logo */}
-      <div className="px-6 py-6 flex items-center gap-2">
-        <div className="w-8 h-8 rounded bg-gradient-to-br from-[#625df5] to-[#45b7f1] flex items-center justify-center shadow-lg">
-          <Code2 size={18} className="text-gray-900 dark:text-white" />
+      <div className={`px-5 py-8 flex items-center ${collapsed ? "justify-center" : "gap-3"} transition-all duration-300`}>
+        <div className="w-9 h-9 shrink-0 flex items-center justify-center rounded-xl bg-gradient-to-br from-[#625df5] to-[#45b7f1] shadow-lg shadow-indigo-500/30">
+          <Code2 size={20} className="text-white" />
         </div>
-        <h1 className="text-xl font-bold text-gray-900 dark:text-white tracking-wide">
-          CodeCanvas <span className="text-[#625df5] text-sm ml-1">AI</span>
-        </h1>
+        {collapsed ? null : (
+          <h1 className="text-2xl font-bold tracking-wide dark:text-white whitespace-nowrap opacity-100 transition-opacity duration-300">
+            CodeCanvas <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#625df5] to-[#45b7f1] text-sm ml-1">AI</span>
+          </h1>
+        )}
       </div>
 
       {/* Navigation */}
-      <div className="flex flex-col px-3 flex-1">
+      <div className="flex flex-col px-4 py-2 flex-1 overflow-x-hidden">
 
         {/* Top Nav */}
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-2">
           {navItems.map((item) => {
             const active = isActive(item.path);
 
@@ -54,29 +68,46 @@ function Sidebar() {
               <Link
                 key={item.name}
                 to={item.path}
-                className={`
-                  flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
-                  ${active
-                    ? "bg-indigo-50 dark:bg-[#1e2332] text-[#625df5] font-semibold"
-                    : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-900 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-100 dark:bg-[#1a1f2e]"
-                  }
-                `}
+                className={`group relative flex items-center ${collapsed ? "justify-center px-0 w-12 mx-auto" : "gap-4 px-4"} py-3.5 rounded-xl transition-all duration-300 ease-in-out ${
+                  active
+                    ? "bg-indigo-50 dark:bg-gradient-to-r dark:from-indigo-600/20 dark:to-blue-600/10 text-[#625df5] dark:text-indigo-300 font-bold dark:border border-transparent dark:border-indigo-500/20 dark:shadow-[0_0_20px_rgba(99,102,241,0.15)]"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 dark:bg-transparent hover:bg-gray-50 dark:hover:bg-white/5"
+                }`}
               >
-                <item.icon
-                  size={20}
-                  className={active ? "text-[#625df5]" : "text-gray-500 dark:text-gray-400"}
-                />
-                <span>{item.name}</span>
+                {/* Active Indicator Dot */}
+                {collapsed && active && (
+                  <div className="absolute left-1 w-1.5 h-1.5 rounded-full bg-[#625df5] shadow-[0_0_8px_#625df5] transition-all duration-300"></div>
+                )}
+
+                <div className="p-1 rounded-lg transition-transform duration-200 group-hover:scale-110 group-hover:bg-black/5 dark:group-hover:bg-white/5 flex items-center justify-center">
+                  <item.icon
+                    size={22}
+                    className={`shrink-0 transition-opacity duration-200 ${
+                      active ? "text-[#625df5] dark:text-indigo-400 opacity-100" : "text-gray-500 dark:text-gray-400 opacity-70 group-hover:opacity-100"
+                    }`}
+                  />
+                </div>
+                
+                {collapsed ? null : (
+                  <span className="whitespace-nowrap transition-opacity duration-300 opacity-100">{item.name}</span>
+                )}
+
+                {/* Tooltip */}
+                {collapsed && (
+                   <div className="absolute left-full ml-3 px-2 py-1 bg-black text-white text-xs rounded-md shadow-soft opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 whitespace-nowrap pointer-events-none">
+                     {item.name}
+                   </div>
+                )}
               </Link>
             );
           })}
         </div>
 
         {/* Divider */}
-        <div className="my-4 border-t border-gray-200 dark:border-[#1e2332]" />
+        <div className={`my-4 border-t border-gray-200 dark:border-white/5 ${collapsed ? "mx-4" : "mx-2"} transition-all duration-300`} />
 
         {/* Bottom Nav */}
-        <div className="flex flex-col gap-1 mt-auto">
+        <div className="flex flex-col gap-2 mt-auto pb-6">
           {bottomNavItems.map((item) => {
             const active = isActive(item.path);
 
@@ -84,19 +115,36 @@ function Sidebar() {
               <Link
                 key={item.name}
                 to={item.path}
-                className={`
-                  flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
-                  ${active
-                    ? "bg-indigo-50 dark:bg-[#1e2332] text-[#625df5] font-semibold"
-                    : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-900 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-100 dark:bg-[#1a1f2e]"
-                  }
-                `}
+                className={`group relative flex items-center ${collapsed ? "justify-center px-0 w-12 mx-auto" : "gap-4 px-4"} py-3.5 rounded-xl transition-all duration-300 ease-in-out ${
+                  active
+                    ? "bg-indigo-50 dark:bg-gradient-to-r dark:from-indigo-600/20 dark:to-blue-600/10 text-[#625df5] dark:text-indigo-300 font-bold dark:border border-transparent dark:border-indigo-500/20 dark:shadow-[0_0_20px_rgba(99,102,241,0.15)]"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 dark:bg-transparent hover:bg-gray-50 dark:hover:bg-white/5"
+                }`}
               >
-                <item.icon
-                  size={20}
-                  className={active ? "text-[#625df5]" : "text-gray-500 dark:text-gray-400"}
-                />
-                <span>{item.name}</span>
+                {/* Active Indicator Dot */}
+                {collapsed && active && (
+                  <div className="absolute left-1 w-1.5 h-1.5 rounded-full bg-[#625df5] shadow-[0_0_8px_#625df5] transition-all duration-300"></div>
+                )}
+
+                <div className="p-1 rounded-lg transition-transform duration-200 group-hover:scale-110 group-hover:bg-black/5 dark:group-hover:bg-white/5 flex items-center justify-center">
+                  <item.icon
+                    size={22}
+                    className={`shrink-0 transition-opacity duration-200 ${
+                      active ? "text-[#625df5] dark:text-indigo-400 opacity-100" : "text-gray-500 dark:text-gray-400 opacity-70 group-hover:opacity-100"
+                    }`}
+                  />
+                </div>
+                
+                {collapsed ? null : (
+                  <span className="whitespace-nowrap transition-opacity duration-300 opacity-100">{item.name}</span>
+                )}
+
+                {/* Tooltip */}
+                {collapsed && (
+                   <div className="absolute left-full ml-3 px-2 py-1 bg-black text-white text-xs rounded-md shadow-soft opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 whitespace-nowrap pointer-events-none">
+                     {item.name}
+                   </div>
+                )}
               </Link>
             );
           })}

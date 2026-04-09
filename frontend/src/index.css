@@ -6,3 +6,55 @@
 
 /* Ensure the selector dark mode works properly */
 @custom-variant dark (&:is(.dark *));
+
+:root {
+  --bg-primary: #0b0f1a;
+  --bg-secondary: #111827;
+  --card-bg: rgba(17, 24, 39, 0.6);
+  --border-color: rgba(255,255,255,0.08);
+  --text-primary: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --accent: #6366f1;
+}
+
+body {
+  background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+  color: var(--text-primary);
+  min-height: 100vh;
+  margin: 0;
+  background-attachment: fixed;
+}
+
+* {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Custom Thin Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Utilities */
+.glass {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+}
+
+.shadow-soft {
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
