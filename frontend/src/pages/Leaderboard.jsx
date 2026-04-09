@@ -7,46 +7,47 @@ export default function LeaderboardPage() {
 
     const [users, setUsers] = useState([]);
 
-    useEffect(() => {
-        fetchLeaderboard();
-    }, []);
-
     const fetchLeaderboard = async () => {
         const { data } = await API.get("/progress/leaderboard");
         console.log(data.leaderboard);
         setUsers(data.leaderboard || []);
     };
 
+    useEffect(() => {
+        fetchLeaderboard();
+    }, []);
+
     const getRankIcon = (rank) => {
         const baseClass = "flex items-center gap-2 justify-center";
+        const badgeClass = "px-2 py-1 rounded-md bg-white/5 font-bold";
 
         switch (rank) {
             case 1:
                 return (
                     <div className={baseClass}>
-                        <Trophy className="w-7 h-7 text-yellow-500" />
-                        <span className="font-bold">#{rank}</span>
+                        <Trophy className="w-6 h-6 text-yellow-400" />
+                        <span className={badgeClass}>#{rank}</span>
                     </div>
                 );
             case 2:
                 return (
                     <div className={baseClass}>
-                        <Medal className="w-7 h-7 text-slate-400" />
-                        <span className="font-bold">#{rank}</span>
+                        <Medal className="w-6 h-6 text-gray-300" />
+                        <span className={badgeClass}>#{rank}</span>
                     </div>
                 );
             case 3:
                 return (
                     <div className={baseClass}>
-                        <Award className="w-7 h-7 text-orange-600" />
-                        <span className="font-bold">#{rank}</span>
+                        <Award className="w-6 h-6 text-orange-400" />
+                        <span className={badgeClass}>#{rank}</span>
                     </div>
                 );
             default:
                 return (
-                    <span className="flex items-center gap-2 justify-center font-bold ">
-                        #{rank}
-                    </span>
+                    <div className={baseClass}>
+                        <span className={`${badgeClass} text-sm text-gray-400`}>#{rank}</span>
+                    </div>
                 );
         }
     };
@@ -58,8 +59,8 @@ export default function LeaderboardPage() {
 
             {/* Header */}
             <div className="mb-10 text-center">
-                <h1 className="text-4xl font-extrabold mb-3">Leaderboard</h1>
-                <p className="text-gray-500">Top coders on CodeCanvas</p>
+                <h1 className="text-3xl font-semibold tracking-tight bg-gradient-to-r from-indigo-400 to-blue-500 bg-clip-text text-transparent">Leaderboard</h1>
+                <p className="text-sm text-gray-400 mt-1">Top coders on CodeCanvas</p>
             </div>
 
             {/* 🏆 Top 3 Podium */}
@@ -74,11 +75,11 @@ export default function LeaderboardPage() {
             )}
 
             {/* 📊 Table */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden">
+            <div className="bg-gradient-to-br from-white/5 to-transparent border border-white/10 rounded-2xl shadow-soft overflow-hidden">
 
                 <table className="w-full text-left">
 
-                    <thead className="bg-gray-100 dark:bg-gray-900">
+                    <thead className="bg-white/5 text-xs uppercase tracking-wider text-gray-400">
                         <tr>
                             <th className="px-6 py-4 text-center">Rank</th>
                             <th className="px-6 py-4">User</th>
@@ -93,7 +94,7 @@ export default function LeaderboardPage() {
                         {users.map((user) => {
 
                             return (
-                                <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-800">
+                                <tr key={user.id} className={`border-b border-white/5 transition-all duration-300 hover:bg-white/5 hover:scale-[1.01] ${user.rank === 1 ? 'bg-yellow-500/5' : ''}`}>
 
                                     {/* Rank */}
                                     <td className="px-6 py-4 text-center">
@@ -105,11 +106,8 @@ export default function LeaderboardPage() {
 
                                         <img
                                             src={`${user.profileimage}`}
-                                            className="w-10 h-10 rounded-full"
-                                        />
-
-                                        <div>
-                                            <div className="font-bold">
+                                            className="w-8 h-8 rounded-full border border-white/10 object-cover transition-all duration-300 hover:scale-[1.15]"                                         />                                        <div>
+                                            <div className="font-medium text-sm transition-colors hover:text-indigo-400 cursor-pointer">
                                                 {user.name}
                                             </div>
                                         </div>
@@ -117,21 +115,23 @@ export default function LeaderboardPage() {
                                     </td>
 
                                     {/* Ratings */}
-                                    <td className="px-6 py-4 text-center text-sm font-medium">
-                                        <span className="text-yellow-600" title="LeetCode">{user.lc_rating || 0}</span>
-                                        <span className="text-gray-500 dark:text-gray-400 mx-1">|</span>
-                                        <span className="text-blue-500" title="Codeforces">{user.cf_rating || 0}</span>
-                                        <span className="text-gray-500 dark:text-gray-400 mx-1">|</span>
-                                        <span className="text-green-600" title="CodeChef">{user.cc_rating || 0}</span>
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center justify-center gap-1 text-xs font-medium">
+                                            <span className="text-yellow-500" title="LeetCode">{user.lc_rating || 0}</span>
+                                            <span className="text-gray-500">|</span>
+                                            <span className="text-blue-500" title="Codeforces">{user.cf_rating || 0}</span>
+                                            <span className="text-gray-500">|</span>
+                                            <span className="text-green-500" title="CodeChef">{user.cc_rating || 0}</span>
+                                        </div>
                                     </td>
 
                                     {/* Total Solved */}
-                                    <td className="px-6 py-4 text-right font-bold text-green-500">
+                                    <td className="px-6 py-4 text-right font-semibold text-green-400">
                                         {user.total_solved}
                                     </td>
 
                                     {/* Score */}
-                                    <td className="px-6 py-4 text-right font-bold text-blue-500">
+                                    <td className="px-6 py-4 text-right font-semibold text-indigo-400">
                                         {user.score}
                                     </td>
 
