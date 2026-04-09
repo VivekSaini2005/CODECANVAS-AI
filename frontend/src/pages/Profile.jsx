@@ -73,7 +73,7 @@
 //   }
 
 //   return (
-//     <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 animate-in fade-in duration-500 pb-20">
+//     <div className="max-w-4xl mx-auto p-4 sm:p-3 sm:p-4 md:p-6 lg:p-4 sm:p-6 md:p-8 space-y-8 animate-in fade-in duration-500 pb-20">
 
 //       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
 //         <div>
@@ -114,9 +114,9 @@
 //       )}
 
 //       {/* Main Card */}
-//       <div className="bg-white dark:bg-[#121622] rounded-3xl p-6 sm:p-10 border border-gray-100 dark:border-[#1e2332] shadow-xl dark:shadow-none transition-colors">
+//       <div className="bg-white dark:bg-[#121622] rounded-3xl p-3 sm:p-4 md:p-6 sm:p-10 border border-gray-100 dark:border-[#1e2332] shadow-xl dark:shadow-none transition-colors">
 
-//         <div className="flex flex-col md:flex-row items-center md:items-start gap-8 border-b border-gray-100 dark:border-[#1e2332] pb-10">
+//         <div className="flex flex-col md:flex-row items-center md:items-start gap-4 sm:gap-6 md:gap-8 border-b border-gray-100 dark:border-[#1e2332] pb-10">
 //           <div className="relative">
 //             <div className="h-32 w-32 rounded-3xl bg-gradient-to-br from-[#625df5] to-[#45b7f1] p-1 shadow-lg">
 //               <div className="w-full h-full bg-white dark:bg-[#1a1f2e] rounded-[20px] overflow-hidden flex flex-col items-center justify-end">
@@ -166,7 +166,7 @@
 //             Platform Integrations
 //           </h3>
 
-//           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+//           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
 
 //             {/* LeetCode */}
 //             <div className="bg-gray-50 dark:bg-[#0a0d14] rounded-2xl p-5 border border-gray-100 dark:border-[#1e2332] transition-colors relative overflow-hidden group">
@@ -182,7 +182,7 @@
 //                   placeholder="e.g. tourist"
 //                 />
 //               ) : (
-//                 <div className="text-base font-semibold text-gray-900 dark:text-gray-200 mt-1 ml-1">
+//                 <div className="text-sm sm:text-base md:text-lg font-semibold text-gray-900 dark:text-gray-200 mt-1 ml-1">
 //                   {user.leetcode_username || <span className="text-gray-500 dark:text-gray-400 italic text-sm font-medium">Not connected</span>}
 //                 </div>
 //               )}
@@ -202,7 +202,7 @@
 //                   placeholder="e.g. tourist"
 //                 />
 //               ) : (
-//                 <div className="text-base font-semibold text-gray-900 dark:text-gray-200 mt-1 ml-1">
+//                 <div className="text-sm sm:text-base md:text-lg font-semibold text-gray-900 dark:text-gray-200 mt-1 ml-1">
 //                   {user.codeforces_username || <span className="text-gray-500 dark:text-gray-400 italic text-sm font-medium">Not connected</span>}
 //                 </div>
 //               )}
@@ -222,7 +222,7 @@
 //                   placeholder="e.g. tourist"
 //                 />
 //               ) : (
-//                 <div className="text-base font-semibold text-gray-900 dark:text-gray-200 mt-1 ml-1">
+//                 <div className="text-sm sm:text-base md:text-lg font-semibold text-gray-900 dark:text-gray-200 mt-1 ml-1">
 //                   {user.codechef_username || <span className="text-gray-500 dark:text-gray-400 italic text-sm font-medium">Not connected</span>}
 //                 </div>
 //               )}
@@ -365,7 +365,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 pb-20">
+    <div className="max-w-4xl mx-auto p-4 sm:p-3 sm:p-4 md:p-6 lg:p-4 sm:p-6 md:p-8 space-y-8 pb-20">
 
       {/* HEADER */}
       <div className="flex justify-between items-center">
@@ -393,9 +393,9 @@ const Profile = () => {
       {error && <p className="text-red-500">{error}</p>}
 
       {/* PROFILE CARD */}
-      <div className="bg-white dark:bg-[#121622] p-6 rounded-3xl">
+      <div className="bg-white dark:bg-[#121622] p-3 sm:p-4 md:p-6 rounded-3xl">
 
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3 sm:gap-4 md:gap-6">
 
           {/* IMAGE */}
           <div className="relative">
@@ -452,7 +452,7 @@ const Profile = () => {
             Platform Integrations
           </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
 
             {[
               { label: "LeetCode Username", name: "leetcode_username", color: "#f89f1b" },

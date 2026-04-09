@@ -35,7 +35,7 @@ export default function RecommendedProblems() {
 
     return (
 
-        <div className="flex-1 glass border border-gray-200 dark:border-white/5 rounded-2xl p-6 flex flex-col h-full shadow-soft hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+        <div className="flex-1 glass border border-gray-200 dark:border-white/5 rounded-2xl p-3 sm:p-4 md:p-6 flex flex-col h-full shadow-soft hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
 
             {/* Title */}
             <h2 className="text-gray-900 dark:text-white text-lg font-bold mb-6">

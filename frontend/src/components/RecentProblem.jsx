@@ -50,7 +50,7 @@ export default function RecentProblems() {
     }
 
     return (
-        <div className="glass rounded-2xl p-6 shadow-soft transition-all duration-200 hover:shadow-lg flex flex-col h-full">  
+        <div className="glass rounded-2xl p-3 sm:p-4 md:p-6 shadow-soft transition-all duration-200 hover:shadow-lg flex flex-col h-full">  
 
             {/* Header */}
             <div className="flex justify-between items-center mb-6">

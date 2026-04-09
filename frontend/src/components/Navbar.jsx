@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Search, Bell, Moon, Sun, User as UserIcon, LogOut, Check } from "lucide-react"
+import { Search, Bell, Moon, Sun, User as UserIcon, LogOut, Check, Menu } from "lucide-react"
 import { fetchUserProfile } from "../api/authApi"
 import { getNotifications, markNotificationRead } from "../api/discussApi"
 import { useSocket } from "../hooks/useSocket"
 import { useTheme } from "../context/ThemeContext"
 
-function Navbar() {
+function Navbar({ onMenuClick }) {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const [token, setToken] = useState(() => localStorage.getItem("token"))
@@ -118,7 +118,16 @@ function Navbar() {
   const seedUrl = userData?.name ? encodeURIComponent(userFirstName) : 'Coder';
 
   return (
-    <div className="sticky top-0 z-30 backdrop-blur-xl bg-white/70 dark:bg-[#0b0f1a]/80 p-4 px-8 flex justify-between items-center border-b border-gray-200 dark:border-white/5 transition-all duration-300 shadow-sm dark:shadow-none">
+    <div className="sticky top-0 z-30 backdrop-blur-xl bg-white/70 dark:bg-[#0b0f1a]/80 py-4 px-3 sm:px-6 flex justify-between items-center border-b border-gray-200 dark:border-white/5 transition-all duration-300 shadow-sm dark:shadow-none gap-3 sm:gap-4 flex-wrap">        
+
+      {/* Hamburger Menu (Mobile Only) */}
+      <button 
+        onClick={onMenuClick}
+        className="md:hidden text-gray-500 dark:text-gray-300 hover:text-[#625df5] p-2 hover:bg-[#625df5]/10 rounded-xl transition-colors"
+        aria-label="Open Menu"
+      >
+        <Menu size={24} />
+      </button>
 
       {/* Search Bar */}
       <div className="flex-1 max-w-xl relative hidden md:block group">
@@ -136,7 +145,7 @@ function Navbar() {
       </div>
 
       {/* Right Actions */}
-      <div className="flex items-center gap-6 sm:gap-8 ml-auto">
+      <div className="flex items-center gap-3 sm:gap-4 md:gap-6 sm:gap-4 sm:gap-6 md:gap-8 ml-auto">
 
         {/* Icons */}
         <div className="flex items-center gap-5 text-gray-500 dark:text-gray-400">

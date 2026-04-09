@@ -41,7 +41,7 @@ const HeatMap = ({ heatmap, onRefresh, isLoading, isExpanded, onToggleExpand }) 
     }
 
     return (
-        <div className="glass border border-gray-200 dark:border-white/5 rounded-2xl p-8 h-full flex flex-col shadow-soft hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+        <div className="glass border border-gray-200 dark:border-white/5 rounded-2xl p-4 sm:p-6 md:p-8 h-full flex flex-col shadow-soft hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
 
             <div className="flex justify-between items-center mb-8">
 

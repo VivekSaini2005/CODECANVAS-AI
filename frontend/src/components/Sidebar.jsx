@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -11,9 +11,23 @@ import {
   ChevronRight
 } from "lucide-react";
 
-function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+function Sidebar({ isOpen, onClose }) {
+  const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false);
   const location = useLocation();
+
+  // Reset desktop collapse state and handle window resizes for responsiveness
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (mobile) setIsDesktopCollapsed(false);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const collapsed = isDesktopCollapsed && !isMobile;
 
   const navItems = [
     { name: "Dashboard", path: "/", icon: LayoutDashboard },
@@ -34,14 +48,18 @@ function Sidebar() {
   };
 
   return (
-    <div className={`relative ${collapsed ? "w-20" : "w-64"} bg-white dark:bg-gradient-to-b dark:from-[#0b0f1a] dark:to-[#0f172a] border-r border-gray-200 dark:border-white/5 flex flex-col h-screen sticky top-0 z-40 glass shadow-soft transition-all duration-300 ease-in-out overflow-visible`}>
+    <div 
+      className={`fixed md:relative top-0 left-0 h-screen z-50 md:z-40 bg-white dark:bg-gradient-to-b dark:from-[#0b0f1a] dark:to-[#0f172a] border-r border-gray-200 dark:border-white/5 flex flex-col glass shadow-soft transition-all duration-300 ease-in-out
+      w-64 ${collapsed ? "md:w-20" : "md:w-64"} 
+      ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 overflow-visible`}
+    >
 
-      {/* Toggle Button */}
-      <div 
-        onClick={() => setCollapsed(!collapsed)}
-        className="absolute top-6 right-0 translate-x-1/2 z-50 w-9 h-9 rounded-full bg-[#111827] border border-white/10 shadow-lg flex items-center justify-center cursor-pointer hover:scale-110 active:scale-95 hover:shadow-indigo-500/20 transition-all duration-300 ease-in-out group focus:outline-none"
+      {/* Toggle Button (Desktop Only) */}
+      <div
+        onClick={() => setIsDesktopCollapsed(!isDesktopCollapsed)}
+        className="hidden md:flex absolute top-6 right-0 translate-x-1/2 z-50 w-9 h-9 rounded-full bg-white dark:bg-[#111827] border border-gray-200 dark:border-white/10 shadow-md dark:shadow-lg items-center justify-center cursor-pointer hover:scale-110 active:scale-95 hover:shadow-indigo-500/20 transition-all duration-300 ease-in-out group focus:outline-none"        
       >
-        <ChevronLeft size={16} className={`text-white/80 group-hover:text-white transition-transform duration-300 ${collapsed ? 'rotate-180' : ''}`} />
+        <ChevronLeft size={16} className={`text-gray-600 dark:text-white/80 group-hover:text-gray-900 dark:group-hover:text-white transition-transform duration-300 ${collapsed ? 'rotate-180' : ''}`} />
       </div>
 
       {/* Logo */}
@@ -65,9 +83,7 @@ function Sidebar() {
             const active = isActive(item.path);
 
             return (
-              <Link
-                key={item.name}
-                to={item.path}
+              <Link key={item.name} to={item.path} onClick={() => { if (isMobile && onClose) onClose(); }}
                 className={`group relative flex items-center ${collapsed ? "justify-center px-0 w-12 mx-auto" : "gap-4 px-4"} py-3.5 rounded-xl transition-all duration-300 ease-in-out ${
                   active
                     ? "bg-indigo-50 dark:bg-gradient-to-r dark:from-indigo-600/20 dark:to-blue-600/10 text-[#625df5] dark:text-indigo-300 font-bold dark:border border-transparent dark:border-indigo-500/20 dark:shadow-[0_0_20px_rgba(99,102,241,0.15)]"
@@ -112,9 +128,7 @@ function Sidebar() {
             const active = isActive(item.path);
 
             return (
-              <Link
-                key={item.name}
-                to={item.path}
+              <Link key={item.name} to={item.path} onClick={() => { if (isMobile && onClose) onClose(); }}
                 className={`group relative flex items-center ${collapsed ? "justify-center px-0 w-12 mx-auto" : "gap-4 px-4"} py-3.5 rounded-xl transition-all duration-300 ease-in-out ${
                   active
                     ? "bg-indigo-50 dark:bg-gradient-to-r dark:from-indigo-600/20 dark:to-blue-600/10 text-[#625df5] dark:text-indigo-300 font-bold dark:border border-transparent dark:border-indigo-500/20 dark:shadow-[0_0_20px_rgba(99,102,241,0.15)]"

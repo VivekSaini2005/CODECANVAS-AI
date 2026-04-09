@@ -106,7 +106,7 @@ function SheetProblems() {
 
   // ─── Render ──────────────────────────────────────────────────────────────────
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col gap-6">
+    <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col gap-3 sm:gap-4 md:gap-6">
 
       {/* Back + Title */}
       <div className="flex items-center gap-3">

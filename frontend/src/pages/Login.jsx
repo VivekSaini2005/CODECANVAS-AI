@@ -64,8 +64,8 @@ const Login = () => {
   };
 
   return (
-    <div className="flex h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-[#0a0d14] text-gray-900 dark:text-gray-200 transition-colors duration-200">
-      <div className="w-full max-w-md space-y-8 bg-white dark:bg-[#121622] p-8 rounded-2xl shadow-xl dark:shadow-none border border-gray-100 dark:border-[#1e2332] transition-colors duration-200">
+    <div className="flex h-full items-center justify-center py-12 px-4 sm:px-3 sm:px-4 md:px-6 lg:px-8 bg-gray-50 dark:bg-[#0a0d14] text-gray-900 dark:text-gray-200 transition-colors duration-200">
+      <div className="w-full max-w-md space-y-8 bg-white dark:bg-[#121622] p-4 sm:p-6 md:p-8 rounded-2xl shadow-xl dark:shadow-none border border-gray-100 dark:border-[#1e2332] transition-colors duration-200">
 
         <div className="flex flex-col items-center">
           <div className="mt-25 w-12 h-12 rounded-xl bg-gradient-to-br from-[#625df5] to-[#45b7f1] flex items-center justify-center shadow-lg mb-4">

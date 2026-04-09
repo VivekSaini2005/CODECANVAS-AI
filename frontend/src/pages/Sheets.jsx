@@ -25,7 +25,7 @@ function Sheets() {
 
   return (
 
-    <div className="p-6">
+    <div className="p-3 sm:p-4 md:p-6">
 
       <div className="mb-6">
         <h1 className="text-xl font-semibold tracking-tight">
@@ -36,23 +36,23 @@ function Sheets() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4 md:gap-5">
         {sheets.map(sheet => (
 
           <Link key={sheet.id} to={`/sheet/${sheet.id}`} className="flex">
 
-            <div className="flex-1 relative rounded-2xl p-5 bg-gradient-to-br from-gray-50 to-white dark:from-white/5 dark:to-transparent border border-gray-200 dark:border-white/10 shadow-soft hover:translate-y-[-3px] hover:shadow-xl transition-all duration-300 before:absolute before:inset-0 before:rounded-2xl before:bg-black/5 dark:before:bg-white/5 before:opacity-0 hover:before:opacity-100 before:pointer-events-none group">
+            <div className="flex-1 relative rounded-2xl p-3 sm:p-5 bg-gradient-to-br from-gray-50 to-white dark:from-white/5 dark:to-transparent border border-gray-200 dark:border-white/10 shadow-soft hover:translate-y-[-3px] hover:shadow-xl transition-all duration-300 before:absolute before:inset-0 before:rounded-2xl before:bg-black/5 dark:before:bg-white/5 before:opacity-0 hover:before:opacity-100 before:pointer-events-none group">
 
-            <div className="relative z-10 flex justify-between items-center mb-3">
-              <h2 className="text-base font-semibold tracking-tight group-hover:text-[#625df5] transition-colors duration-200">
+            <div className="relative z-10 flex justify-between items-center mb-3 gap-3">
+              <h2 className="text-sm md:text-base lg:text-lg font-semibold tracking-tight group-hover:text-[#625df5] transition-colors duration-200 truncate">
                 {sheet.name}
               </h2>
-              <span className="text-xs text-gray-500 dark:text-gray-400 bg-black/5 dark:bg-white/5 px-2 py-1 rounded-md">
+              <span className="text-xs text-gray-500 dark:text-gray-400 bg-black/5 dark:bg-white/5 px-2 py-1 rounded-md shrink-0">
                 {Math.round(sheet.progress || 0)}%
               </span>
             </div>
 
-            <p className="relative z-10 text-sm text-gray-500 dark:text-gray-400 mt-1">
+            <p className="relative z-10 text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2 md:line-clamp-none">
               {sheet.description}
             </p>
 

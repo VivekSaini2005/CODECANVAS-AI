@@ -138,24 +138,25 @@ export default function SolveProblem() {
     <div className="flex flex-col h-screen w-full bg-gray-50 dark:bg-[#0f1117] text-gray-900 dark:text-gray-200">
 
       {/* ================= TOP BAR ================= */}
-      <div className="flex items-center gap-6 px-6 py-3 border-b border-gray-200 dark:border-[#1e2332] bg-white dark:bg-[#121622]">
+      <div className="flex items-center gap-2 sm:gap-4 md:gap-6 px-3 sm:px-6 py-3 border-b border-gray-200 dark:border-[#1e2332] bg-white dark:bg-[#121622] flex-wrap">
 
         {/* Back */}
         <button
           onClick={() => navigate(-1)}
-          className="text-gray-500 dark:text-gray-400 hover:text-white text-sm"
+          className="text-gray-500 dark:text-gray-400 hover:text-indigo-400 text-sm shrink-0" 
         >
-          ← Back
+          <span className="sm:hidden text-lg">←</span>
+          <span className="hidden sm:inline">← Back</span>
         </button>
 
         {/* Title */}
-        <h1 className="font-semibold text-gray-900 dark:text-white">
+        <h1 className="font-semibold text-gray-900 dark:text-white truncate max-w-[150px] sm:max-w-none shrink-0">
           {problem.title}
         </h1>
 
         {/* Difficulty */}
         <span
-          className={`text-xs font-semibold px-2 py-1 rounded
+          className={`text-xs font-semibold px-2 py-1 rounded shrink-0
           ${problem.difficulty === "Easy"
               ? "bg-green-500/20 text-green-400"
               : problem.difficulty === "Medium"
@@ -167,12 +168,12 @@ export default function SolveProblem() {
         </span>
 
         {/* Platform */}
-        <span className="text-xs text-gray-500 dark:text-gray-400">
+        <span className="text-xs text-gray-500 dark:text-gray-400 shrink-0 hidden sm:inline-block">
           {problem.platform}
         </span>
 
         {/* Spacer */}
-        <div className="flex-1"></div>
+        <div className="flex-1 min-w-[20px]"></div>
 
         {/* Original Problem */}
         {problem.link && (
@@ -180,9 +181,10 @@ export default function SolveProblem() {
             href={problem.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-indigo-400 hover:underline"
+            className="text-sm text-indigo-500 dark:text-indigo-400 hover:underline shrink-0"
           >
-            Original Problem →
+            <span className="hidden sm:inline">Original Problem →</span>
+            <span className="sm:hidden">Solve →</span>
           </a>
         )}
 
@@ -190,12 +192,12 @@ export default function SolveProblem() {
 
 
       {/* ================= TAGS + COMPANIES ================= */}
-      <div className="px-6 py-2 border-b border-gray-200 dark:border-[#1e2332] flex flex-wrap gap-2">
+      <div className="px-3 sm:px-6 py-2 border-b border-gray-200 dark:border-[#1e2332] flex flex-wrap gap-2">
 
         {problem.tags?.map(tag => (
           <span
             key={tag}
-            className="text-xs bg-gray-100 dark:bg-[#1c2233] px-2 py-1 rounded"
+            className="text-xs bg-gray-100 dark:bg-[#1c2233] px-2 py-1 rounded" 
           >
             {tag}
           </span>
@@ -214,7 +216,7 @@ export default function SolveProblem() {
 
 
       {/* ================= WORKSPACE ================= */}
-      <div ref={containerRef} className="flex flex-1 overflow-hidden select-none">
+      <div ref={containerRef} className="flex flex-col lg:flex-row flex-1 overflow-y-auto lg:overflow-hidden select-none">
 
         {/* WHITEBOARD */}
         <div className="border-r border-gray-200 dark:border-[#1e2332] flex flex-col overflow-hidden" style={{ width: `${leftWidth}%` }}>
@@ -234,10 +236,10 @@ export default function SolveProblem() {
         </div>
 
         {/* RIGHT PANEL */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden min-h-[500px] lg:min-h-0">
 
           {/* Tab Bar — always visible, tabs highlight when AI result exists */}
-          <div className="flex items-center border-b border-gray-200 dark:border-[#1e2332] bg-white dark:bg-[#121622] flex-shrink-0">
+          <div className="flex items-center border-b border-gray-200 dark:border-[#1e2332] bg-white dark:bg-[#121622] flex-shrink-0 overflow-x-auto whitespace-nowrap scrollbar-hide">
             <button
               onClick={() => setRightTab("compiler")}
               className={`flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 transition-all duration-200

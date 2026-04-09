@@ -20,7 +20,7 @@ function PodiumCard({ user, rank }) {
     };
 
     return (
-        <div className={`relative p-6 rounded-2xl text-center bg-gradient-to-br from-white/5 to-transparent border backdrop-blur-md transition-all duration-300 hover:-translate-y-2 cursor-pointer ${getRankStyles()} ${rank === 1 ? 'scale-105 z-10' : ''}`}>
+        <div className={`relative w-full md:w-1/3 flex-1 p-3 sm:p-4 md:p-6 rounded-2xl text-center bg-gradient-to-br from-white/5 to-transparent border backdrop-blur-md transition-all duration-300 hover:-translate-y-2 cursor-pointer ${getRankStyles()} ${rank === 1 ? 'scale-105 z-10' : ''}`}>
 
             <div className="mb-4 flex justify-center drop-shadow-md transition-transform duration-300 hover:rotate-6 hover:scale-110">{getIcon()}</div>
 
@@ -30,7 +30,7 @@ function PodiumCard({ user, rank }) {
                 alt={user.name}
             />
 
-            <h3 className="font-semibold text-base text-gray-800 dark:text-gray-100 tracking-tight transition-colors hover:text-blue-600 dark:hover:text-blue-400">{user.name}</h3>
+            <h3 className="font-semibold text-sm sm:text-base md:text-lg text-gray-800 dark:text-gray-100 tracking-tight transition-colors hover:text-blue-600 dark:hover:text-blue-400">{user.name}</h3>
 
             <div className="text-2xl font-bold text-indigo-400 mt-2 drop-shadow-sm transition-transform hover:scale-110">
                 {user.total_solved}

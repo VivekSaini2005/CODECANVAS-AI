@@ -124,7 +124,7 @@ export default function ProblemsPage() {
     const optionClass = "bg-white dark:bg-[#121622] text-gray-900 dark:text-gray-200";
 
     return (
-        <div className="p-8 max-w-7xl mx-auto pb-10">
+        <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto pb-10">
             {/* HEADER */}
             <div className="flex justify-between items-center mb-8">
                 <div>
@@ -194,14 +194,14 @@ export default function ProblemsPage() {
 
             {/* TABLE */}
             <div className="border border-gray-200 dark:border-[#1e2332] rounded-xl overflow-hidden bg-white dark:bg-[#0d111a]">
-                <table className="w-full text-sm">
+                <div className="w-full overflow-x-auto"><table className="w-full text-sm">
                     <thead className="text-gray-500 dark:text-gray-400 text-[11px] uppercase tracking-widest font-bold">
                         <tr className="text-left border-b border-gray-200 dark:border-[#1e2332]">
-                            <th className="p-[18px] pl-8 w-24">STATUS</th>
-                            <th className="p-[18px]">TITLE</th>
-                            <th className="p-[18px]">SHEET</th>
-                            <th className="p-[18px]">DIFFICULTY</th>
-                            <th className="p-[18px]">COMPANIES</th>
+                            <th className="px-3 sm:px-6 py-3 sm:py-4 w-16 sm:w-24 text-center">STATUS</th>      
+                            <th className="px-3 sm:px-6 py-3 sm:py-4">TITLE</th>
+                            <th className="px-3 sm:px-6 py-3 sm:py-4">SHEET</th>
+                            <th className="px-3 sm:px-6 py-3 sm:py-4">DIFFICULTY</th>
+                            <th className="px-3 sm:px-6 py-3 sm:py-4 hidden md:table-cell">COMPANIES</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -212,7 +212,8 @@ export default function ProblemsPage() {
                             return (
                             <tr key={p.id} className="border-b border-gray-200 dark:border-[#1e2332] last:border-0 hover:bg-gray-50 dark:hover:bg-[#121622] bg-white dark:bg-[#0d111a] transition-colors group">
                                 {/* STATUS */}
-                                <td className="p-4 pl-10 cursor-pointer" onClick={() => !isToggling && toggleSolved(p.id)}>
+                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-center cursor-pointer" onClick={() => !isToggling && toggleSolved(p.id)}>
+                                    <div className="flex justify-center items-center">
                                     {isSolved ? (
                                         <div className="w-5 h-5 rounded-full border border-white/20 flex items-center justify-center bg-gradient-to-r from-green-400 to-emerald-500 shadow-[0_0_10px_rgba(34,197,94,0.5)] hover:scale-110 transition-all duration-300">
                                             <CheckCircle size={14} className="text-white" strokeWidth={3} />
@@ -220,10 +221,11 @@ export default function ProblemsPage() {
                                     ) : (
                                         <div className="w-5 h-5 rounded-full border border-gray-300 dark:border-white/20 flex items-center justify-center bg-transparent group-hover:border-gray-400 dark:group-hover:border-white/40 hover:scale-110 transition-all duration-300"></div>
                                     )}
+                                    </div>
                                 </td>
 
                                 {/* TITLE */}
-                                <td className="p-4">
+                                <td className="px-3 sm:px-6 py-3 sm:py-4 max-w-[160px] sm:max-w-[200px] md:max-w-none">
                                     <button
                                         onClick={(e) => {
                                             e.preventDefault();
@@ -235,19 +237,19 @@ export default function ProblemsPage() {
                                             }
                                             navigate(`/solve/${p.id}`, { state: { problem: p } });
                                         }}
-                                        className={`font-medium text-sm leading-relaxed text-left transition-colors duration-200 ${isSolved ? 'line-through text-gray-500 dark:text-gray-500 hover:text-indigo-400' : 'text-gray-900 dark:text-white/90 hover:text-indigo-400'}`}
+                                        className={`font-medium text-sm leading-relaxed text-left transition-colors duration-200 block truncate w-full ${isSolved ? 'line-through text-gray-500 dark:text-gray-500 hover:text-indigo-400' : 'text-gray-900 dark:text-white/90 hover:text-indigo-400'}`}
                                     >
                                         {indexOfFirst + index + 1}. {p.title}
                                     </button>
                                 </td>
 
                                 {/* SHEET */}
-                                <td className="p-4 text-gray-500 dark:text-gray-400 text-[13px]">
+                                <td className="px-3 sm:px-6 py-3 sm:py-4 text-gray-500 dark:text-gray-400 text-[13px] whitespace-nowrap">
                                     {p.sheet || "Blind 75"}
                                 </td>
 
                                 {/* DIFFICULTY */}
-                                <td className="p-4">
+                                <td className="px-3 sm:px-6 py-3 sm:py-4">
                                     <span className={`px-2.5 py-1 text-xs font-medium rounded-full border transition-all duration-300 ${
                                         p.difficulty?.toLowerCase() === 'easy' 
                                             ? 'bg-green-500/10 text-green-400 border-green-500/20 hover:shadow-[0_0_10px_rgba(34,197,94,0.2)]'
@@ -265,7 +267,8 @@ export default function ProblemsPage() {
                                 {/* REMOVED */}
 
                                 {/* COMPANIES */}
-                                <td className="p-4 flex gap-1 flex-wrap items-center mt-1">
+                                <td className="px-3 sm:px-6 py-3 sm:py-4 hidden md:table-cell">
+                                  <div className="flex gap-1 flex-wrap items-center mt-1">
                                     {p.companies && p.companies.length > 0 ? (
                                         <>
                                             {p.companies.slice(0, 2).map((c, i) => (
@@ -282,12 +285,13 @@ export default function ProblemsPage() {
                                     ) : (
                                         <span className="text-xs text-gray-600">-</span>
                                     )}
+                                  </div>
                                 </td>
                             </tr>
                         )
                         })}
                     </tbody>
-                </table>
+                </table></div>
             </div>
 
             {/* PAGINATION */}

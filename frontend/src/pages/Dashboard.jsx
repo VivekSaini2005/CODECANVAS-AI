@@ -119,13 +119,13 @@ function Dashboard() {
   };
 
   return (
-    <div className="flex flex-col gap-8 max-w-7xl mx-auto pb-10 pt-4">
+    <div className="flex flex-col gap-4 sm:gap-6 md:gap-8 max-w-7xl mx-auto pb-10 pt-4">
 
       {/* Top Section */}
-      <div className="flex xl:flex-row flex-col gap-8">
+      <div className="flex xl:flex-row flex-col gap-4 sm:gap-6 md:gap-8">
 
         {/* Sheets Progress Card */}
-        <div className="flex-1 glass border border-gray-200 dark:border-white/5 rounded-2xl p-8 dark:bg-gradient-to-br dark:from-white/5 dark:to-transparent flex flex-col shadow-soft hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+        <div className="flex-1 glass border border-gray-200 dark:border-white/5 rounded-2xl p-4 sm:p-6 md:p-8 dark:bg-gradient-to-br dark:from-white/5 dark:to-transparent flex flex-col shadow-soft hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500/20 to-purple-500/10 flex items-center justify-center shadow-[0_0_15px_rgba(99,102,241,0.2)]">
@@ -183,11 +183,9 @@ function Dashboard() {
         </div>
 
         {/* Small Stats Cards */}
-        <div className="flex flex-col sm:flex-row xl:flex-col gap-6">
-
-          <div className="flex gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 w-full">
             {/* Solved Problems */}
-            <div className="glass border border-gray-200 dark:border-white/5 rounded-2xl p-8 w-44 flex flex-col justify-between dark:bg-gradient-to-br dark:from-white/5 dark:to-transparent shadow-soft hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+            <div className="glass border border-gray-200 dark:border-white/5 rounded-2xl p-4 sm:p-6 md:p-8 w-full flex flex-col justify-between dark:bg-gradient-to-br dark:from-white/5 dark:to-transparent shadow-soft hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
               <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-500/20 to-green-500/10 flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
                 <CheckCircle2 size={24} className="text-[#10b981]" />
               </div>
@@ -198,7 +196,7 @@ function Dashboard() {
             </div>
 
             {/* Day Streak */}
-            <div className="glass border border-gray-200 dark:border-white/5 rounded-2xl p-8 w-44 flex flex-col justify-between dark:bg-gradient-to-br dark:from-white/5 dark:to-transparent shadow-soft hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+            <div className="glass border border-gray-200 dark:border-white/5 rounded-2xl p-4 sm:p-6 md:p-8 w-full flex flex-col justify-between dark:bg-gradient-to-br dark:from-white/5 dark:to-transparent shadow-soft hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
               <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-amber-500/20 to-orange-500/10 flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(245,158,11,0.2)]">
                 <Flame size={24} className="text-[#f59e0b]" />
               </div>
@@ -209,7 +207,7 @@ function Dashboard() {
             </div>
 
             {/* Max Streak */}
-            <div className="glass border border-gray-200 dark:border-white/5 rounded-2xl p-8 w-44 flex flex-col justify-between dark:bg-gradient-to-br dark:from-white/5 dark:to-transparent shadow-soft hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+            <div className="glass border border-gray-200 dark:border-white/5 rounded-2xl p-4 sm:p-6 md:p-8 w-full flex flex-col justify-between dark:bg-gradient-to-br dark:from-white/5 dark:to-transparent shadow-soft hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
               <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-pink-500/20 to-rose-500/10 flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(236,72,153,0.2)]">
                 <Zap size={24} className="text-[#ec4899]" />
               </div>
@@ -218,10 +216,8 @@ function Dashboard() {
                 <p className="text-[11px] uppercase tracking-wider text-gray-500 font-semibold">Max Streak</p>
               </div>
             </div>
-          </div>
-
           {/* Submissions */}
-          <div className="glass border border-gray-200 dark:border-white/5 rounded-2xl p-8 flex-1 flex items-center justify-between dark:bg-gradient-to-br dark:from-white/5 dark:to-transparent shadow-soft hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+          <div className="glass border border-gray-200 dark:border-white/5 rounded-2xl p-4 sm:p-6 md:p-8 flex-1 flex items-center justify-between dark:bg-gradient-to-br dark:from-white/5 dark:to-transparent shadow-soft hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
             <div className="flex items-center gap-5">
               <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/10 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.2)]">
                 <ArrowUpCircle size={24} className="text-[#3b82f6]" />
@@ -238,11 +234,11 @@ function Dashboard() {
       </div>
 
       {/* Middle Section */}
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 md:gap-8">
 
         {/* Activity Analytics */}
         {/* Activity Analytics (Replaced with Heatmap) */}
-        <div className={`${isHeatMapExpanded ? 'w-auto' : 'flex-[2]'} overflow-hidden flex flex-col transition-all duration-300`}>
+        <div className={`${isHeatMapExpanded ? 'w-auto' : 'flex-[2]'} overflow-x-auto overflow-y-hidden flex flex-col transition-all duration-300`}>
           <HeatMap
             heatmap={heatmapData}
             onRefresh={handleRefreshHeatmap}
@@ -253,10 +249,10 @@ function Dashboard() {
         </div>
 
         {/* Topic Strength
-        <div className="flex-1 bg-white dark:bg-[#121622] border border-gray-200 dark:border-[#1e2332] rounded-2xl p-6 flex flex-col">
+        <div className="flex-1 bg-white dark:bg-[#121622] border border-gray-200 dark:border-[#1e2332] rounded-2xl p-3 sm:p-4 md:p-6 flex flex-col">
           <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-6">Topic Strength</h3>
 
-          <div className="flex flex-col gap-6 flex-1">
+          <div className="flex flex-col gap-3 sm:gap-4 md:gap-6 flex-1">
             <div>
               <div className="flex justify-between mb-2">
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Graphs</span>
