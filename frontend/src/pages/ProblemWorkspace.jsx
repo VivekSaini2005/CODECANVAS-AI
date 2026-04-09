@@ -70,96 +70,63 @@ function ProblemWorkspace() {
 
     <div className="h-screen flex flex-col bg-[#0B1120] text-white">
 
-      {/* ================= NAVBAR ================= */}
+      {/* ================= WORKSPACE NAVBAR ================= */}
 
-      <div className="h-14 flex items-center justify-between px-6 border-b border-gray-800">
+      <div className="relative flex items-center justify-between px-6 py-3 border-b border-white/10 bg-[rgba(15,23,42,0.7)] backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] sticky top-0 z-30 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[1px] after:bg-gradient-to-r after:from-transparent after:via-indigo-500/30 after:to-transparent">
 
-        <div className="flex items-center gap-6">
-
-          <h1 className="font-bold text-lg text-indigo-400">
-            CodeCanvas AI
-          </h1>
-
-          <div className="flex gap-4 text-sm text-gray-500 dark:text-gray-400">
-            <span className="cursor-pointer hover:text-white">Problems</span>
-            <span className="cursor-pointer hover:text-white">Contests</span>
-            <span className="cursor-pointer hover:text-white">Leaderboard</span>
-          </div>
-
-        </div>
-
-        <input
-          className="bg-[#111827] px-3 py-1 rounded text-sm outline-none"
-          placeholder="Jump to problem..."
-        />
-
-      </div>
-
-
-      {/* ================= PROBLEM HEADER ================= */}
-
-      <div className="px-6 py-4 border-b border-gray-800 space-y-2">
-
-        {/* TITLE + DIFFICULTY */}
-
+        {/* LEFT SECTION */}
         <div className="flex items-center gap-3">
 
-          <h2 className="text-lg font-semibold">
+          <a href="/problems" className="px-2 py-1 rounded-md text-gray-400 text-sm hover:text-white hover:bg-white/5 transition-all duration-300 hover:-translate-x-[2px] flex items-center gap-1">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+            Back
+          </a>
+
+          <span className="w-1 h-1 rounded-full bg-gray-600"></span>
+
+          <h2 className="text-lg font-semibold tracking-tight bg-[length:200%_200%] animate-[gradientMove_4s_ease_infinite] bg-gradient-to-r from-indigo-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(99,102,241,0.4)] transition-all duration-300">
             {problem.title}
           </h2>
 
-          <span className="px-2 py-1 text-xs bg-green-900 text-green-300 rounded">
+          <span className="w-1 h-1 rounded-full bg-gray-600"></span>
+
+          <span className={`px-2.5 py-0.5 text-xs font-medium rounded-full transition-all duration-300 ${
+            problem.difficulty === 'Easy' ? 'bg-green-500/10 text-green-400 border border-green-500/30 shadow-[0_0_10px_rgba(34,197,94,0.3)]' :
+            problem.difficulty === 'Medium' ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 shadow-[0_0_10px_rgba(234,179,8,0.3)]' :
+            'bg-red-500/10 text-red-400 border border-red-500/30 shadow-[0_0_10px_rgba(239,68,68,0.3)]'
+          }`}>
             {problem.difficulty}
           </span>
 
+          <span className="w-1 h-1 rounded-full bg-gray-600"></span>
+
+          <span className="text-xs text-gray-500 bg-white/5 px-2 py-0.5 rounded-md border border-white/10">leetcode</span>
+
+          {tags.length > 0 && (
+            <>
+              <span className="w-1 h-1 rounded-full bg-gray-600 hidden md:block"></span>
+              <div className="hidden md:flex gap-2 flex-wrap text-xs">
+                {tags.slice(0, 2).map((tag) => (
+                  <span key={tag} className="px-2 py-0.5 bg-gray-800/40 text-gray-400 rounded-full border border-white/5">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
-
-        {/* TAGS */}
-
-        <div className="flex gap-2 flex-wrap text-xs">
-
-          {tags.map(tag => (
-            <span
-              key={tag}
-              className="px-2 py-1 bg-gray-800 rounded"
-            >
-              {tag}
-            </span>
-          ))}
-
-        </div>
-
-
-        {/* COMPANIES */}
-
-        <div className="flex gap-2 flex-wrap text-xs">
-
-          {companies.map(company => (
-            <span
-              key={company}
-              className="px-2 py-1 bg-indigo-900 text-indigo-300 rounded"
-            >
-              {company}
-            </span>
-          ))}
-
-        </div>
-
-
-        {/* ORIGINAL LINK */}
-
-        <div>
-
+        {/* RIGHT SECTION */}
+        <div className="flex items-center gap-2">
           <a
             href={link}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-indigo-400 hover:underline"
+            className="px-3 py-1.5 text-sm font-medium rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 hover:shadow-[0_0_15px_rgba(99,102,241,0.3)] hover:scale-105 transition-all duration-300 flex items-center gap-1"
           >
-            Original Problem →
+            Original Problem
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
           </a>
-
         </div>
 
       </div>
@@ -207,4 +174,4 @@ function ProblemWorkspace() {
 
 }
 
-export default ProblemWorkspace
+export default ProblemWorkspace
