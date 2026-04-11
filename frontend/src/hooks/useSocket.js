@@ -10,7 +10,7 @@ export const useSocket = (userId) => {
     if (!userId) return;
 
     if (!socket) {
-      socket = io("http://localhost:5000"); // Match with backend URL
+      socket = io("https://codecanvas-ai-evfn.onrender.com" || "http://localhost:5000"); // Match with backend URL
     }
 
     const handleConnect = () => {
