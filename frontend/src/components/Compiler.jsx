@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import Editor from "@monaco-editor/react"
 import API from "../api/axiosInstance"
 import { useTheme } from "../context/ThemeContext"
@@ -18,6 +18,13 @@ function Compiler() {
   const [output, setOutput] = useState("")
   const [loading, setLoading] = useState(false)
   const { theme } = useTheme()
+  const outputRef = useRef(null)
+
+  useEffect(() => {
+    if (output && output !== "Running...") {
+      outputRef.current?.scrollIntoView({ behavior: "smooth" })
+    }
+  }, [output])
 
   const runCode = async () => {
 
@@ -47,7 +54,7 @@ function Compiler() {
 
   return (
 
-    <div className="flex flex-col h-full bg-white dark:bg-[#0f1117]">
+    <div className="flex flex-col h-full bg-white dark:bg-[#0f1117] overflow-y-auto overflow-x-hidden">
 
       {/* HEADER */}
       <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-[#1e2332]">
@@ -77,7 +84,7 @@ function Compiler() {
       </div>
 
       {/* EDITOR */}
-      <div className="flex-1">
+      <div className="h-[400px] flex-shrink-0">
 
         <Editor
           height="100%"
@@ -90,33 +97,42 @@ function Compiler() {
       </div>
 
       {/* I/O WRAPPER */}
-      <div className={`flex flex-col border-t border-gray-200 dark:border-[#1e2332] bg-white dark:bg-[#0f1117] ${output ? 'h-[250px]' : ''} flex-shrink-0`}>
+      <div className="flex flex-col border-t border-gray-200 dark:border-[#1e2332] bg-white dark:bg-[#0f1117] flex-shrink-0">
         
         {/* INPUT */}
-        <div className={`p-3 flex flex-col ${output ? 'h-[100px]' : ''} flex-shrink-0`}>
-          <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+        <div className="p-3 flex flex-col border-b border-gray-200 dark:border-[#1e2332]">
+          <div className="text-xs text-gray-500 dark:text-gray-400 mb-1 font-semibold uppercase tracking-wider">
             Input
           </div>
           <textarea
+            rows={4}
             value={input}
             onChange={(e)=>setInput(e.target.value)}
-            className={`w-full bg-gray-100 dark:bg-[#121622] text-gray-900 dark:text-white p-2 rounded text-sm ${output ? 'flex-1 resize-none' : 'h-20'}`}
+            className="w-full bg-gray-50 dark:bg-[#121622] text-gray-900 dark:text-white p-2 rounded text-sm focus:outline-none focus:ring-1 focus:ring-[#625df5] border border-transparent dark:border-[#1e2332]"
             placeholder="Enter input..."
           />
         </div>
 
-        {/* OUTPUT (Conditional) */}
-        {output && (
-          <div className="border-t border-gray-200 dark:border-[#1e2332] p-3 flex-1 flex flex-col overflow-hidden">
-            <div className="text-xs flex justify-between text-gray-500 dark:text-gray-400 mb-1">
-              <span>Output</span>
-              <button onClick={() => setOutput("")} className="hover:text-white transition-colors">Clear</button>
-            </div>
-            <pre className="bg-gray-100 dark:bg-black text-green-600 dark:text-green-400 p-3 rounded text-sm overflow-auto flex-1 whitespace-pre-wrap">
-              {output}
+        {/* OUTPUT */}
+        <div ref={outputRef} className="p-3 flex flex-col">
+          <div className="text-xs flex justify-between text-gray-500 dark:text-gray-400 mb-1 font-semibold uppercase tracking-wider">
+            <span>Output</span>
+            {output && (
+              <button 
+                onClick={() => setOutput("")} 
+                className="hover:text-red-500 transition-colors"
+                title="Clear output"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+          <div className="bg-gray-50 dark:bg-black p-3 rounded text-sm whitespace-pre-wrap border border-transparent dark:border-[#1e2332] min-h-[100px]">
+            <pre className={`${output.startsWith("Error") ? 'text-red-500' : 'text-green-600 dark:text-green-400'}`}>
+              {output || "No output yet. Run the code to see results."}
             </pre>
           </div>
-        )}
+        </div>
 
       </div>
 
