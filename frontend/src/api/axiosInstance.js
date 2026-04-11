@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api" || "https://codecanvas-ai-evfn.onrender.com/api",
+  baseURL: "https://codecanvas-ai-evfn.onrender.com/api" || "http://localhost:5000/api",
 })
 
 API.interceptors.request.use((req) => {
