@@ -23,8 +23,10 @@ exports.register = async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false, // true in production (https)
-            sameSite: "lax",
+            // secure: false, // true in production (https)
+            // sameSite: "lax",
+            secure: true,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
@@ -77,8 +79,10 @@ exports.login = async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false,
-            sameSite: "lax",
+            // secure: false,
+            // sameSite: "lax",
+            secure: true,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
@@ -153,8 +157,10 @@ exports.googleLogin = async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false,
-            sameSite: "lax",
+            // secure: false,
+            // sameSite: "lax",
+            secure: true,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
