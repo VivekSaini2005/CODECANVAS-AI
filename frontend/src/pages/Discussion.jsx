@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { MessageSquare, ThumbsUp, ThumbsDown, Bookmark, Send, Loader2, Trash2, MessageCircle } from "lucide-react";
 import { getPosts, createPost, votePost, bookmarkPost, deletePost, getComments, addComment, deleteComment } from "../api/discussApi";
 import { fetchUserProfile } from "../api/authApi";
@@ -19,10 +20,18 @@ function Discussion() {
   const [newCommentContent, setNewCommentContent] = useState("");
   const [replyingTo, setReplyingTo] = useState(null); // stores comment id
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
+
 
   useEffect(() => {
     fetchUser();
     fetchPosts();
+    // If redirected from login with ?create=1, open the post form
+    if (location.search.includes('create=1')) {
+      setShowCreate(true);
+    }
   }, []);
 
   const fetchUser = async () => {
@@ -240,7 +249,14 @@ function Discussion() {
           <p className="text-gray-500 dark:text-gray-400">Share knowledge and ask questions.</p>
         </div>
         <button
-          onClick={() => setShowCreate(!showCreate)}
+          onClick={() => {
+            if (!currentUser) {
+              // Redirect to login, then back to /discuss?create=1
+              navigate(`/login?redirect=/discuss?create=1`);
+            } else {
+              setShowCreate(!showCreate);
+            }
+          }}
           className="bg-[#625df5] hover:bg-[#524cdd] text-white px-5 py-2.5 rounded-xl font-medium transition-colors"
         >
           {showCreate ? "Cancel" : "New Post"}

@@ -89,6 +89,9 @@ flowchart TD
 **Frontend** (`/frontend`):
 - `src/`
 	- `components/` – UI components (e.g., `Sidebar.jsx`, `ProblemCard.jsx`, `Compiler.jsx`, `HeatMap.jsx`, `Whiteboard.jsx`, etc.)
+		- `Whiteboard.jsx`: An interactive drawing area for users to sketch diagrams, visualize algorithms, or take notes while solving problems. Useful for planning solutions, drawing trees/graphs, or collaborating in interviews.
+	**AI APIs**
+	- `/api/ai` (via `aiRoutes.js` and `aiController.js`): Handles AI-powered features such as hint generation, code suggestions, or future planned features like stepwise guidance. These endpoints are designed to provide intelligent support to users without giving away full solutions.
 	- `pages/` – Main pages (e.g., `Dashboard.jsx`, `ProblemsPage.jsx`, `ProblemWorkspace.jsx`, `SheetProblems.jsx`, `Leaderboard.jsx`, etc.)
 	- `api/` – API call logic (`authApi.js`, `axiosInstance.js`, `discussApi.js`, etc.)
 	- `context/` – React context providers (e.g., `ThemeContext.jsx`)
