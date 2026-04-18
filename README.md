@@ -1,329 +1,135 @@
+## Project Flow Diagram
+
+```mermaid
+flowchart TD
+	A[Frontend (React)] -- REST API --> B[Backend (Express.js)]
+	B -- SQL Queries --> C[(PostgreSQL DB)]
+	A -- Redirects --> D[LeetCode/Codeforces/GFG]
+	B -- Returns Data --> A
+	C -- Data --> B
+```
+
+
 # CodeCanvas AI
 
-CodeCanvas AI is a **DSA learning roadmap platform** that aggregates popular coding sheets (Blind 75, Striver SDE Sheet, etc.) into a unified system where users can track progress, discover problems, and receive guided learning support.
-
-Unlike traditional coding platforms, **CodeCanvas AI is not a coding judge or LeetCode clone**. Instead, it acts as a **learning aggregator and progress tracker**, redirecting users to original platforms such as **LeetCode, Codeforces, and GeeksForGeeks** to solve problems.
-
-The platform solves the common issue of **fragmented learning resources**, where students jump between multiple sheets and tutorials without a structured progress tracking system.
+> **A beginner-friendly DSA learning roadmap platform for tracking, aggregating, and guiding your coding journey.**
 
 ---
 
-# Problem Statement
-
-Many computer science students struggle with **DSA preparation due to scattered resources**.
-
-Students typically use:
-
-* Striver SDE Sheet
-* Blind 75
-* Neetcode 150
-* Love Babbar 450
-
-These resources often contain **duplicate problems across sheets**, and students lack a unified way to track progress.
-
-CodeCanvas AI solves this by providing:
-
-* A **centralized sheet aggregator**
-* **Duplicate problem mapping**
-* **Progress tracking**
-* **AI-guided hints**
-* **Discussion system**
+## Table of Contents
+- [Project Overview](#project-overview)
+- [Tech Stack & Skills](#tech-stack--skills)
+- [Folder Structure & Paths](#folder-structure--paths)
+- [API Routes & Usage](#api-routes--usage)
+- [Project Flow Diagram](#project-flow-diagram)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [Common Tasks & Tips](#common-tasks--tips)
+- [Future Improvements](#future-improvements)
+- [Author & Links](#author--links)
 
 ---
 
-# Key Features
+## Project Overview
 
-## Sheet Aggregator (SheetScope)
+**CodeCanvas AI** solves the problem of scattered DSA resources by aggregating popular coding sheets (Blind 75, Striver SDE, etc.) into a single platform. It helps users:
+- Track progress across multiple sheets
+- Avoid duplicate problems
+- Get AI-guided hints (planned)
+- Discuss problems (planned)
 
-Combines multiple popular problem sheets into one platform.
-
-Examples:
-
-* Blind 75
-* Striver SDE Sheet
-* Babbar 450
-* Custom user sheets
-
-Each sheet can contain ordered problems while still referencing a **single canonical problem entry**.
+**Note:** CodeCanvas AI is NOT a coding judge. It redirects users to original platforms (LeetCode, Codeforces, GeeksForGeeks) for solving problems, while tracking progress and learning.
 
 ---
 
-## Problem Redirection
 
-Instead of hosting the problem itself, CodeCanvas redirects users to the original platform:
+## Tech Stack & Skills
 
-* LeetCode
-* Codeforces
-* GeeksForGeeks
+**Frontend:**
+- React (Vite)
+- React Router
+- Axios (API calls)
+- TailwindCSS (UI styling)
 
-This keeps the system lightweight while maintaining the learning flow.
+**Backend:**
+- Node.js
+- Express.js
+- JWT Authentication
+- Prisma ORM (database management)
 
----
+**Database:**
+- PostgreSQL
 
-## Progress Tracking
-
-Users can track their progress across sheets.
-
-Progress states:
-
-* Pending
-* Attempted
-* Solved
-
-The system maintains a unique progress entry per user and problem.
-
----
-
-## AI Learning Assistant (Planned)
-
-An AI tutor will guide users through hints using progressive levels:
-
-1. Observation Hint
-2. Strategy Hint
-3. Pseudocode Hint
-
-The AI intentionally avoids revealing full solutions.
+**Other Skills:**
+- REST API design
+- Basic SQL
+- Git & GitHub
+- Debugging with console/logs
 
 ---
 
-## Discussion System (Future)
 
-Each problem will support community discussions where users can:
+## Folder Structure & Paths
 
-* Ask questions
-* Share approaches
-* Discuss optimizations
+**Backend** (`/Backend`):
+- `src/`
+	- `controllers/` – Handles business logic for each feature (e.g., `problemController.js`, `userController.js`, `aiController.js`, `sheetController.js`, etc.)
+	- `routes/` – Defines API endpoints and maps them to controllers (e.g., `problemRoutes.js`, `authRoutes.js`, `aiRoutes.js`, etc.)
+	- `services/` – Contains reusable business logic (e.g., `aiService.js`, `leaderboardService.js`, `notificationService.js`, `heatmapService.js`)
+	- `middleware/` – Express middleware for authentication (`authMiddleware.js`), file uploads, etc.
+	- `utils/` – Utility functions (e.g., `generateToken.js`, `parseDrawing.js`, `streakCalculator.js`)
+	- `config/` – Database config (`db.js`), cloudinary, scoring, SQL scripts, and insert data helpers
+	- `script/` – Data import scripts (e.g., `importProblems.js`)
+	- `server.js` – Main server entry point
+	- `index.js` – App setup
+	- `socket.js` – Socket.io logic (if real-time features are used)
+- `prisma/` – Prisma schema and migrations
+- `package.json` – Backend dependencies
 
----
-
-# Tech Stack
-
-## Frontend
-
-* React (Vite)
-* React Router
-* Axios
-* TailwindCSS
-
-## Backend
-
-* Node.js
-* Express.js
-* PostgreSQL
-* JWT Authentication
-
-## Database
-
-* PostgreSQL
-* Prisma ORM (Schema Management)
-
----
-
-# System Architecture
-
-Frontend (React + Vite)
-│
-│ REST API
-▼
-Backend (Node.js + Express)
-│
-│ SQL Queries
-▼
-PostgreSQL Database
-
-External Platforms
-
-LeetCode
-Codeforces
-GeeksForGeeks
-
-Users solve problems on external platforms while CodeCanvas tracks their progress.
+**Frontend** (`/frontend`):
+- `src/`
+	- `components/` – UI components (e.g., `Sidebar.jsx`, `ProblemCard.jsx`, `Compiler.jsx`, `HeatMap.jsx`, `Whiteboard.jsx`, etc.)
+	- `pages/` – Main pages (e.g., `Dashboard.jsx`, `ProblemsPage.jsx`, `ProblemWorkspace.jsx`, `SheetProblems.jsx`, `Leaderboard.jsx`, etc.)
+	- `api/` – API call logic (`authApi.js`, `axiosInstance.js`, `discussApi.js`, etc.)
+	- `context/` – React context providers (e.g., `ThemeContext.jsx`)
+	- `hooks/` – Custom React hooks (e.g., `useSocket.js`)
+	- `layout/` – Layout components (e.g., `MainLayout.jsx`)
+	- `assets/` – Images, icons, and static assets
+	- `utils/` – Frontend helpers (e.g., `streakCalculator.js`)
+	- `main.jsx` – App entry point
+	- `App.jsx` – Main app component
+- `public/` – Static files
+- `package.json` – Frontend dependencies
 
 ---
 
-# Database Schema Overview
-
-The database is designed around **canonical problem mapping**.
-
-Main entities:
-
-* Users
-* Problems
-* Sheets
-* SheetProblems
-* Progress
-* Submissions
-* Tags
-* Companies
-
----
-
-## Users
-
-Stores registered users.
-
-Fields:
-
-* id
-* email
-* name
-* password
-* createdAt
-
----
-
-## Problems
-
-Stores canonical problems across all sheets.
-
-Fields:
-
-* id
-* title
-* slug
-* difficulty
-* problemLink
-* platform
-* editorialLink
-* youtubeLink
-
----
-
-## Sheets
-
-Represents curated DSA roadmaps.
-
-Examples:
-
-* Blind 75
-* Striver SDE Sheet
-
----
-
-## SheetProblems
-
-Join table linking problems to sheets.
-
-Supports ordered problems inside sheets.
-
----
-
-## Progress
-
-Tracks user progress for each problem.
-
-Unique constraint:
-
-userId + problemId
-
----
-
-## Submissions
-
-Stores user code submissions.
-
-Although CodeCanvas does not execute code, submissions can store:
-
-* solution drafts
-* notes
-* attempts
-
----
-
-## Tags
-
-Problem topic classification.
-
-Examples:
-
-* Array
-* Graph
-* Dynamic Programming
-* Greedy
-
----
-
-## Companies
-
-Tracks which companies commonly ask each problem.
-
-Examples:
-
-* Google
-* Amazon
-* Microsoft
-
----
-
-# Backend API
-
-## Authentication
-
-Register
-
-POST /api/auth/register
-
-Login
-
-POST /api/auth/login
-
-Returns JWT token.
-
----
-
-## Problems
-
-Get all problems
-
-GET /api/problems
-
-Get problem by slug
-
-GET /api/problems/:slug
-
-Create problem
-
-POST /api/problems
-
----
-
-## Sheets
-
-Get all sheets
-
-GET /api/sheets
-
-Get problems inside sheet
-
-GET /api/sheets/:id
-
-Create sheet
-
-POST /api/sheets
-
----
-
-## Progress
-
-Update progress
-
-POST /api/progress
-
-Get user progress
-
-GET /api/progress
-
----
-
-## Submissions
-
-Create submission
-
-POST /api/submissions
-
-Get user submissions
-
-GET /api/submissions
+# API Routes & Usage
+
+**Authentication**
+- `POST /api/auth/register` – Register new user
+- `POST /api/auth/login` – Login, returns JWT token
+
+**Problems**
+- `GET /api/problems` – List all problems
+- `GET /api/problems/:slug` – Get problem details
+- `POST /api/problems` – Add new problem
+
+**Sheets**
+- `GET /api/sheets` – List all sheets
+- `GET /api/sheets/:id` – Get problems in a sheet
+- `POST /api/sheets` – Create a new sheet
+
+**Progress**
+- `GET /api/progress` – Get user progress
+- `POST /api/progress` – Update progress (pending/attempted/solved)
+
+**Submissions**
+- `GET /api/submissions` – Get user submissions
+- `POST /api/submissions` – Save a code draft/attempt
+
+**Other planned/future routes:**
+- `/api/discussion` – Problem discussions (future)
+- `/api/leaderboard` – Leaderboard (future)
 
 ---
 
@@ -358,97 +164,83 @@ layout
 
 ---
 
-# Installation
 
-Clone the repository
+## Getting Started
 
+**1. Clone the repository**
+```sh
+git clone https://github.com/VivekSaini2005/codecanvas-ai
 ```
-git clone https://github.com/yourusername/codecanvas-ai
-```
 
-Install backend dependencies
-
-```
+**2. Install backend dependencies**
+```sh
+cd Backend
 npm install
 ```
 
-Install frontend dependencies
-
-```
-cd frontend
+**3. Install frontend dependencies**
+```sh
+cd ../frontend
 npm install
 ```
 
----
-
-# Environment Variables
-
-Create a .env file.
-
-Example:
-
+**4. Set up environment variables**
+Create a `.env` file in `/Backend`:
 ```
 DATABASE_URL=postgresql://user:password@localhost:5432/codecanvas_ai
 JWT_SECRET=your_secret_key
 DB_PASSWORD=your_database_password
 ```
 
----
-
-# Run Backend
-
-```
-node server.js
+**5. Run the backend**
+```sh
+cd ../Backend
+node src/server.js
 ```
 
----
-
-# Run Frontend
-
-```
+**6. Run the frontend**
+```sh
+cd ../frontend
 npm run dev
 ```
 
----
-
-# Import Problems
-
-You can populate the database using the import script.
-
-```
-node scripts/importProblems.js
+**7. (Optional) Import sample problems**
+```sh
+cd ../Backend/src/script
+node importProblems.js
 ```
 
-This inserts sample problems into the database.
+---
+
+
+## Common Tasks & Tips
+
+- **Debugging:** Use `console.log` in backend and browser dev tools in frontend.
+- **API Testing:** Use Postman or Thunder Client to test backend routes.
+- **Extending:** Add new routes in `src/routes/` and logic in `src/controllers/` (backend).
+- **Frontend:** Add new pages in `src/pages/` and components in `src/components/`.
+- **Database:** Edit `prisma/schema.prisma` and run `npx prisma migrate dev` to update DB schema.
+- **Authentication:** All protected routes require a valid JWT token in the `Authorization` header.
 
 ---
 
-# Future Improvements
 
-Planned upgrades include:
+## Future Improvements
 
-* AI hint system
-* Automatic sheet import
-* Duplicate problem detection
-* Problem discussion forum
-* Leaderboard system
-* Career readiness score
-* Mock interview system
-
----
-
-# Long-Term Vision
-
-CodeCanvas AI aims to become the **operating system for technical growth**, providing a structured environment where students can build algorithmic thinking and prepare for software engineering interviews.
+- AI hint system (stepwise hints)
+- Automatic sheet import
+- Duplicate problem detection
+- Problem discussion forum
+- Leaderboard system
+- Career readiness score
+- Mock interview system
 
 ---
 
-# Author
+## Author & Links
 
-Vivek Saini
-
+**Author:** Vivek Saini  
 Full Stack Developer
 
-GitHub: https://github.com/VivekSaini2005
-
-# Live Link : [https://codecanva-ai.vercel.app/](https://codecanvasai-dusky.vercel.app/)
+- GitHub: [VivekSaini2005](https://github.com/VivekSaini2005)
+- Live: [https://codecanva-ai.vercel.app/](https://codecanvasai-dusky.vercel.app/)
