@@ -10,7 +10,7 @@ const {
   getLeaderboard
 } = require("../controllers/progressController")
 
-router.get("/leaderboard", auth, getLeaderboard)
+router.get("/leaderboard", getLeaderboard)
 router.get("/stats", auth, getUserStats)
 router.post("/", auth, updateProgress)
 router.get("/", auth, getUserProgress)

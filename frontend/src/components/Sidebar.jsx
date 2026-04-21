@@ -8,7 +8,8 @@ import {
   User,
   MessageSquare,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Home as HomeIcon,
 } from "lucide-react";
 
 function Sidebar({ isOpen, onClose }) {
@@ -30,7 +31,8 @@ function Sidebar({ isOpen, onClose }) {
   const collapsed = isDesktopCollapsed && !isMobile;
 
   const navItems = [
-    { name: "Dashboard", path: "/", icon: LayoutDashboard },
+    { name: "Home", path: "/", icon: HomeIcon },
+    { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
     { name: "Problem Sheets", path: "/sheets", icon: FileText },
     { name: "Problems", path: "/problems", icon: Code2 },
     { name: "Leaderboard", path: "/leaderboard", icon: BarChart2 },

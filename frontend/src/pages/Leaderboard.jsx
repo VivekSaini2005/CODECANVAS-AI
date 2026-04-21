@@ -8,9 +8,13 @@ export default function LeaderboardPage() {
     const [users, setUsers] = useState([]);
 
     const fetchLeaderboard = async () => {
-        const { data } = await API.get("/progress/leaderboard");
-        console.log(data.leaderboard);
-        setUsers(data.leaderboard || []);
+        try {
+            const { data } = await API.get("/progress/leaderboard");
+            setUsers(data.leaderboard || []);
+        } catch (error) {
+            console.error("Failed to fetch leaderboard:", error);
+            setUsers([]);
+        }
     };
 
     useEffect(() => {

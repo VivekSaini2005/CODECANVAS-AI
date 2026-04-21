@@ -14,6 +14,7 @@ import SolveProblem from "./pages/SolveProblem"
 import ProblemsPage from "./pages/ProblemsPage"
 import Leaderboard from "./pages/Leaderboard"
 import Discussion from "./pages/Discussion"
+import Home from "./pages/Home"
 
 function App() {
 
@@ -24,7 +25,8 @@ function App() {
 
         <Routes>
 
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/sheets" element={<Sheets />} />
           <Route path="/sheet/:id" element={<SheetProblems />} />
           <Route path="/problems" element={<ProblemsPage />} />

@@ -267,7 +267,7 @@ function Navbar({ onMenuClick }) {
           </div>
         ) : (
           <div className="flex items-center gap-3">
-            <Link to="/login" className="text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-white transition-colors">Login</Link>
+            <Link to="/login" className="text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-green transition-colors">Login</Link>
             <Link to="/register" className="text-sm font-semibold bg-[#625df5] hover:bg-[#524de3] text-white px-4 py-2 rounded-xl transition-colors shadow-md">Register</Link>
           </div>
         )}

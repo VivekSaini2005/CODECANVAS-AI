@@ -3,12 +3,13 @@ import { fetchDashboardStats, fetchSheets, fetchSheetProblems, fetchSolvedProble
 import { fetchUserHeatmap, fetchUserPlatformStats, syncUserPlatformStats } from "../api/platformStatsApi"
 import { CheckCircle2, Flame, ArrowUpCircle, Play, ArrowRight, BookOpen, Zap } from "lucide-react"
 import HeatMap from "../components/HeatMap"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import RecentProblems from "../components/RecentProblem"
 import RecommendedProblems from "../components/Recommended"
 import { calculateStreak, calculateLongestStreak } from "../utils/streakCalculator"
 
 function Dashboard() {
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     totalSolved: 0,
     sheetsCompleted: 0,
@@ -89,8 +90,10 @@ function Dashboard() {
       fetchData();
       loadPlatformStats();
       loadSheets();
+    } else {
+      navigate('/login');
     }
-  }, []);
+  }, [navigate]);
 
   // Refresh heatmap data and recalculate streak
   const handleRefreshHeatmap = async () => {
