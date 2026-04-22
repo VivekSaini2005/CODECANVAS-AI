@@ -173,6 +173,21 @@ export default function ProblemsPage() {
                             alt="Meta" 
                             className="h-4 md:h-5 object-contain dark:invert"
                         />
+                        <img 
+                            src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" 
+                            alt="Netflix" 
+                            className="h-4 md:h-5 object-contain dark:invert"
+                        />
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/commons/2/24/Paytm_Logo_%28standalone%29.svg" 
+                            alt="Paytm" 
+                            className="h-4 md:h-5 object-contain dark:invert"
+                        />
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/commons/7/71/The_Flipkart_Logo_-_from_Official_Website.png" 
+                            alt="Flipkart" 
+                            className="h-4 md:h-5 object-contain dark:invert"
+                        />
                     </div>
                 </div>
             </div>
