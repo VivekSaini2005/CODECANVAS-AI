@@ -124,19 +124,60 @@ export default function ProblemsPage() {
     const optionClass = "bg-white dark:bg-[#121622] text-gray-900 dark:text-gray-200";
 
     return (
-        <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto pb-10">
-            {/* HEADER */}
-            <div className="flex justify-between items-center mb-8">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Explore Problems</h1>
-                    <p className="text-gray-500 dark:text-gray-400 text-[13px]">
-                        Master your skills with curated coding challenges.
+        <>
+            {/* HERO SECTION */}
+            <div className="animate-fade-in-up w-full bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 border-b border-gray-200 dark:border-white/5 mb-8 md:mb-12">
+                <div className="text-center max-w-5xl mx-auto py-16 md:py-20 px-6">
+                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
+                        Practice Smarter, Not Harder
+                    </h1>
+                    <p className="text-gray-600 dark:text-gray-300 mt-4 text-lg">
+                        Structured DSA practice with zero duplication and full control.
                     </p>
+                    <div className="flex justify-center items-center gap-4 mt-6">
+                        <button 
+                            onClick={() => document.getElementById('problems-filters')?.scrollIntoView({ behavior: 'smooth' })}
+                            className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black font-medium rounded-xl hover:scale-105 hover:shadow-lg transition-all duration-300 shadow-md"
+                        >
+                            Start Solving
+                        </button>
+                        <button 
+                            onClick={() => navigate('/sheets')}
+                            className="px-6 py-3 bg-transparent text-black dark:text-white font-medium rounded-xl border border-gray-400 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 shadow-sm hover:scale-105 hover:shadow-lg"
+                        >
+                            Explore Sheets
+                        </button>
+                    </div>
+
+                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-10">
+                        Inspired by top tech hiring standards
+                    </p>
+                    <div className="flex justify-center items-center gap-8 mt-4 flex-wrap">
+                        <img 
+                            src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" 
+                            alt="Google" 
+                            className="h-6 md:h-8 object-contain"
+                        />
+                        <img 
+                            src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" 
+                            alt="Amazon" 
+                            className="h-6 md:h-8 object-contain dark:invert"
+                        />
+                        <img 
+                            src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" 
+                            alt="Microsoft" 
+                            className="h-6 md:h-8 object-contain"
+                        />
+                        <img 
+                            src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" 
+                            alt="Meta" 
+                            className="h-4 md:h-5 object-contain dark:invert"
+                        />
+                    </div>
                 </div>
-                <button className="bg-[#3b82f6] px-5 py-2.5 rounded-lg text-sm font-medium text-white hover:bg-blue-500 transition-colors flex items-center gap-2.5 shadow-sm shadow-[#3b82f6]/20">
-                    <Shuffle size={16} strokeWidth={2.5} /> Pick One
-                </button>
             </div>
+
+            <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto pb-10" id="problems-filters">
 
             {/* FILTERS */}
             <div className="flex gap-3 mb-6 flex-wrap">
@@ -337,5 +378,6 @@ export default function ProblemsPage() {
                 </div>
             </div>
         </div>
+        </>
     )
 }
