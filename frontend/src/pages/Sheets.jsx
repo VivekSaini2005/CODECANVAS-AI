@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import API from "../api/axiosInstance"
 import { Link } from "react-router-dom"
 import ProgressBar from "../components/ProgressBar"
+import ProblemImg from '../images/ProblemImg.png';
 
 function Sheets() {
 
@@ -64,7 +65,7 @@ function Sheets() {
           <div className="animate-float relative w-full max-w-[450px] xl:max-w-[500px] aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border border-transparent dark:border-white/5 group">
             <div className="absolute inset-0 bg-gradient-to-tr from-[#625df5]/10 to-transparent mix-blend-overlay z-10 transition-opacity duration-500 group-hover:opacity-0 pointer-events-none"></div>
             <img 
-              src="/src/images/ProblemImg.png" 
+              src={ProblemImg}
               alt="Minimal AI coding dashboard illustration" 
               className="w-full h-full object-cover rounded-2xl transition-transform duration-700 group-hover:scale-[1.03]"
             />
