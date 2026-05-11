@@ -2,13 +2,12 @@
 
 ```mermaid
 flowchart TD
-	A[Frontend (React)] -- REST API --> B[Backend (Express.js)]
-	B -- SQL Queries --> C[(PostgreSQL DB)]
-	A -- Redirects --> D[LeetCode/Codeforces/GFG]
-	B -- Returns Data --> A
-	C -- Data --> B
+    A["Frontend - React"] -- "REST API" --> B["Backend - Express.js"]
+    B -- "SQL Queries" --> C[("PostgreSQL Database")]
+    A -- "Redirects Users" --> D["LeetCode / Codeforces / GFG"]
+    B -- "Returns Data" --> A
+    C -- "Provides Data" --> B
 ```
-
 
 # CodeCanvas AI
 
