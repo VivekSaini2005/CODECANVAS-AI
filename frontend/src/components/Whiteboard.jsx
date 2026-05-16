@@ -126,7 +126,7 @@ export default function Whiteboard({ problem, onAIStart, onAIResult }) {
 
       {/* AI TOOLBAR - Modern Glassmorphic Pill */}
       <div
-        className="absolute bottom-16 left-1/2 z-[100] flex gap-3 p-2 bg-gradient-to-b from-[#1e293b]/90 to-[#0f172a]/95 backdrop-blur-xl border border-gray-200 dark:border-white/10 rounded-2xl pointer-events-auto items-center hover:border-white/20 transition-colors"
+        className="absolute bottom-16 left-1/2 z-[100] flex gap-3 p-2 bg-white/90 dark:bg-gradient-to-b dark:from-[#1e293b]/90 dark:to-[#0f172a]/95 backdrop-blur-xl border border-gray-200 dark:border-white/10 shadow-lg dark:shadow-none rounded-2xl pointer-events-auto items-center hover:border-gray-300 dark:hover:border-white/20 transition-colors"
         style={{ transform: `translate(calc(-50% + ${position.x}px), ${position.y}px)` }}
       >
 
@@ -138,42 +138,42 @@ export default function Whiteboard({ problem, onAIStart, onAIResult }) {
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerUp}
         >
-          <GripHorizontal className="w-5 h-5 text-gray-500 dark:text-gray-400 hover:text-white transition-colors pointer-events-none" />
-          <Bot className="w-5 h-5 text-indigo-400 drop-shadow-[0_0_8px_rgba(99,102,241,0.8)] ml-2 pointer-events-none hidden sm:block" />
+          <GripHorizontal className="w-5 h-5 text-gray-400 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors pointer-events-none" />
+          <Bot className="w-5 h-5 text-indigo-500 dark:text-indigo-400 drop-shadow-[0_0_8px_rgba(99,102,241,0.2)] dark:drop-shadow-[0_0_8px_rgba(99,102,241,0.8)] ml-2 pointer-events-none hidden sm:block" />
         </div>
 
         <button
           onClick={() => handleAction("analyze")}
           disabled={loading}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-500/20 to-indigo-600/20 hover:from-indigo-500 hover:to-indigo-600 border border-indigo-500/30 hover:border-indigo-400 text-indigo-100 hover:text-white rounded-xl text-sm font-medium transition-all duration-300 hover:scale-[1.03] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-[0_0_20px_rgba(99,102,241,0.4)]"
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-50 to-indigo-100 dark:from-indigo-500/20 dark:to-indigo-600/20 hover:from-indigo-100 hover:to-indigo-200 dark:hover:from-indigo-500 dark:hover:to-indigo-600 border border-indigo-200 dark:border-indigo-500/30 hover:border-indigo-300 dark:hover:border-indigo-400 text-indigo-700 dark:text-indigo-100 hover:text-indigo-900 dark:hover:text-white rounded-xl text-sm font-medium transition-all duration-300 hover:scale-[1.03] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed dark:hover:shadow-[0_0_20px_rgba(99,102,241,0.4)]"
         >
-          {loading && currentAction === "analyze" ? <Loader2 className="w-4 h-4 animate-spin text-indigo-200" /> : <Sparkles className="w-4 h-4 text-indigo-300" />}
+          {loading && currentAction === "analyze" ? <Loader2 className="w-4 h-4 animate-spin text-indigo-600 dark:text-indigo-200" /> : <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-300" />}
           <span>Analyze</span>
         </button>
 
         <button
           onClick={() => handleAction("pseudocode")}
           disabled={loading}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 hover:from-emerald-500 hover:to-emerald-600 border border-emerald-500/30 hover:border-emerald-400 text-emerald-100 hover:text-white rounded-xl text-sm font-medium transition-all duration-300 hover:scale-[1.03] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-50 to-emerald-100 dark:from-emerald-500/20 dark:to-emerald-600/20 hover:from-emerald-100 hover:to-emerald-200 dark:hover:from-emerald-500 dark:hover:to-emerald-600 border border-emerald-200 dark:border-emerald-500/30 hover:border-emerald-300 dark:hover:border-emerald-400 text-emerald-700 dark:text-emerald-100 hover:text-emerald-900 dark:hover:text-white rounded-xl text-sm font-medium transition-all duration-300 hover:scale-[1.03] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed dark:hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
         >
-          {loading && currentAction === "pseudocode" ? <Loader2 className="w-4 h-4 animate-spin text-emerald-200" /> : <Code className="w-4 h-4 text-emerald-300" />}
+          {loading && currentAction === "pseudocode" ? <Loader2 className="w-4 h-4 animate-spin text-emerald-600 dark:text-emerald-200" /> : <Code className="w-4 h-4 text-emerald-600 dark:text-emerald-300" />}
           <span>Pseudocode</span>
         </button>
 
         <button
           onClick={() => handleAction("hint")}
           disabled={loading}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500/20 to-amber-600/20 hover:from-amber-500 hover:to-amber-600 border border-amber-500/30 hover:border-amber-400 text-amber-100 hover:text-white rounded-xl text-sm font-medium transition-all duration-300 hover:scale-[1.03] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]"
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-500/20 dark:to-amber-600/20 hover:from-amber-100 hover:to-amber-200 dark:hover:from-amber-500 dark:hover:to-amber-600 border border-amber-200 dark:border-amber-500/30 hover:border-amber-300 dark:hover:border-amber-400 text-amber-700 dark:text-amber-100 hover:text-amber-900 dark:hover:text-white rounded-xl text-sm font-medium transition-all duration-300 hover:scale-[1.03] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed dark:hover:shadow-[0_0_20px_rgba(245,158,11,0.4)]"
         >
-          {loading && currentAction === "hint" ? <Loader2 className="w-4 h-4 animate-spin text-amber-200" /> : <Lightbulb className="w-4 h-4 text-amber-300" />}
+          {loading && currentAction === "hint" ? <Loader2 className="w-4 h-4 animate-spin text-amber-600 dark:text-amber-200" /> : <Lightbulb className="w-4 h-4 text-amber-600 dark:text-amber-300" />}
           <span>Hint</span>
         </button>
 
-        <div className="w-px h-6 bg-white/10 mx-1 hidden sm:block"></div>
+        <div className="w-px h-6 bg-gray-200 dark:bg-white/10 mx-1 hidden sm:block"></div>
 
         <button
           onClick={toggleTheme}
-          className="p-2 text-indigo-200 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95"
+          className="p-2 text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 dark:text-indigo-200 dark:hover:text-white dark:bg-white/5 dark:hover:bg-white/10 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95"
           title="Toggle Theme"
         >
           {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}

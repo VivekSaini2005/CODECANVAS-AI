@@ -288,9 +288,9 @@ export default function SolveProblem() {
 
               {!aiLoading && !aiResult && (
                 <div className="flex flex-col items-center justify-center h-full gap-3 text-center px-8">
-                  <Bot className="w-12 h-12 text-indigo-500/40" />
-                  <p className="text-gray-500 text-sm leading-relaxed">
-                    Use the <span className="text-indigo-400 font-medium">AI toolbar</span> on the whiteboard<br />
+                  <Bot className="w-12 h-12 text-indigo-500/40 dark:text-indigo-500/40" />
+                  <p className="text-gray-600 dark:text-gray-500 text-sm leading-relaxed">
+                    Use the <span className="text-indigo-600 dark:text-indigo-400 font-medium">AI toolbar</span> on the whiteboard<br />
                     to get insights, hints, or pseudocode.
                   </p>
                 </div>
@@ -301,8 +301,8 @@ export default function SolveProblem() {
                   {/* Header */}
                   <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-white/10 shrink-0">
                     <div className="flex items-center gap-2">
-                      <Bot className="w-5 h-5 text-indigo-400 drop-shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
-                      <h3 className="font-semibold text-sm tracking-wide bg-gradient-to-r from-indigo-300 to-purple-300 bg-clip-text text-transparent uppercase">
+                      <Bot className="w-5 h-5 text-indigo-600 dark:text-indigo-400 drop-shadow-[0_0_8px_rgba(99,102,241,0.2)] dark:drop-shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
+                      <h3 className="font-semibold text-sm tracking-wide bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-300 dark:to-purple-300 bg-clip-text text-transparent uppercase">
                         AI Insights {currentActionContext ? `- ${currentActionContext}` : ''}
                       </h3>
                     </div>
@@ -320,7 +320,7 @@ export default function SolveProblem() {
                       <div className="space-y-6">
                         {chatHistory.map((msg, idx) => (
                           <div key={idx} className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}>
-                            <div className={`text-sm leading-relaxed ${msg.role === "user" ? "bg-indigo-600/20 text-indigo-100 px-4 py-2 rounded-2xl rounded-tr-sm border border-indigo-500/30 max-w-[85%]" : "text-gray-900 dark:text-gray-200 w-full"}`}>
+                            <div className={`text-sm leading-relaxed ${msg.role === "user" ? "bg-indigo-100 dark:bg-indigo-600/20 text-indigo-900 dark:text-indigo-100 px-4 py-2 rounded-2xl rounded-tr-sm border border-indigo-200 dark:border-indigo-500/30 max-w-[85%]" : "text-gray-900 dark:text-gray-200 w-full"}`}>
                               {msg.role === "user" ? (
                                 msg.text
                               ) : (
@@ -330,16 +330,16 @@ export default function SolveProblem() {
                                   components={{
                                     h1: ({ node, ...props }) => <h1 className="text-xl font-bold text-gray-900 dark:text-white mt-5 mb-3" {...props} />,
                                     h2: ({ node, ...props }) => <h2 className="text-lg font-bold text-gray-900 dark:text-white mt-5 mb-3 border-b border-gray-200 dark:border-white/10 pb-2" {...props} />,
-                                    h3: ({ node, ...props }) => <h3 className="text-base font-bold text-indigo-300 mt-4 mb-2" {...props} />,
-                                    p: ({ node, ...props }) => <p className="mb-3 text-indigo-50/90 leading-relaxed font-sans" {...props} />,
-                                    ul: ({ node, ...props }) => <ul className="list-disc pl-6 mb-3 space-y-1 font-sans text-indigo-100/90" {...props} />,
-                                    ol: ({ node, ...props }) => <ol className="list-decimal pl-6 mb-3 space-y-1 font-sans text-indigo-100/90" {...props} />,
-                                    li: ({ node, ...props }) => <li className="pl-1 marker:text-indigo-400" {...props} />,
-                                    a: ({ node, ...props }) => <a className="text-indigo-400 hover:text-indigo-300 underline underline-offset-2 font-sans transition-colors" target="_blank" rel="noreferrer" {...props} />,
+                                    h3: ({ node, ...props }) => <h3 className="text-base font-bold text-indigo-700 dark:text-indigo-300 mt-4 mb-2" {...props} />,
+                                    p: ({ node, ...props }) => <p className="mb-3 text-gray-800 dark:text-indigo-50/90 leading-relaxed font-sans" {...props} />,
+                                    ul: ({ node, ...props }) => <ul className="list-disc pl-6 mb-3 space-y-1 font-sans text-gray-800 dark:text-indigo-100/90" {...props} />,
+                                    ol: ({ node, ...props }) => <ol className="list-decimal pl-6 mb-3 space-y-1 font-sans text-gray-800 dark:text-indigo-100/90" {...props} />,
+                                    li: ({ node, ...props }) => <li className="pl-1 marker:text-indigo-600 dark:marker:text-indigo-400" {...props} />,
+                                    a: ({ node, ...props }) => <a className="text-indigo-700 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 underline underline-offset-2 font-sans transition-colors" target="_blank" rel="noreferrer" {...props} />,
                                     strong: ({ node, ...props }) => <strong className="font-semibold text-gray-900 dark:text-white tracking-wide" {...props} />,
                                     pre: ({ node, ...props }) => (
-                                      <div className="my-4 rounded-xl overflow-hidden border border-gray-200 dark:border-white/10 bg-white dark:bg-[#0f172a] shadow-lg">
-                                        <div className="flex items-center px-4 py-2 bg-white/5 border-b border-gray-200 dark:border-white/10">
+                                      <div className="my-4 rounded-xl overflow-hidden border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#0f172a] shadow-lg">
+                                        <div className="flex items-center px-4 py-2 bg-gray-100 dark:bg-white/5 border-b border-gray-200 dark:border-white/10">
                                           <div className="flex gap-1.5">
                                             <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
                                             <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
@@ -347,15 +347,15 @@ export default function SolveProblem() {
                                           </div>
                                           <span className="ml-3 text-[10px] text-gray-500 dark:text-gray-400 font-mono uppercase tracking-wider">Snippet</span>
                                         </div>
-                                        <pre className="p-4 overflow-x-auto custom-scrollbar" {...props} />
+                                        <pre className="p-4 overflow-x-auto custom-scrollbar text-gray-800 dark:text-indigo-50" {...props} />
                                       </div>
                                     ),
                                     code: ({ node, className, children, ...props }) => {
                                       const match = /language-(\w+)/.exec(className || '')
                                       return match ? (
-                                        <code className="text-[13px] text-indigo-100 font-mono leading-relaxed" {...props}>{children}</code>
+                                        <code className="text-[13px] text-gray-800 dark:text-indigo-100 font-mono leading-relaxed" {...props}>{children}</code>
                                       ) : (
-                                        <code className="bg-indigo-900/40 text-indigo-200 px-1.5 py-0.5 rounded text-xs font-mono border border-indigo-500/20" {...props}>{children}</code>
+                                        <code className="bg-indigo-50 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-200 px-1.5 py-0.5 rounded text-xs font-mono border border-indigo-200 dark:border-indigo-500/20" {...props}>{children}</code>
                                       )
                                     }
                                   }}
@@ -384,16 +384,16 @@ export default function SolveProblem() {
                           components={{
                             h1: ({ node, ...props }) => <h1 className="text-xl font-bold text-gray-900 dark:text-white mt-5 mb-3" {...props} />,
                             h2: ({ node, ...props }) => <h2 className="text-lg font-bold text-gray-900 dark:text-white mt-5 mb-3 border-b border-gray-200 dark:border-white/10 pb-2" {...props} />,
-                            h3: ({ node, ...props }) => <h3 className="text-base font-bold text-indigo-300 mt-4 mb-2" {...props} />,
-                            p: ({ node, ...props }) => <p className="mb-3 text-indigo-50/90 leading-relaxed font-sans" {...props} />,
-                            ul: ({ node, ...props }) => <ul className="list-disc pl-6 mb-3 space-y-1 font-sans text-indigo-100/90" {...props} />,
-                            ol: ({ node, ...props }) => <ol className="list-decimal pl-6 mb-3 space-y-1 font-sans text-indigo-100/90" {...props} />,
-                            li: ({ node, ...props }) => <li className="pl-1 marker:text-indigo-400" {...props} />,
-                            a: ({ node, ...props }) => <a className="text-indigo-400 hover:text-indigo-300 underline underline-offset-2 font-sans transition-colors" target="_blank" rel="noreferrer" {...props} />,
+                            h3: ({ node, ...props }) => <h3 className="text-base font-bold text-indigo-600 dark:text-indigo-300 mt-4 mb-2" {...props} />,
+                            p: ({ node, ...props }) => <p className="mb-3 text-gray-700 dark:text-indigo-50/90 leading-relaxed font-sans" {...props} />,
+                            ul: ({ node, ...props }) => <ul className="list-disc pl-6 mb-3 space-y-1 font-sans text-gray-700 dark:text-indigo-100/90" {...props} />,
+                            ol: ({ node, ...props }) => <ol className="list-decimal pl-6 mb-3 space-y-1 font-sans text-gray-700 dark:text-indigo-100/90" {...props} />,
+                            li: ({ node, ...props }) => <li className="pl-1 marker:text-indigo-600 dark:marker:text-indigo-400" {...props} />,
+                            a: ({ node, ...props }) => <a className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 underline underline-offset-2 font-sans transition-colors" target="_blank" rel="noreferrer" {...props} />,
                             strong: ({ node, ...props }) => <strong className="font-semibold text-gray-900 dark:text-white tracking-wide" {...props} />,
                             pre: ({ node, ...props }) => (
-                              <div className="my-4 rounded-xl overflow-hidden border border-gray-200 dark:border-white/10 bg-white dark:bg-[#0f172a] shadow-lg">
-                                <div className="flex items-center px-4 py-2 bg-white/5 border-b border-gray-200 dark:border-white/10">
+                              <div className="my-4 rounded-xl overflow-hidden border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#0f172a] shadow-lg">
+                                <div className="flex items-center px-4 py-2 bg-gray-100 dark:bg-white/5 border-b border-gray-200 dark:border-white/10">
                                   <div className="flex gap-1.5">
                                     <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
                                     <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
@@ -401,15 +401,15 @@ export default function SolveProblem() {
                                   </div>
                                   <span className="ml-3 text-[10px] text-gray-500 dark:text-gray-400 font-mono uppercase tracking-wider">Snippet</span>
                                 </div>
-                                <pre className="p-4 overflow-x-auto custom-scrollbar" {...props} />
+                                <pre className="p-4 overflow-x-auto custom-scrollbar text-gray-800 dark:text-indigo-50" {...props} />
                               </div>
                             ),
                             code: ({ node, className, children, ...props }) => {
                               const match = /language-(\w+)/.exec(className || '')
                               return match ? (
-                                <code className="text-[13px] text-indigo-100 font-mono leading-relaxed" {...props}>{children}</code>
+                                <code className="text-[13px] text-gray-800 dark:text-indigo-100 font-mono leading-relaxed" {...props}>{children}</code>
                               ) : (
-                                <code className="bg-indigo-900/40 text-indigo-200 px-1.5 py-0.5 rounded text-xs font-mono border border-indigo-500/20" {...props}>{children}</code>
+                                <code className="bg-indigo-50 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-200 px-1.5 py-0.5 rounded text-xs font-mono border border-indigo-200 dark:border-indigo-500/20" {...props}>{children}</code>
                               )
                             }
                           }}
@@ -438,7 +438,7 @@ export default function SolveProblem() {
                         <button
                           onClick={handleSendChat}
                           disabled={!chatInput.trim() || isChatLoading}
-                          className="p-2 mr-2 text-indigo-400 hover:text-indigo-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/5 rounded-lg transition-colors"
+                          className="p-2 mr-2 text-indigo-500 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors"
                         >
                           {isChatLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                         </button>
